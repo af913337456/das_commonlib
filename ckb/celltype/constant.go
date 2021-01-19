@@ -17,13 +17,14 @@ const CkbTxMinOutputCKBValue = 61 * OneCkb
 type TableType uint32
 
 const (
-	TableType_ACTION        TableType = 0
-	TableType_STATE_CELL    TableType = 1
-	TableType_ACCOUNT_CELL  TableType = 2
-	TableType_REGISTER_CELL TableType = 3
-	TableType_ON_SALE_CELL  TableType = 4
-	TableType_BIDDING_CELL  TableType = 5
-	TableType_PROPOSE_CELL  TableType = 6 // todo change it
+	TableType_ACTION       TableType = 0
+	TableType_CONFIG_CELL  TableType = 1
+	TableType_ACCOUNT_CELL TableType = 2
+	// TableType_REGISTER_CELL TableType = 3
+	TableType_ON_SALE_CELL     TableType = 3
+	TableType_BIDDING_CELL     TableType = 4
+	TableType_PROPOSE_CELL     TableType = 5 // todo change it
+	TableType_PRE_ACCOUNT_CELL TableType = 6
 )
 
 const (
