@@ -16,8 +16,9 @@ import (
  */
 
 type CkbWalletObj struct {
-	Secp256k1Key *secp256k1.Secp256k1Key
-	LockScript   *types.Script
+	SystemScripts *utils.SystemScripts
+	Secp256k1Key  *secp256k1.Secp256k1Key
+	LockScript    *types.Script
 }
 
 func InitCkbWallet(privateKeyHex string, systemScript *utils.SystemScripts) (*CkbWalletObj, error) {
@@ -30,7 +31,8 @@ func InitCkbWallet(privateKeyHex string, systemScript *utils.SystemScripts) (*Ck
 		return nil, fmt.Errorf("InitCkbWallet LockScript err: %s", err.Error())
 	}
 	return &CkbWalletObj{
-		Secp256k1Key: key,
-		LockScript:   lockScript,
+		Secp256k1Key:  key,
+		LockScript:    lockScript,
+		SystemScripts: systemScript,
 	}, nil
 }
