@@ -76,6 +76,14 @@ func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionB
 	return builder
 }
 
+func (builder *TransactionBuilder) AddCellDeps(cellDeps []types.CellDep) *TransactionBuilder {
+	cellDepsSize := len(cellDeps)
+	for i := 0; i < cellDepsSize; i++ {
+		builder.AddCellDep(&cellDeps[i])
+	}
+	return builder
+}
+
 func (builder *TransactionBuilder) AddInput(cell *types.CellInput, thisCellCap uint64) *TransactionBuilder {
 	builder.totalInputCap = builder.totalInputCap + thisCellCap
 	builder.tx.Inputs = append(builder.tx.Inputs, cell)
