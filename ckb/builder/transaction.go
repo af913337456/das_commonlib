@@ -63,6 +63,9 @@ func NewTransactionBuilder2(fromScript *types.Script, fee uint64) *TransactionBu
 }
 
 func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionBuilder {
+	if cell == nil {
+		return builder
+	}
 	// 如果已经存在，那么不再重复添加
 	for _, item := range builder.tx.CellDeps {
 		if item.OutPoint.TxHash == cell.OutPoint.TxHash && item.OutPoint.Index == cell.OutPoint.Index {
