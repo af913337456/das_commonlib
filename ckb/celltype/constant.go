@@ -29,9 +29,9 @@ const (
 )
 
 const (
-	ProposeWitnessDataItemType_Exist    = 1
-	ProposeWitnessDataItemType_Proposed = 2
-	ProposeWitnessDataItemType_New      = 3
+	ProposeWitnessDataItemType_Exist    = 0
+	ProposeWitnessDataItemType_Proposed = 1
+	ProposeWitnessDataItemType_New      = 2
 )
 
 const (
