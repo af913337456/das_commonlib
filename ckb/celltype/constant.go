@@ -15,6 +15,7 @@ const OneCkb = uint64(1e8)
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 
 type TableType uint32
+type ProposeWitnessDataItemType string
 
 const (
 	TableType_ACTION       TableType = 0
@@ -25,6 +26,12 @@ const (
 	TableType_BIDDING_CELL     TableType = 4
 	TableType_PROPOSE_CELL     TableType = 5 // todo change it
 	TableType_PRE_ACCOUNT_CELL TableType = 6
+)
+
+const (
+	ProposeWitnessDataItemType_Exist    = "exist"
+	ProposeWitnessDataItemType_Proposed = "proposed"
+	ProposeWitnessDataItemType_New      = "new"
 )
 
 const (
