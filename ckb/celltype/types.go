@@ -178,3 +178,24 @@ type ProposeWitnessSliceDataObject struct {
 	ItemType  ProposeWitnessDataItemType `json:"item_type"`
 	Next      string                     `json:"next"`
 }
+
+func ProposeWitnessSliceDataObjectFromBytes(bys []byte) ([]ProposeWitnessSliceDataObject, error) {
+	proposeCellData, err := ProposalCellDataFromSlice(bys, false)
+	if err != nil {
+		return nil, err
+	}
+	list := []ProposeWitnessSliceDataObject{}
+	sliceList := proposeCellData.Slices()
+	index := uint(0)
+	for sl := sliceList.Get(index); sl != nil && !sl.IsEmpty(); index++ {
+		proposeItemIndex := uint(0)
+		for propose := sl.Get(proposeItemIndex); propose != nil && !propose.IsEmpty(); proposeItemIndex++ {
+			list = append(list, ProposeWitnessSliceDataObject{
+				AccountId: string(propose.AccountId().AsSlice()),
+				ItemType:  1,
+				Next:      string(propose.Next().AsSlice()),
+			})
+		}
+	}
+	return list, nil
+}

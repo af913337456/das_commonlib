@@ -15,7 +15,7 @@ const OneCkb = uint64(1e8)
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 
 type TableType uint32
-type ProposeWitnessDataItemType string
+type ProposeWitnessDataItemType uint32
 
 const (
 	TableType_ACTION       TableType = 0
@@ -29,9 +29,9 @@ const (
 )
 
 const (
-	ProposeWitnessDataItemType_Exist    = "exist"
-	ProposeWitnessDataItemType_Proposed = "proposed"
-	ProposeWitnessDataItemType_New      = "new"
+	ProposeWitnessDataItemType_Exist    = 1
+	ProposeWitnessDataItemType_Proposed = 2
+	ProposeWitnessDataItemType_New      = 3
 )
 
 const (
