@@ -190,9 +190,13 @@ func ProposeWitnessSliceDataObjectFromBytes(bys []byte) ([]ProposeWitnessSliceDa
 	for sl := sliceList.Get(index); sl != nil && !sl.IsEmpty(); index++ {
 		proposeItemIndex := uint(0)
 		for propose := sl.Get(proposeItemIndex); propose != nil && !propose.IsEmpty(); proposeItemIndex++ {
+			itemTypeUint8, err := MoleculeU8ToGo(propose.ItemType().inner)
+			if err != nil {
+				return nil, err
+			}
 			list = append(list, ProposeWitnessSliceDataObject{
 				AccountId: string(propose.AccountId().AsSlice()),
-				ItemType:  1,
+				ItemType:  ProposeWitnessDataItemType(itemTypeUint8),
 				Next:      string(propose.Next().AsSlice()),
 			})
 		}

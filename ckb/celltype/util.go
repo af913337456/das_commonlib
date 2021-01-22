@@ -93,6 +93,15 @@ func GoCkbScriptToMoleculeScript(script types.Script) Script {
 		Build()
 }
 
+func MoleculeU8ToGo(bys []byte) (uint8, error) {
+	var t uint8
+	bytesBuffer := bytes.NewBuffer(bys)
+	if err := binary.Read(bytesBuffer, binary.LittleEndian, &t); err != nil {
+		return 0, err
+	}
+	return t, nil
+}
+
 func MoleculeU32ToGo(bys []byte) (uint32, error) {
 	var t uint32
 	bytesBuffer := bytes.NewBuffer(bys)

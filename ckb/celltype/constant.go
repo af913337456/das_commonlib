@@ -15,7 +15,7 @@ const OneCkb = uint64(1e8)
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 
 type TableType uint32
-type ProposeWitnessDataItemType uint32
+type ProposeWitnessDataItemType uint8
 
 const (
 	TableType_ACTION       TableType = 0
