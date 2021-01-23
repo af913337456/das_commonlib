@@ -17,6 +17,18 @@ const CkbTxMinOutputCKBValue = 61 * OneCkb
 type TableType uint32
 type AccountCellStatus uint8
 
+func (a AccountCellStatus) Str() string {
+	switch a {
+	case AccountCellStatus_Exist:
+		return "exist"
+	case AccountCellStatus_New:
+		return "new"
+	case AccountCellStatus_Proposed:
+		return "proposed"
+	}
+	return "unknown"
+}
+
 const (
 	TableType_ACTION       TableType = 0
 	TableType_CONFIG_CELL  TableType = 1
