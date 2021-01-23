@@ -174,9 +174,9 @@ type ParseDasWitnessBysDataObj struct {
 }
 
 type ProposeWitnessSliceDataObject struct {
-	AccountId string            `json:"account_id"`
+	AccountId []byte            `json:"account_id"`
 	ItemType  AccountCellStatus `json:"item_type"`
-	Next      string            `json:"next"`
+	Next      []byte            `json:"next"`
 }
 
 type ProposeWitnessSliceDataObjectList []ProposeWitnessSliceDataObject
@@ -198,9 +198,9 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 				return nil, err
 			}
 			list = append(list, ProposeWitnessSliceDataObject{
-				AccountId: string(propose.AccountId().AsSlice()),
+				AccountId: propose.AccountId().AsSlice(),
 				ItemType:  AccountCellStatus(itemTypeUint8),
-				Next:      string(propose.Next().AsSlice()),
+				Next:      propose.Next().AsSlice(),
 			})
 		}
 		retList = append(retList, list)

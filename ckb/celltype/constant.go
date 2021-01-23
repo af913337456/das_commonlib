@@ -29,9 +29,9 @@ const (
 )
 
 const (
-	AccountCellStatus_Exist    = 0
-	AccountCellStatus_Proposed = 1
-	AccountCellStatus_New      = 2
+	AccountCellStatus_Exist    AccountCellStatus = 0
+	AccountCellStatus_Proposed AccountCellStatus = 1
+	AccountCellStatus_New      AccountCellStatus = 2
 )
 
 const (
