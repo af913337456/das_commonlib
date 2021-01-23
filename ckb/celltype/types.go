@@ -3,6 +3,7 @@ package celltype
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -177,6 +178,13 @@ type ProposeWitnessSliceDataObject struct {
 	AccountId []byte            `json:"account_id"`
 	ItemType  AccountCellStatus `json:"item_type"`
 	Next      []byte            `json:"next"`
+}
+
+func (p ProposeWitnessSliceDataObject) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(
+		`{"account_id":"%s","item_type":"%s","next":"%s"}`,
+		hex.EncodeToString(p.AccountId),
+		p.ItemType.Str(), hex.EncodeToString(p.Next))), nil
 }
 
 type ProposeWitnessSliceDataObjectList []ProposeWitnessSliceDataObject
