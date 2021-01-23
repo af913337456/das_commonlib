@@ -174,21 +174,24 @@ type ParseDasWitnessBysDataObj struct {
 }
 
 type ProposeWitnessSliceDataObject struct {
-	AccountId string                     `json:"account_id"`
-	ItemType  ProposeWitnessDataItemType `json:"item_type"`
-	Next      string                     `json:"next"`
+	AccountId string            `json:"account_id"`
+	ItemType  AccountCellStatus `json:"item_type"`
+	Next      string            `json:"next"`
 }
 
-func ProposeWitnessSliceDataObjectFromBytes(bys []byte) ([]ProposeWitnessSliceDataObject, error) {
+type ProposeWitnessSliceDataObjectList []ProposeWitnessSliceDataObject
+
+func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSliceDataObjectList, error) {
 	proposeCellData, err := ProposalCellDataFromSlice(bys, false)
 	if err != nil {
 		return nil, err
 	}
-	list := []ProposeWitnessSliceDataObject{}
+	retList := []ProposeWitnessSliceDataObjectList{}
 	sliceList := proposeCellData.Slices()
 	index := uint(0)
 	for sl := sliceList.Get(index); sl != nil && !sl.IsEmpty(); index++ {
 		proposeItemIndex := uint(0)
+		list := []ProposeWitnessSliceDataObject{}
 		for propose := sl.Get(proposeItemIndex); propose != nil && !propose.IsEmpty(); proposeItemIndex++ {
 			itemTypeUint8, err := MoleculeU8ToGo(propose.ItemType().inner)
 			if err != nil {
@@ -196,10 +199,11 @@ func ProposeWitnessSliceDataObjectFromBytes(bys []byte) ([]ProposeWitnessSliceDa
 			}
 			list = append(list, ProposeWitnessSliceDataObject{
 				AccountId: string(propose.AccountId().AsSlice()),
-				ItemType:  ProposeWitnessDataItemType(itemTypeUint8),
+				ItemType:  AccountCellStatus(itemTypeUint8),
 				Next:      string(propose.Next().AsSlice()),
 			})
 		}
+		retList = append(retList, list)
 	}
-	return list, nil
+	return retList, nil
 }
