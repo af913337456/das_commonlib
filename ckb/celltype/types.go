@@ -219,3 +219,9 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 	}
 	return retList, nil
 }
+
+type ProposeWitnessSliceDataObjectLL []ProposeWitnessSliceDataObjectList
+
+func (p ProposeWitnessSliceDataObjectLL) ToMoleculeData() Data {
+	return NewDataBuilder().Build()
+}
