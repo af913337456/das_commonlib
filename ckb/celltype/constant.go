@@ -13,6 +13,7 @@ const CellVersionByteLen = 4
 const MoleculeBytesHeaderSize = 4
 const OneCkb = uint64(1e8)
 const CkbTxMinOutputCKBValue = 61 * OneCkb
+const AccountCellDataAccountIdStartIndex = 72
 
 type TableType uint32
 type AccountCellStatus uint8
