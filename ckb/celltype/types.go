@@ -189,6 +189,10 @@ func (p ProposeWitnessSliceDataObject) MarshalJSON() ([]byte, error) {
 
 type ProposeWitnessSliceDataObjectList []ProposeWitnessSliceDataObject
 
+func (p *ProposeWitnessSliceDataObjectList) Add(accountId, nextId []byte, status AccountCellStatus) {
+	*p = append(*p, ProposeWitnessSliceDataObject{AccountId: accountId, Next: nextId, ItemType: status})
+}
+
 func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSliceDataObjectList, error) {
 	proposeCellData, err := ProposalCellDataFromSlice(bys, false)
 	if err != nil {
