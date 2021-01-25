@@ -148,18 +148,21 @@ func (c *ProposeCell) TypeScript() *types.Script {
 }
 
 func (c *ProposeCell) Data() ([]byte, error) {
-	tableBys := c.TableData()
-	hashBys, err := blake2b.Blake256(tableBys)
+	hashBys, err := blake2b.Blake160(c.ProposalCellData())
 	if err != nil {
 		return nil, err
 	}
-	return append(hashBys, tableBys...), nil
+	return hashBys, nil
 }
 
 func (c *ProposeCell) TableType() TableType {
-	return TableType_ACCOUNT_CELL
+	return TableType_PROPOSE_CELL
 }
 
 func (c *ProposeCell) TableData() []byte {
 	return c.p.Data.AsSlice()
+}
+
+func (c *ProposeCell) ProposalCellData() []byte {
+	return c.p.Data.New().AsSlice()
 }

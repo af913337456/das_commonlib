@@ -192,7 +192,7 @@ type ConfigCellDataBuilder struct {
 	apply_max_waiting_time                    Uint32
 	account_max_length                        Uint32
 	price_configs                             PriceConfigList
-	char_sets                                 CharSet
+	char_sets                                 CharSetList
 	min_ttl                                   Uint32
 	closing_limit_of_primary_market_auction   Uint32
 	closing_limit_of_secondary_market_auction Uint32
@@ -302,7 +302,7 @@ func (s *ConfigCellDataBuilder) PriceConfigs(v PriceConfigList) *ConfigCellDataB
 	return s
 }
 
-func (s *ConfigCellDataBuilder) CharSets(v CharSet) *ConfigCellDataBuilder {
+func (s *ConfigCellDataBuilder) CharSets(v CharSetList) *ConfigCellDataBuilder {
 	s.char_sets = v
 	return s
 }
@@ -328,7 +328,7 @@ func (s *ConfigCellDataBuilder) CodeHashTable(v CodeHashTable) *ConfigCellDataBu
 }
 
 func NewConfigCellDataBuilder() *ConfigCellDataBuilder {
-	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), code_hash_table: CodeHashTableDefault()}
+	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), code_hash_table: CodeHashTableDefault()}
 }
 
 type ConfigCellData struct {
@@ -343,7 +343,7 @@ func (s *ConfigCellData) AsSlice() []byte {
 }
 
 func ConfigCellDataDefault() ConfigCellData {
-	return *ConfigCellDataFromSliceUnchecked([]byte{30, 2, 0, 0, 60, 0, 0, 0, 64, 0, 0, 0, 65, 0, 0, 0, 66, 0, 0, 0, 70, 0, 0, 0, 74, 0, 0, 0, 78, 0, 0, 0, 82, 0, 0, 0, 86, 0, 0, 0, 90, 0, 0, 0, 202, 0, 0, 0, 206, 0, 0, 0, 210, 0, 0, 0, 214, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 112, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellDataFromSliceUnchecked([]byte{178, 1, 0, 0, 60, 0, 0, 0, 64, 0, 0, 0, 65, 0, 0, 0, 66, 0, 0, 0, 70, 0, 0, 0, 74, 0, 0, 0, 78, 0, 0, 0, 82, 0, 0, 0, 86, 0, 0, 0, 90, 0, 0, 0, 94, 0, 0, 0, 98, 0, 0, 0, 102, 0, 0, 0, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, error) {
@@ -447,7 +447,7 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = CharSetFromSlice(slice[offsets[9]:offsets[10]], compatible)
+	_, err = CharSetListFromSlice(slice[offsets[9]:offsets[10]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -554,10 +554,10 @@ func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
 	return PriceConfigListFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) CharSets() *CharSet {
+func (s *ConfigCellData) CharSets() *CharSetList {
 	start := unpackNumber(s.inner[40:])
 	end := unpackNumber(s.inner[44:])
-	return CharSetFromSliceUnchecked(s.inner[start:end])
+	return CharSetListFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ConfigCellData) MinTtl() *Uint32 {
@@ -971,10 +971,193 @@ func (s *PriceConfig) AsBuilder() PriceConfigBuilder {
 	return *ret
 }
 
+type CharSetListBuilder struct {
+	inner []CharSet
+}
+
+func (s *CharSetListBuilder) Build() CharSetList {
+	itemCount := len(s.inner)
+
+	b := new(bytes.Buffer)
+
+	// Empty dyn vector, just return size's bytes
+	if itemCount == 0 {
+		b.Write(packNumber(Number(HeaderSizeUint)))
+		return CharSetList{inner: b.Bytes()}
+	}
+
+	// Calculate first offset then loop for rest items offsets
+	totalSize := HeaderSizeUint * uint32(itemCount+1)
+	offsets := make([]uint32, 0, itemCount)
+	offsets = append(offsets, totalSize)
+	for i := 1; i < itemCount; i++ {
+		totalSize += uint32(len(s.inner[i-1].AsSlice()))
+		offsets = append(offsets, offsets[i-1]+uint32(len(s.inner[i-1].AsSlice())))
+	}
+	totalSize += uint32(len(s.inner[itemCount-1].AsSlice()))
+
+	b.Write(packNumber(Number(totalSize)))
+
+	for i := 0; i < itemCount; i++ {
+		b.Write(packNumber(Number(offsets[i])))
+	}
+
+	for i := 0; i < itemCount; i++ {
+		b.Write(s.inner[i].AsSlice())
+	}
+
+	return CharSetList{inner: b.Bytes()}
+}
+
+func (s *CharSetListBuilder) Set(v []CharSet) *CharSetListBuilder {
+	s.inner = v
+	return s
+}
+func (s *CharSetListBuilder) Push(v CharSet) *CharSetListBuilder {
+	s.inner = append(s.inner, v)
+	return s
+}
+func (s *CharSetListBuilder) Extend(iter []CharSet) *CharSetListBuilder {
+	for i := 0; i < len(iter); i++ {
+		s.inner = append(s.inner, iter[i])
+	}
+	return s
+}
+
+func NewCharSetListBuilder() *CharSetListBuilder {
+	return &CharSetListBuilder{[]CharSet{}}
+}
+
+type CharSetList struct {
+	inner []byte
+}
+
+func CharSetListFromSliceUnchecked(slice []byte) *CharSetList {
+	return &CharSetList{inner: slice}
+}
+func (s *CharSetList) AsSlice() []byte {
+	return s.inner
+}
+
+func CharSetListDefault() CharSetList {
+	return *CharSetListFromSliceUnchecked([]byte{4, 0, 0, 0})
+}
+
+func CharSetListFromSlice(slice []byte, compatible bool) (*CharSetList, error) {
+	sliceLen := len(slice)
+
+	if uint32(sliceLen) < HeaderSizeUint {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "CharSetList", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	totalSize := unpackNumber(slice)
+	if Number(sliceLen) != totalSize {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "CharSetList", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	if uint32(sliceLen) == HeaderSizeUint {
+		return &CharSetList{inner: slice}, nil
+	}
+
+	if uint32(sliceLen) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "CharSetList", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
+	if offsetFirst%4 != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"OffsetsNotMatch", "CharSetList", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	itemCount := offsetFirst/4 - 1
+	headerSize := HeaderSizeUint * (uint32(itemCount) + 1)
+	if uint32(sliceLen) < headerSize {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "CharSetList", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(headerSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsets := make([]uint32, itemCount)
+
+	for i := 0; i < int(itemCount); i++ {
+		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][4*i:]))
+	}
+
+	offsets = append(offsets, uint32(totalSize))
+
+	for i := 0; i < len(offsets); i++ {
+		if i&1 != 0 && offsets[i-1] > offsets[i] {
+			errMsg := strings.Join([]string{"OffsetsNotMatch", "CharSetList"}, " ")
+			return nil, errors.New(errMsg)
+		}
+	}
+
+	for i := 0; i < len(offsets); i++ {
+		if i&1 != 0 {
+			start := offsets[i-1]
+			end := offsets[i]
+			_, err := CharSetFromSlice(slice[start:end], compatible)
+
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return &CharSetList{inner: slice}, nil
+}
+
+func (s *CharSetList) TotalSize() uint {
+	return uint(unpackNumber(s.inner))
+}
+func (s *CharSetList) ItemCount() uint {
+	var number uint = 0
+	if uint32(s.TotalSize()) == HeaderSizeUint {
+		return number
+	}
+	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
+	return number
+}
+func (s *CharSetList) Len() uint {
+	return s.ItemCount()
+}
+func (s *CharSetList) IsEmpty() bool {
+	return s.Len() == 0
+}
+
+// if *CharSet is nil, index is out of bounds
+func (s *CharSetList) Get(index uint) *CharSet {
+	var b *CharSet
+	if index < s.Len() {
+		start_index := uint(HeaderSizeUint) * (1 + index)
+		start := unpackNumber(s.inner[start_index:])
+
+		if index == s.Len()-1 {
+			b = CharSetFromSliceUnchecked(s.inner[start:])
+		} else {
+			end_index := start_index + uint(HeaderSizeUint)
+			end := unpackNumber(s.inner[end_index:])
+			b = CharSetFromSliceUnchecked(s.inner[start:end])
+		}
+	}
+	return b
+}
+
+func (s *CharSetList) AsBuilder() CharSetListBuilder {
+	size := s.ItemCount()
+	t := NewCharSetListBuilder()
+	for i := uint(0); i < size; i++ {
+		t.Push(*s.Get(i))
+	}
+	return *t
+}
+
 type CharSetBuilder struct {
-	emoji Hash
-	en    Hash
-	zh    Hash
+	name   Uint32
+	global Uint8
+	chars  Chars
 }
 
 func (s *CharSetBuilder) Build() CharSet {
@@ -984,11 +1167,11 @@ func (s *CharSetBuilder) Build() CharSet {
 	offsets := make([]uint32, 0, 3)
 
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.emoji.AsSlice()))
+	totalSize += uint32(len(s.name.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.en.AsSlice()))
+	totalSize += uint32(len(s.global.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.zh.AsSlice()))
+	totalSize += uint32(len(s.chars.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -996,29 +1179,29 @@ func (s *CharSetBuilder) Build() CharSet {
 		b.Write(packNumber(Number(offsets[i])))
 	}
 
-	b.Write(s.emoji.AsSlice())
-	b.Write(s.en.AsSlice())
-	b.Write(s.zh.AsSlice())
+	b.Write(s.name.AsSlice())
+	b.Write(s.global.AsSlice())
+	b.Write(s.chars.AsSlice())
 	return CharSet{inner: b.Bytes()}
 }
 
-func (s *CharSetBuilder) Emoji(v Hash) *CharSetBuilder {
-	s.emoji = v
+func (s *CharSetBuilder) Name(v Uint32) *CharSetBuilder {
+	s.name = v
 	return s
 }
 
-func (s *CharSetBuilder) En(v Hash) *CharSetBuilder {
-	s.en = v
+func (s *CharSetBuilder) Global(v Uint8) *CharSetBuilder {
+	s.global = v
 	return s
 }
 
-func (s *CharSetBuilder) Zh(v Hash) *CharSetBuilder {
-	s.zh = v
+func (s *CharSetBuilder) Chars(v Chars) *CharSetBuilder {
+	s.chars = v
 	return s
 }
 
 func NewCharSetBuilder() *CharSetBuilder {
-	return &CharSetBuilder{emoji: HashDefault(), en: HashDefault(), zh: HashDefault()}
+	return &CharSetBuilder{name: Uint32Default(), global: Uint8Default(), chars: CharsDefault()}
 }
 
 type CharSet struct {
@@ -1033,7 +1216,7 @@ func (s *CharSet) AsSlice() []byte {
 }
 
 func CharSetDefault() CharSet {
-	return *CharSetFromSliceUnchecked([]byte{112, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *CharSetFromSliceUnchecked([]byte{25, 0, 0, 0, 16, 0, 0, 0, 20, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
 }
 
 func CharSetFromSlice(slice []byte, compatible bool) (*CharSet, error) {
@@ -1092,17 +1275,17 @@ func CharSetFromSlice(slice []byte, compatible bool) (*CharSet, error) {
 
 	var err error
 
-	_, err = HashFromSlice(slice[offsets[0]:offsets[1]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[0]:offsets[1]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = HashFromSlice(slice[offsets[1]:offsets[2]], compatible)
+	_, err = Uint8FromSlice(slice[offsets[1]:offsets[2]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = HashFromSlice(slice[offsets[2]:offsets[3]], compatible)
+	_, err = CharsFromSlice(slice[offsets[2]:offsets[3]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -1135,33 +1318,216 @@ func (s *CharSet) HasExtraFields() bool {
 	return 3 != s.FieldCount()
 }
 
-func (s *CharSet) Emoji() *Hash {
+func (s *CharSet) Name() *Uint32 {
 	start := unpackNumber(s.inner[4:])
 	end := unpackNumber(s.inner[8:])
-	return HashFromSliceUnchecked(s.inner[start:end])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *CharSet) En() *Hash {
+func (s *CharSet) Global() *Uint8 {
 	start := unpackNumber(s.inner[8:])
 	end := unpackNumber(s.inner[12:])
-	return HashFromSliceUnchecked(s.inner[start:end])
+	return Uint8FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *CharSet) Zh() *Hash {
-	var ret *Hash
+func (s *CharSet) Chars() *Chars {
+	var ret *Chars
 	start := unpackNumber(s.inner[12:])
 	if s.HasExtraFields() {
 		end := unpackNumber(s.inner[16:])
-		ret = HashFromSliceUnchecked(s.inner[start:end])
+		ret = CharsFromSliceUnchecked(s.inner[start:end])
 	} else {
-		ret = HashFromSliceUnchecked(s.inner[start:])
+		ret = CharsFromSliceUnchecked(s.inner[start:])
 	}
 	return ret
 }
 
 func (s *CharSet) AsBuilder() CharSetBuilder {
-	ret := NewCharSetBuilder().Emoji(*s.Emoji()).En(*s.En()).Zh(*s.Zh())
+	ret := NewCharSetBuilder().Name(*s.Name()).Global(*s.Global()).Chars(*s.Chars())
 	return *ret
+}
+
+type CharsBuilder struct {
+	inner []Bytes
+}
+
+func (s *CharsBuilder) Build() Chars {
+	itemCount := len(s.inner)
+
+	b := new(bytes.Buffer)
+
+	// Empty dyn vector, just return size's bytes
+	if itemCount == 0 {
+		b.Write(packNumber(Number(HeaderSizeUint)))
+		return Chars{inner: b.Bytes()}
+	}
+
+	// Calculate first offset then loop for rest items offsets
+	totalSize := HeaderSizeUint * uint32(itemCount+1)
+	offsets := make([]uint32, 0, itemCount)
+	offsets = append(offsets, totalSize)
+	for i := 1; i < itemCount; i++ {
+		totalSize += uint32(len(s.inner[i-1].AsSlice()))
+		offsets = append(offsets, offsets[i-1]+uint32(len(s.inner[i-1].AsSlice())))
+	}
+	totalSize += uint32(len(s.inner[itemCount-1].AsSlice()))
+
+	b.Write(packNumber(Number(totalSize)))
+
+	for i := 0; i < itemCount; i++ {
+		b.Write(packNumber(Number(offsets[i])))
+	}
+
+	for i := 0; i < itemCount; i++ {
+		b.Write(s.inner[i].AsSlice())
+	}
+
+	return Chars{inner: b.Bytes()}
+}
+
+func (s *CharsBuilder) Set(v []Bytes) *CharsBuilder {
+	s.inner = v
+	return s
+}
+func (s *CharsBuilder) Push(v Bytes) *CharsBuilder {
+	s.inner = append(s.inner, v)
+	return s
+}
+func (s *CharsBuilder) Extend(iter []Bytes) *CharsBuilder {
+	for i := 0; i < len(iter); i++ {
+		s.inner = append(s.inner, iter[i])
+	}
+	return s
+}
+
+func NewCharsBuilder() *CharsBuilder {
+	return &CharsBuilder{[]Bytes{}}
+}
+
+type Chars struct {
+	inner []byte
+}
+
+func CharsFromSliceUnchecked(slice []byte) *Chars {
+	return &Chars{inner: slice}
+}
+func (s *Chars) AsSlice() []byte {
+	return s.inner
+}
+
+func CharsDefault() Chars {
+	return *CharsFromSliceUnchecked([]byte{4, 0, 0, 0})
+}
+
+func CharsFromSlice(slice []byte, compatible bool) (*Chars, error) {
+	sliceLen := len(slice)
+
+	if uint32(sliceLen) < HeaderSizeUint {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "Chars", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	totalSize := unpackNumber(slice)
+	if Number(sliceLen) != totalSize {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Chars", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	if uint32(sliceLen) == HeaderSizeUint {
+		return &Chars{inner: slice}, nil
+	}
+
+	if uint32(sliceLen) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Chars", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
+	if offsetFirst%4 != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"OffsetsNotMatch", "Chars", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	itemCount := offsetFirst/4 - 1
+	headerSize := HeaderSizeUint * (uint32(itemCount) + 1)
+	if uint32(sliceLen) < headerSize {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "Chars", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(headerSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsets := make([]uint32, itemCount)
+
+	for i := 0; i < int(itemCount); i++ {
+		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][4*i:]))
+	}
+
+	offsets = append(offsets, uint32(totalSize))
+
+	for i := 0; i < len(offsets); i++ {
+		if i&1 != 0 && offsets[i-1] > offsets[i] {
+			errMsg := strings.Join([]string{"OffsetsNotMatch", "Chars"}, " ")
+			return nil, errors.New(errMsg)
+		}
+	}
+
+	for i := 0; i < len(offsets); i++ {
+		if i&1 != 0 {
+			start := offsets[i-1]
+			end := offsets[i]
+			_, err := BytesFromSlice(slice[start:end], compatible)
+
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return &Chars{inner: slice}, nil
+}
+
+func (s *Chars) TotalSize() uint {
+	return uint(unpackNumber(s.inner))
+}
+func (s *Chars) ItemCount() uint {
+	var number uint = 0
+	if uint32(s.TotalSize()) == HeaderSizeUint {
+		return number
+	}
+	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
+	return number
+}
+func (s *Chars) Len() uint {
+	return s.ItemCount()
+}
+func (s *Chars) IsEmpty() bool {
+	return s.Len() == 0
+}
+
+// if *Bytes is nil, index is out of bounds
+func (s *Chars) Get(index uint) *Bytes {
+	var b *Bytes
+	if index < s.Len() {
+		start_index := uint(HeaderSizeUint) * (1 + index)
+		start := unpackNumber(s.inner[start_index:])
+
+		if index == s.Len()-1 {
+			b = BytesFromSliceUnchecked(s.inner[start:])
+		} else {
+			end_index := start_index + uint(HeaderSizeUint)
+			end := unpackNumber(s.inner[end_index:])
+			b = BytesFromSliceUnchecked(s.inner[start:end])
+		}
+	}
+	return b
+}
+
+func (s *Chars) AsBuilder() CharsBuilder {
+	size := s.ItemCount()
+	t := NewCharsBuilder()
+	for i := uint(0); i < size; i++ {
+		t.Push(*s.Get(i))
+	}
+	return *t
 }
 
 type CodeHashTableBuilder struct {
