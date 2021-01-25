@@ -16,6 +16,11 @@ import (
  * Description:
  */
 
+type CellDepWithWitness struct {
+	CellDep     *types.CellDep
+	WitnessData []byte
+}
+
 // [das, type, table]
 type DASWitnessDataObj struct {
 	Tag       string `json:"tag"`

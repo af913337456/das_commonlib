@@ -62,17 +62,35 @@ func NewTransactionBuilder2(fromScript *types.Script, fee uint64) *TransactionBu
 	}
 }
 
-func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionBuilder {
-	if cell == nil {
+func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWithWitness) *TransactionBuilder {
+	if cellDep == nil {
 		return builder
 	}
 	// 如果已经存在，那么不再重复添加
 	for _, item := range builder.tx.CellDeps {
-		if item.OutPoint.TxHash == cell.OutPoint.TxHash && item.OutPoint.Index == cell.OutPoint.Index {
+		if item.OutPoint.TxHash == cellDep.CellDep.OutPoint.TxHash && item.OutPoint.Index == cellDep.CellDep.OutPoint.Index {
 			return builder
 		}
 	}
-	builder.tx.CellDeps = append(builder.tx.CellDeps, cell)
+	builder.tx.CellDeps = append(builder.tx.CellDeps, cellDep.CellDep)
+	if cellDep.WitnessData != nil {
+		builder.tx.Witnesses = append(builder.tx.Witnesses, cellDep.WitnessData)
+	}
+	return builder
+}
+
+func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionBuilder {
+	return builder.AddWitnessCellDep(&celltype.CellDepWithWitness{
+		CellDep:     cell,
+		WitnessData: nil,
+	})
+}
+
+func (builder *TransactionBuilder) AddWitnessCellDeps(cellDeps []celltype.CellDepWithWitness) *TransactionBuilder {
+	cellDepsSize := len(cellDeps)
+	for i := 0; i < cellDepsSize; i++ {
+		builder.AddWitnessCellDep(&cellDeps[i])
+	}
 	return builder
 }
 
