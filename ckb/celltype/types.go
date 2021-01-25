@@ -175,6 +175,7 @@ type AccountCellParam struct {
 type ParseDasWitnessBysDataObj struct {
 	WitnessObj            *DASWitnessDataObj
 	MoleculeData          *Data
+	MoleculeDepDataEntity *DataEntity
 	MoleculeOldDataEntity *DataEntity
 	MoleculeNewDataEntity *DataEntity
 }

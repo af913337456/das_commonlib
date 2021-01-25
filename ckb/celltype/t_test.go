@@ -31,3 +31,6 @@ func Test_AppendProposeWitnessSliceDataObjectList(t *testing.T) {
 	fmt.Println(string(p[0].AccountId))
 	fmt.Println(string(p[1].AccountId))
 }
+
+func Test_SliceValue(t *testing.T) {
+}

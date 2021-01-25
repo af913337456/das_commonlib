@@ -123,6 +123,15 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 		return nil, fmt.Errorf("fail to parse data: %s", err.Error())
 	}
 	ret.MoleculeData = data
+	if data.Dep().IsNone() {
+		ret.MoleculeDepDataEntity = nil
+	} else {
+		if depData, err := DataEntityFromSlice(data.Dep().AsSlice(), false); err != nil {
+			return nil, fmt.Errorf("fail to parse dep dataEntity: %s", err.Error())
+		} else {
+			ret.MoleculeDepDataEntity = depData
+		}
+	}
 	if data.Old().IsNone() {
 		ret.MoleculeOldDataEntity = nil
 	} else {
