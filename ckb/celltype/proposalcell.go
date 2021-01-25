@@ -85,10 +85,10 @@ table ProposalCellData {
 
 */
 
-var TestNetProposeCell = func(oldIndex, newIndex uint32, old, new *ProposalCellData) *ProposeCellParam {
+var TestNetProposeCell = func(depIndex, oldIndex, newIndex uint32, dep, old, new *ProposalCellData) *ProposeCellParam {
 	acp := &ProposeCellParam{
 		Version:      1,
-		Data:         *buildDasCommonMoleculeDataObj(oldIndex, newIndex, old, new),
+		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
 		CellCodeInfo: TestNet_ProposeCellScript,
 		AlwaysSpendableScriptInfo: DASCellBaseInfo{
 			Dep: DASCellBaseInfoDep{

@@ -157,8 +157,9 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 	return ret, nil
 }
 
-func buildDasCommonMoleculeDataObj(oldIndex, newIndex uint32, oldMolecule, newMolecule ICellData) *Data {
+func buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolecule, oldMolecule, newMolecule ICellData) *Data {
 	var (
+		depData DataEntity
 		oldData DataEntity
 		newData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(newIndex)).
@@ -168,6 +169,16 @@ func buildDasCommonMoleculeDataObj(oldIndex, newIndex uint32, oldMolecule, newMo
 		dataBuilder = NewDataBuilder().
 				New(NewDataEntityOptBuilder().Set(newData).Build())
 	)
+	if depMolecule != nil {
+		depData = NewDataEntityBuilder().
+			Index(GoUint32ToMoleculeU32(depIndex)).
+			Version(GoUint32ToMoleculeU32(1)).
+			Entity(*BytesFromSliceUnchecked(depMolecule.AsSlice())).
+			Build()
+		dataBuilder.Dep(NewDataEntityOptBuilder().Set(depData).Build())
+	} else {
+		dataBuilder.Dep(NewDataEntityOptBuilder().Build())
+	}
 	if oldMolecule != nil {
 		oldData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(oldIndex)).
@@ -175,6 +186,8 @@ func buildDasCommonMoleculeDataObj(oldIndex, newIndex uint32, oldMolecule, newMo
 			Entity(*BytesFromSliceUnchecked(oldMolecule.AsSlice())).
 			Build()
 		dataBuilder.Old(NewDataEntityOptBuilder().Set(oldData).Build())
+	} else {
+		dataBuilder.Old(NewDataEntityOptBuilder().Build())
 	}
 	d := dataBuilder.Build()
 	return &d

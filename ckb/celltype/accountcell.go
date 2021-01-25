@@ -20,10 +20,10 @@ table DataEntity {
     entity: Bytes, // 代表具体的数据结构
 }
 */
-var TestNetAccountCell = func(oldIndex, newIndex uint32, old, new *AccountCellData) *AccountCellParam {
+var TestNetAccountCell = func(depIndex, oldIndex, newIndex uint32, old, new *AccountCellData) *AccountCellParam {
 	acp := &AccountCellParam{
 		Version:      1,
-		Data:         *buildDasCommonMoleculeDataObj(oldIndex, newIndex, old, new),
+		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, nil, old, new),
 		CellCodeInfo: TestNet_AccountCellScript,
 		AlwaysSpendableScriptInfo: DASCellBaseInfo{
 			Dep: DASCellBaseInfoDep{
