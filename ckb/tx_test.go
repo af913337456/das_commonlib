@@ -2,6 +2,7 @@ package ckb
 
 import (
 	"encoding/hex"
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -52,10 +53,10 @@ func Test_TxBuilder(t *testing.T) {
 	cellData1 := celltype.NewConfigCellDataBuilder().Build()
 	// cellData2 := celltype.NewActionCellDataBuilder().Build()
 	// cellData3 := celltype.NewAccountCellDataBuilder().Build()
-
+	fmt.Println(cellData1)
 	txBuilder :=
 		builder.NewTransactionBuilder2(nil, 10000).
-			AddDasSpecOutput(celltype.NewAccountCell(celltype.TestNetStateCell(&cellData1)))
+			AddDasSpecOutput(celltype.NewAccountCell(nil))
 		// AddDasSpecOutput(celltype.NewActionCell(celltype.TestNetActionCell(&cellData2))).
 		// AddDasSpecOutput(celltype.NewAccountCell(celltype.TestNetAccountCell(&cellData3)))
 

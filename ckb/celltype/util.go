@@ -181,3 +181,24 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 	}
 	return nil, errors.New("FindSenderLockScriptByInputList not found")
 }
+
+func ChangeMoleculeDataNewToDep(originWitnessData []byte) ([]byte, error) {
+	witnessObj, err := NewDasWitnessDataFromSlice(originWitnessData)
+	if err != nil {
+		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep NewDasWitnessDataFromSlice err: %s", err.Error())
+	}
+	data, err := DataFromSlice(witnessObj.TableBys, false)
+	if err != nil {
+		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep DataFromSlice err: %s", err.Error())
+	}
+	// bys := data.New().AsSlice()
+	// dataNewBys := make([]byte, 0, len(bys))
+	depOpt, err := DataEntityOptFromSlice(data.New().AsSlice(), false)
+	if err != nil {
+		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep DataEntityFromSlice err: %s", err.Error())
+	}
+	newData := NewDataBuilder().New(DataEntityOptDefault()).Dep(*depOpt).Old(*data.Old()).Build()
+	newDataBytes := (&newData).AsSlice()
+	newWitnessData := NewDasWitnessData(witnessObj.TableType, newDataBytes)
+	return newWitnessData.ToWitness(), nil
+}
