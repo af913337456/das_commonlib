@@ -80,6 +80,14 @@ func GoTimeUnixToMoleculeBytes(timeSec int64) [8]Byte {
 	return timestampByteArr
 }
 
+func GoBytesToMoleculeAccountBytes(bys []byte) [20]Byte {
+	byteArr := [20]Byte{}
+	for index, bye := range bys {
+		byteArr[index] = *ByteFromSliceUnchecked([]byte{bye})
+	}
+	return byteArr
+}
+
 func GoCkbScriptToMoleculeScript(script types.Script) Script {
 	// 这里 data 类型应该就是 0x00 ，type 就是 0x01
 	ht := 0x00
