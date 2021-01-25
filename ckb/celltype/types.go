@@ -16,6 +16,11 @@ import (
  * Description:
  */
 
+type InputWithWitness struct {
+	CellInput   *types.CellInput
+	WitnessData []byte
+}
+
 type CellDepWithWitness struct {
 	CellDep     *types.CellDep
 	WitnessData []byte
