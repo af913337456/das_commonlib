@@ -228,6 +228,29 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 
 type ProposeWitnessSliceDataObjectLL []ProposeWitnessSliceDataObjectList
 
-func (p ProposeWitnessSliceDataObjectLL) ToMoleculeData() Data {
-	return NewDataBuilder().Build()
+func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockScript *types.Script) ProposalCellData {
+	sliceList := make([]SL, 0, len(p))
+	for _, slice := range p {
+		proposeItemList := make([]ProposalItem, 0, len(slice))
+		for _, item := range slice {
+			accountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.AccountId)).Build()
+			nextAccountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.Next)).Build()
+			proposeItem := NewProposalItemBuilder().
+				AccountId(accountId).
+				Next(
+					NewAccountIdOptBuilder().
+						Set(nextAccountId).
+						Build()).
+				ItemType(GoUint8ToMoleculeU8(uint8(item.ItemType))).
+				Build()
+			proposeItemList = append(proposeItemList, proposeItem)
+			NewSLBuilder().Set(proposeItemList)
+		}
+		sliceList = append(sliceList, NewSLBuilder().Set(proposeItemList).Build())
+	}
+	proposalCellData := NewProposalCellDataBuilder().
+		StarterLock(GoCkbScriptToMoleculeScript(*incomeLockScript)).
+		Slices(NewSliceListBuilder().Set(sliceList).Build()).
+		Build()
+	return proposalCellData
 }
