@@ -23,9 +23,9 @@ type CellDepWithWitness struct {
 
 // [das, type, table]
 type DASWitnessDataObj struct {
-	Tag       string `json:"tag"`
-	TableType uint32 `json:"table_type"`
-	TableBys  []byte `json:"table_bys"`
+	Tag       string    `json:"tag"`
+	TableType TableType `json:"table_type"`
+	TableBys  []byte    `json:"table_bys"`
 }
 
 /**
@@ -47,14 +47,14 @@ func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
 	}
 	return &DASWitnessDataObj{
 		Tag:       tag,
-		TableType: tableType,
+		TableType: TableType(tableType),
 		TableBys:  rawData[11:],
 	}, nil
 }
 func NewDasWitnessData(tableType TableType, tableBys []byte) *DASWitnessDataObj {
 	return &DASWitnessDataObj{
 		Tag:       witnessDas,
-		TableType: uint32(tableType),
+		TableType: tableType,
 		TableBys:  tableBys,
 	}
 }
