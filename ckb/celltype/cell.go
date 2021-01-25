@@ -4,7 +4,6 @@ package celltype
 
 import (
 	"bytes"
-	"encoding/binary"
 	"errors"
 	"strconv"
 	"strings"
