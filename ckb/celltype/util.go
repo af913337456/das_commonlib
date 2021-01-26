@@ -212,11 +212,10 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 	return nil, errors.New("FindSenderLockScriptByInputList not found")
 }
 
-const sameIndexMark = 999999
-
-func ChangeMoleculeDataSameIndex(changeType DataEntityChangeType, originWitnessData []byte) ([]byte, error) {
-	return ChangeMoleculeData(changeType, sameIndexMark, originWitnessData)
-}
+// const sameIndexMark = 999999
+// func ChangeMoleculeDataSameIndex(changeType DataEntityChangeType, originWitnessData []byte) ([]byte, error) {
+// 	return ChangeMoleculeData(changeType,sameIndexMark, originWitnessData)
+// }
 
 func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWitnessData []byte) ([]byte, error) {
 	witnessObj, err := NewDasWitnessDataFromSlice(originWitnessData)
@@ -230,22 +229,32 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	// bys := data.New().AsSlice()
 	// dataNewBys := make([]byte, 0, len(bys))
 	newData := Data{}
+	depToX := func(changeType DataEntityChangeType) error {
+		if entityOpt := oldData.Dep(); !entityOpt.IsNone() {
+			entity, _ := entityOpt.IntoDataEntity()
+			dataEntity := NewDataEntityBuilder().
+				Version(*entity.Version()).
+				Index(GoUint32ToMoleculeU32(index)). // reset index
+				Entity(*entity.Entity()).
+				Build()
+			dataEntityOpt := NewDataEntityOptBuilder().Set(dataEntity).Build()
+			if changeType == DepToInput {
+				newData = NewDataBuilder().New(DataEntityOptDefault()).Old(dataEntityOpt).Dep(DataEntityOptDefault()).Build()
+			} else if changeType == depToDep {
+				newData = NewDataBuilder().New(DataEntityOptDefault()).Old(DataEntityOptDefault()).Dep(dataEntityOpt).Build()
+			}
+		} else {
+			return errors.New("ChangeMoleculeData both new ans dep are empty data")
+		}
+		return nil
+	}
 	switch changeType {
 	case NewToDep:
 		oldNewDataEntity, err := oldData.New().IntoDataEntity()
 		if err != nil {
 			// no data
-			if depEntityOpt := oldData.Dep(); !depEntityOpt.IsNone() {
-				depEntity, _ := depEntityOpt.IntoDataEntity()
-				depDataEntity := NewDataEntityBuilder().
-					Version(*depEntity.Version()).
-					Index(GoUint32ToMoleculeU32(index)). // reset index
-					Entity(*depEntity.Entity()).
-					Build()
-				depDataEntityOpt := NewDataEntityOptBuilder().Set(depDataEntity).Build()
-				newData = NewDataBuilder().New(DataEntityOptDefault()).Old(DataEntityOptDefault()).Dep(depDataEntityOpt).Build()
-			} else {
-				return nil, errors.New("ChangeMoleculeData both new ans dep are empty data")
+			if err := depToX(depToDep); err != nil {
+				return nil, err
 			}
 		} else {
 			depDataEntity := NewDataEntityBuilder().
@@ -260,34 +269,24 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	case NewToInput:
 		oldNewDataEntity, err := oldData.New().IntoDataEntity()
 		if err != nil {
-			return nil, fmt.Errorf("ChangeMoleculeData new.IntoDataEntity err: %s", err.Error())
+			// no data
+			if err := depToX(DepToInput); err != nil {
+				return nil, err
+			}
+		} else {
+			oldDataEntity := NewDataEntityBuilder().
+				Version(*oldNewDataEntity.Version()).
+				Index(GoUint32ToMoleculeU32(index)).
+				Entity(*oldNewDataEntity.Entity()).
+				Build()
+			oldDataEntityOpt := NewDataEntityOptBuilder().Set(oldDataEntity).Build()
+			newData = NewDataBuilder().New(DataEntityOptDefault()).Old(oldDataEntityOpt).Dep(DataEntityOptDefault()).Build()
 		}
-		oldDataEntity := NewDataEntityBuilder().
-			Version(*oldNewDataEntity.Version()).
-			Index(GoUint32ToMoleculeU32(index)).
-			Entity(*oldNewDataEntity.Entity()).
-			Build()
-		oldDataEntityOpt := NewDataEntityOptBuilder().Set(oldDataEntity).Build()
-		newData = NewDataBuilder().New(DataEntityOptDefault()).Old(oldDataEntityOpt).Dep(DataEntityOptDefault()).Build()
 		break
 	case DepToInput:
-		depNewDataEntity, err := oldData.Dep().IntoDataEntity()
-		if err != nil {
-			return nil, fmt.Errorf("ChangeMoleculeData dep.IntoDataEntity err: %s", err.Error())
+		if err := depToX(DepToInput); err != nil {
+			return nil, err
 		}
-		indexUint32 := Uint32{}
-		if index == sameIndexMark {
-			indexUint32 = *depNewDataEntity.Index()
-		} else {
-			indexUint32 = GoUint32ToMoleculeU32(index)
-		}
-		oldDataEntity := NewDataEntityBuilder().
-			Version(*depNewDataEntity.Version()).
-			Index(indexUint32).
-			Entity(*depNewDataEntity.Entity()).
-			Build()
-		oldDataEntityOpt := NewDataEntityOptBuilder().Set(oldDataEntity).Build()
-		newData = NewDataBuilder().New(DataEntityOptDefault()).Old(oldDataEntityOpt).Dep(DataEntityOptDefault()).Build()
 		break
 	default:
 		return nil, errors.New("unSupport changeType")

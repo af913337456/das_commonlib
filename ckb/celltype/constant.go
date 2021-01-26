@@ -55,6 +55,7 @@ const (
 	NewToDep   DataEntityChangeType = 0
 	NewToInput DataEntityChangeType = 1
 	DepToInput DataEntityChangeType = 2
+	depToDep   DataEntityChangeType = 3
 )
 
 const (
