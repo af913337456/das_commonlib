@@ -55,6 +55,11 @@ const (
 )
 
 const (
+	CkbSize_AccountCell    = 147 * OneCkb
+	CkbSize_PreAccountCell = 147 * OneCkb
+)
+
+const (
 	Action_ConfigState           = "config_state"
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"
