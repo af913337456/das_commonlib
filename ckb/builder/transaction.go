@@ -113,19 +113,28 @@ func (builder *TransactionBuilder) AddInput(cell *types.CellInput, thisCellCap u
 	return builder
 }
 
-func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []celltype.InputWithWitness) *TransactionBuilder {
+func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []celltype.InputWithWitness) (*TransactionBuilder, error) {
 	size := len(cellInputs)
 	for i := 0; i < size; i++ {
 		input := cellInputs[i]
-		builder.AddWitnessInput(input)
+		if _, err := builder.AddWitnessInput(input); err != nil {
+			return nil, fmt.Errorf("AddWitnessInputs %s", err.Error())
+		}
 	}
-	return builder
+	return builder, nil
 }
 
-func (builder *TransactionBuilder) AddWitnessInput(cellInput celltype.InputWithWitness) *TransactionBuilder {
+func (builder *TransactionBuilder) AddWitnessInput(cellInput celltype.InputWithWitness) (*TransactionBuilder, error) {
 	builder.AddInput(cellInput.CellInput, cellInput.CellCap)
-	builder.tx.Witnesses = append(builder.tx.Witnesses, cellInput.WitnessData)
-	return builder
+	if cellInput.GetWitnessData != nil {
+		index := uint32(len(builder.tx.Inputs) - 1)
+		witnessData, err := cellInput.GetWitnessData(index)
+		if err != nil {
+			return nil, fmt.Errorf("AddWitnessInput err: %s", err.Error())
+		}
+		builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)
+	}
+	return builder, nil
 }
 
 // 自动计算需要的 input

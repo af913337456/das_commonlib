@@ -17,9 +17,9 @@ import (
  */
 
 type InputWithWitness struct {
-	CellCap     uint64
-	CellInput   *types.CellInput
-	WitnessData []byte
+	CellCap        uint64
+	CellInput      *types.CellInput
+	GetWitnessData CellDepWithWitnessFunc
 }
 
 type CellDepWithWitnessFunc func(index uint32) ([]byte, error)
