@@ -1,15 +1,12 @@
 package builder
 
 import (
-	"context"
 	"encoding/binary"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
 	"github.com/nervosnetwork/ckb-sdk-go/address"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
-	"github.com/nervosnetwork/ckb-sdk-go/indexer"
-	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/transaction"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
@@ -105,6 +102,21 @@ func (builder *TransactionBuilder) AddCellDeps(cellDeps []types.CellDep) *Transa
 func (builder *TransactionBuilder) AddInput(cell *types.CellInput, thisCellCap uint64) *TransactionBuilder {
 	builder.totalInputCap = builder.totalInputCap + thisCellCap
 	builder.tx.Inputs = append(builder.tx.Inputs, cell)
+	return builder
+}
+
+func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []celltype.InputWithWitness) *TransactionBuilder {
+	size := len(cellInputs)
+	for i := 0; i < size; i++ {
+		input := cellInputs[i]
+		builder.AddWitnessInput(input)
+	}
+	return builder
+}
+
+func (builder *TransactionBuilder) AddWitnessInput(cellInput celltype.InputWithWitness) *TransactionBuilder {
+	builder.AddInput(cellInput.CellInput, cellInput.CellCap)
+	builder.tx.Witnesses = append(builder.tx.Witnesses, cellInput.WitnessData)
 	return builder
 }
 
@@ -281,109 +293,6 @@ func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
 	return nil
 }
 
-type DASTransactionBuilder struct {
-	From        *types.Script
-	To          *types.Script
-	Amount      uint64
-	Fee         uint64
-	group       []int
-	witnessArgs *types.WitnessArgs
-	tx          *types.Transaction
-}
-
-func NewDASNormalTransactionBuilder(from, to string, amount, fee uint64) (*DASTransactionBuilder, error) {
-	fromAddress, err := address.Parse(from)
-	if err != nil {
-		return nil, fmt.Errorf("parse from address %s error: %v", from, err)
-	}
-	toAddress, err := address.Parse(to)
-	if err != nil {
-		return nil, fmt.Errorf("parse to address %s error: %v", to, err)
-	}
-	if fromAddress.Mode != toAddress.Mode {
-		return nil, fmt.Errorf("from address and to address with diffrent network: %v:%v", fromAddress.Mode, toAddress.Mode)
-	}
-	return &DASTransactionBuilder{
-		From:   fromAddress.Script,
-		To:     toAddress.Script,
-		Amount: amount,
-		Fee:    fee,
-	}, nil
-}
-
-func (p *DASTransactionBuilder) GenerateTx(client rpc.Client) (*types.Transaction, error) {
-	return generateTxWithIndexer(client, p)
-}
-
-func generateTxWithIndexer(client rpc.Client, p *DASTransactionBuilder) (*types.Transaction, error) {
-	searchKey := &indexer.SearchKey{
-		Script:     p.From,
-		ScriptType: indexer.ScriptTypeLock,
-	}
-	collector := utils.NewLiveCellCollector(client, searchKey, indexer.SearchOrderAsc, 1000, "", utils.NewCapacityLiveCellProcessor(p.Amount+p.Fee))
-	result, err := collector.Collect()
-	if err != nil {
-		return nil, fmt.Errorf("collect cell error: %v", err)
-	}
-
-	if result.Capacity < p.Amount+p.Fee {
-		return nil, fmt.Errorf("insufficient balance: %d", result.Capacity)
-	}
-
-	systemScripts, err := utils.NewSystemScripts(client)
-	if err != nil {
-		return nil, fmt.Errorf("load system script error: %v", err)
-	}
-
-	tx := transaction.NewSecp256k1SingleSigTx(systemScripts)
-	tx.Outputs = append(tx.Outputs, &types.CellOutput{
-		Capacity: p.Amount,
-		Lock:     p.To,
-	})
-	tx.OutputsData = [][]byte{{}}
-
-	if result.Capacity-p.Amount-p.Fee > 0 {
-		if result.Capacity-p.Amount-p.Fee >= 6100000000 {
-			tx.Outputs = append(tx.Outputs, &types.CellOutput{ // 找零，如果钱包内还有 CKB 剩余的话，剩余 CKB 的数量不能小于 61 CKB
-				Capacity: result.Capacity - p.Amount - p.Fee,
-				Lock:     p.From,
-			})
-			tx.OutputsData = [][]byte{{}, {}}
-		} else {
-			tx.Outputs[0].Capacity = result.Capacity - p.Fee // 全部 CKB 都转出去
-		}
-	}
-	var inputs []*types.CellInput
-	for _, cell := range result.LiveCells {
-		input := &types.CellInput{
-			Since: 0,
-			PreviousOutput: &types.OutPoint{
-				TxHash: cell.OutPoint.TxHash,
-				Index:  cell.OutPoint.Index,
-			},
-		}
-		inputs = append(inputs, input)
-	}
-	group, witnessArgs, err := transaction.AddInputsForTransaction(tx, inputs)
-	if err != nil {
-		return nil, fmt.Errorf("add inputs to transaction error: %v", err)
-	}
-
-	p.group = group
-	p.witnessArgs = witnessArgs
-	p.tx = tx
-	return tx, err
-}
-
-func (p *DASTransactionBuilder) Sign(key crypto.Key) (*types.Transaction, error) {
-	err := transaction.SingleSignTransaction(p.tx, p.group, p.witnessArgs, key)
-	if err != nil {
-		return nil, fmt.Errorf("sign transaction error: %v", err)
-	}
-
-	return p.tx, err
-}
-
-func (p *DASTransactionBuilder) Send(client rpc.Client) (*types.Hash, error) {
-	return client.SendTransaction(context.Background(), p.tx)
-}
+// func (p *DASTransactionBuilder) Send(client rpc.Client) (*types.Hash, error) {
+// 	return client.SendTransaction(context.Background(), p.tx)
+// }
