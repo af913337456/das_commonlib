@@ -237,13 +237,13 @@ func (builder *TransactionBuilder) Tx() *types.Transaction {
 	return builder.tx
 }
 
-func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
+func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
 	data, _ := transaction.EmptyWitnessArg.Serialize() // 对应前 65 字节的签名信息
 	length := make([]byte, 8)
 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
 	hash, err := builder.tx.ComputeHash()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	message := append(hash.Bytes(), length...)
 	message = append(message, data...)
@@ -254,7 +254,6 @@ func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
 	for i := 1; i < inputSize; i++ {
 		emptyWitnessList = append(emptyWitnessList, []byte{})
 	}
-
 	// 添加自定义的 witness 见证数据到签名
 	if len(emptyWitnessList) > 0 {
 		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
@@ -268,8 +267,16 @@ func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
 		message = append(message, length...) // 前 8 字节不变
 		message = append(message, _wData...) // 实际数据
 	}
-
 	if message, err = blake2b.Blake256(message); err != nil {
+		return nil, err
+	} else {
+		return message, nil
+	}
+}
+
+func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
+	message, err := builder.BuildTransaction()
+	if err != nil {
 		return err
 	}
 	if signed, err := key.Sign(message); err != nil {
@@ -292,7 +299,3 @@ func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
 	}
 	return nil
 }
-
-// func (p *DASTransactionBuilder) Send(client rpc.Client) (*types.Hash, error) {
-// 	return client.SendTransaction(context.Background(), p.tx)
-// }
