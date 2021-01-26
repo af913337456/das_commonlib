@@ -17,6 +17,7 @@ const AccountCellDataAccountIdStartIndex = 72
 
 type TableType uint32
 type AccountCellStatus uint8
+type DataEntityChangeType uint
 
 func (a AccountCellStatus) Str() string {
 	switch a {
@@ -45,6 +46,12 @@ const (
 	AccountCellStatus_Exist    AccountCellStatus = 0
 	AccountCellStatus_Proposed AccountCellStatus = 1
 	AccountCellStatus_New      AccountCellStatus = 2
+)
+
+const (
+	NewToDep   DataEntityChangeType = 0
+	NewToInput DataEntityChangeType = 1
+	DepToInput DataEntityChangeType = 2
 )
 
 const (

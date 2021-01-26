@@ -212,22 +212,61 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 	return nil, errors.New("FindSenderLockScriptByInputList not found")
 }
 
-func ChangeMoleculeDataNewToDep(originWitnessData []byte) ([]byte, error) {
+func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWitnessData []byte) ([]byte, error) {
 	witnessObj, err := NewDasWitnessDataFromSlice(originWitnessData)
 	if err != nil {
 		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep NewDasWitnessDataFromSlice err: %s", err.Error())
 	}
-	data, err := DataFromSlice(witnessObj.TableBys, false)
+	oldData, err := DataFromSlice(witnessObj.TableBys, false)
 	if err != nil {
 		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep DataFromSlice err: %s", err.Error())
 	}
 	// bys := data.New().AsSlice()
 	// dataNewBys := make([]byte, 0, len(bys))
-	depOpt, err := DataEntityOptFromSlice(data.New().AsSlice(), false)
-	if err != nil {
-		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep DataEntityFromSlice err: %s", err.Error())
+	newData := Data{}
+	switch changeType {
+	case NewToDep:
+		oldNewDataEntity, err := oldData.New().IntoDataEntity()
+		if err != nil {
+			return nil, fmt.Errorf("ChangeMoleculeDataNewToDep new.IntoDataEntity err: %s", err.Error())
+		}
+		depDataEntity := NewDataEntityBuilder().
+			Version(*oldNewDataEntity.Version()).
+			Index(GoUint32ToMoleculeU32(index)).
+			Entity(*oldNewDataEntity.Entity()).
+			Build()
+		depDataEntityOpt := NewDataEntityOptBuilder().Set(depDataEntity).Build()
+		newData = NewDataBuilder().New(DataEntityOptDefault()).Old(DataEntityOptDefault()).Dep(depDataEntityOpt).Build()
+		break
+	case NewToInput:
+		oldNewDataEntity, err := oldData.New().IntoDataEntity()
+		if err != nil {
+			return nil, fmt.Errorf("ChangeMoleculeDataNewToDep new.IntoDataEntity err: %s", err.Error())
+		}
+		oldDataEntity := NewDataEntityBuilder().
+			Version(*oldNewDataEntity.Version()).
+			Index(GoUint32ToMoleculeU32(index)).
+			Entity(*oldNewDataEntity.Entity()).
+			Build()
+		oldDataEntityOpt := NewDataEntityOptBuilder().Set(oldDataEntity).Build()
+		newData = NewDataBuilder().New(DataEntityOptDefault()).Old(oldDataEntityOpt).Dep(DataEntityOptDefault()).Build()
+		break
+	case DepToInput:
+		depNewDataEntity, err := oldData.Dep().IntoDataEntity()
+		if err != nil {
+			return nil, fmt.Errorf("ChangeMoleculeDataNewToDep dep.IntoDataEntity err: %s", err.Error())
+		}
+		oldDataEntity := NewDataEntityBuilder().
+			Version(*depNewDataEntity.Version()).
+			Index(GoUint32ToMoleculeU32(index)).
+			Entity(*depNewDataEntity.Entity()).
+			Build()
+		oldDataEntityOpt := NewDataEntityOptBuilder().Set(oldDataEntity).Build()
+		newData = NewDataBuilder().New(DataEntityOptDefault()).Old(oldDataEntityOpt).Dep(DataEntityOptDefault()).Build()
+		break
+	default:
+		return nil, errors.New("unSupport changeType")
 	}
-	newData := NewDataBuilder().New(DataEntityOptDefault()).Dep(*depOpt).Old(*data.Old()).Build()
 	newDataBytes := (&newData).AsSlice()
 	newWitnessData := NewDasWitnessData(witnessObj.TableType, newDataBytes)
 	return newWitnessData.ToWitness(), nil
