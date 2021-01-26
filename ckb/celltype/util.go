@@ -215,11 +215,11 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWitnessData []byte) ([]byte, error) {
 	witnessObj, err := NewDasWitnessDataFromSlice(originWitnessData)
 	if err != nil {
-		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep NewDasWitnessDataFromSlice err: %s", err.Error())
+		return nil, fmt.Errorf("ChangeMoleculeData NewDasWitnessDataFromSlice err: %s", err.Error())
 	}
 	oldData, err := DataFromSlice(witnessObj.TableBys, false)
 	if err != nil {
-		return nil, fmt.Errorf("ChangeMoleculeDataNewToDep DataFromSlice err: %s", err.Error())
+		return nil, fmt.Errorf("ChangeMoleculeData DataFromSlice err: %s", err.Error())
 	}
 	// bys := data.New().AsSlice()
 	// dataNewBys := make([]byte, 0, len(bys))
@@ -228,20 +228,33 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	case NewToDep:
 		oldNewDataEntity, err := oldData.New().IntoDataEntity()
 		if err != nil {
-			return nil, fmt.Errorf("ChangeMoleculeDataNewToDep new.IntoDataEntity err: %s", err.Error())
+			// no data
+			if depEntityOpt := oldData.Dep(); !depEntityOpt.IsNone() {
+				depEntity, _ := depEntityOpt.IntoDataEntity()
+				depDataEntity := NewDataEntityBuilder().
+					Version(*depEntity.Version()).
+					Index(GoUint32ToMoleculeU32(index)). // reset index
+					Entity(*depEntity.Entity()).
+					Build()
+				depDataEntityOpt := NewDataEntityOptBuilder().Set(depDataEntity).Build()
+				newData = NewDataBuilder().New(DataEntityOptDefault()).Old(DataEntityOptDefault()).Dep(depDataEntityOpt).Build()
+			} else {
+				return nil, errors.New("ChangeMoleculeData both new ans dep are empty data")
+			}
+		} else {
+			depDataEntity := NewDataEntityBuilder().
+				Version(*oldNewDataEntity.Version()).
+				Index(GoUint32ToMoleculeU32(index)).
+				Entity(*oldNewDataEntity.Entity()).
+				Build()
+			depDataEntityOpt := NewDataEntityOptBuilder().Set(depDataEntity).Build()
+			newData = NewDataBuilder().New(DataEntityOptDefault()).Old(DataEntityOptDefault()).Dep(depDataEntityOpt).Build()
 		}
-		depDataEntity := NewDataEntityBuilder().
-			Version(*oldNewDataEntity.Version()).
-			Index(GoUint32ToMoleculeU32(index)).
-			Entity(*oldNewDataEntity.Entity()).
-			Build()
-		depDataEntityOpt := NewDataEntityOptBuilder().Set(depDataEntity).Build()
-		newData = NewDataBuilder().New(DataEntityOptDefault()).Old(DataEntityOptDefault()).Dep(depDataEntityOpt).Build()
 		break
 	case NewToInput:
 		oldNewDataEntity, err := oldData.New().IntoDataEntity()
 		if err != nil {
-			return nil, fmt.Errorf("ChangeMoleculeDataNewToDep new.IntoDataEntity err: %s", err.Error())
+			return nil, fmt.Errorf("ChangeMoleculeData new.IntoDataEntity err: %s", err.Error())
 		}
 		oldDataEntity := NewDataEntityBuilder().
 			Version(*oldNewDataEntity.Version()).
@@ -254,7 +267,7 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	case DepToInput:
 		depNewDataEntity, err := oldData.Dep().IntoDataEntity()
 		if err != nil {
-			return nil, fmt.Errorf("ChangeMoleculeDataNewToDep dep.IntoDataEntity err: %s", err.Error())
+			return nil, fmt.Errorf("ChangeMoleculeData dep.IntoDataEntity err: %s", err.Error())
 		}
 		oldDataEntity := NewDataEntityBuilder().
 			Version(*depNewDataEntity.Version()).
