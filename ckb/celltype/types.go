@@ -76,7 +76,7 @@ func (d *DASWitnessDataObj) ToWitness() []byte {
 }
 
 type DASCellBaseInfoDep struct {
-	TxHash  string        `json:"tx_hash"`
+	TxHash  types.Hash    `json:"tx_hash"`
 	TxIndex uint          `json:"tx_index"`
 	DepType types.DepType `json:"dep_type"`
 }
@@ -84,7 +84,7 @@ type DASCellBaseInfoDep struct {
 func (c DASCellBaseInfoDep) ToDepCell() *types.CellDep {
 	return &types.CellDep{
 		OutPoint: &types.OutPoint{
-			TxHash: types.HexToHash(c.TxHash),
+			TxHash: c.TxHash,
 			Index:  c.TxIndex,
 		},
 		DepType: c.DepType,
@@ -92,14 +92,22 @@ func (c DASCellBaseInfoDep) ToDepCell() *types.CellDep {
 }
 
 type DASCellBaseInfoOut struct {
-	CodeHash     string               `json:"code_hash"`
+	CodeHash     types.Hash           `json:"code_hash"`
 	CodeHashType types.ScriptHashType `json:"code_hash_type"`
 	Args         []byte               `json:"args"`
 }
 
+func DASCellBaseInfoOutFromScript(script *types.Script) DASCellBaseInfoOut {
+	return DASCellBaseInfoOut{
+		CodeHash:     script.CodeHash,
+		CodeHashType: script.HashType,
+		Args:         script.Args,
+	}
+}
+
 func (c DASCellBaseInfoOut) SameScript(script *types.Script) bool {
 	current := &types.Script{
-		CodeHash: types.HexToHash(c.CodeHash),
+		CodeHash: c.CodeHash,
 		HashType: c.CodeHashType,
 		Args:     c.Args,
 	}
@@ -111,12 +119,15 @@ type DASCellBaseInfo struct {
 	Out DASCellBaseInfoOut `json:"out"`
 }
 
-// type ActionCellParam struct {
-// 	Version                   uint32          `json:"version"`
-// 	Data                      *ActionCellData `json:"data"` // todo 换成 actionCellData
-// 	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
-// 	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
-// }
+type ApplyRegisterCellParam struct {
+	Version              uint32          `json:"version"`
+	PubkeyHash           string          `json:"pubkey_hash"`
+	Account              string          `json:"account"`
+	Timestamp            uint64          `json:"timestamp"`
+	CellCodeInfo         DASCellBaseInfo `json:"cell_code_info"`
+	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`
+}
+
 //
 // type StateCellParam struct {
 // 	Version                   uint32          `json:"version"`

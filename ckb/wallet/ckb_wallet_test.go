@@ -11,9 +11,9 @@ import "testing"
  */
 
 func Test_InitWallet(t *testing.T) {
-	key, err := InitCkbWallet("")
+	key, err := InitCkbWallet("", nil)
 	if err != nil {
 		panic(err)
 	}
-	t.Log(key.PubKey())
+	t.Log(key.Secp256k1Key.PubKey())
 }
