@@ -15,6 +15,8 @@ const OneCkb = uint64(1e8)
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
 
+var EmptyAccountId = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+
 type TableType uint32
 type AccountCellStatus uint8
 type DataEntityChangeType uint
@@ -38,7 +40,7 @@ const (
 	// TableType_REGISTER_CELL TableType = 3
 	TableType_ON_SALE_CELL     TableType = 3
 	TableType_BIDDING_CELL     TableType = 4
-	TableType_PROPOSE_CELL     TableType = 5 // todo change it
+	TableType_PROPOSE_CELL     TableType = 5
 	TableType_PRE_ACCOUNT_CELL TableType = 6
 )
 

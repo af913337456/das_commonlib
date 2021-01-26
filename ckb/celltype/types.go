@@ -170,12 +170,22 @@ type ProposeCellParam struct {
 	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
 }
 
+type AccountCellFullData struct {
+	NextAccountId []byte          `json:"next_account_id"`
+	AccountInfo   AccountCellData `json:"-"`
+}
+
+type AccountCellDatas struct {
+	DepAccountCellData *AccountCellFullData `json:"-"`
+	OldAccountCellData *AccountCellFullData `json:"-"`
+	NewAccountCellData *AccountCellFullData `json:"-"`
+}
 type AccountCellParam struct {
-	// AccountCommonParam
-	Version                   uint32          `json:"version"`
-	Data                      Data            `json:"data"`
-	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+	AccountCellDatas          AccountCellDatas `json:"-"`
+	Version                   uint32           `json:"version"`
+	Data                      Data             `json:"data"`
+	CellCodeInfo              DASCellBaseInfo  `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo  `json:"always_spendable_script_info"`
 }
 
 type ParseDasWitnessBysDataObj struct {

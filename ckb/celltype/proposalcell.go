@@ -164,5 +164,6 @@ func (c *ProposeCell) TableData() []byte {
 }
 
 func (c *ProposeCell) ProposalCellData() []byte {
-	return c.p.Data.New().AsSlice()
+	entity, _ := c.p.Data.New().IntoDataEntity()
+	return entity.AsSlice()
 }
