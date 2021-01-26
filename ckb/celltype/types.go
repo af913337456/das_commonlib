@@ -22,9 +22,11 @@ type InputWithWitness struct {
 	WitnessData []byte
 }
 
+type CellDepWithWitnessFunc func(index uint32) []byte
+
 type CellDepWithWitness struct {
-	CellDep     *types.CellDep
-	WitnessData []byte
+	CellDep        *types.CellDep
+	GetWitnessData CellDepWithWitnessFunc
 }
 
 // [das, type, table]

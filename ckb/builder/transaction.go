@@ -70,16 +70,17 @@ func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWi
 		}
 	}
 	builder.tx.CellDeps = append(builder.tx.CellDeps, cellDep.CellDep)
-	if cellDep.WitnessData != nil {
-		builder.tx.Witnesses = append(builder.tx.Witnesses, cellDep.WitnessData)
+	if cellDep.GetWitnessData != nil {
+		cellDepIndex := uint32(len(builder.tx.CellDeps)) - 1
+		builder.tx.Witnesses = append(builder.tx.Witnesses, cellDep.GetWitnessData(cellDepIndex))
 	}
 	return builder
 }
 
 func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionBuilder {
 	return builder.AddWitnessCellDep(&celltype.CellDepWithWitness{
-		CellDep:     cell,
-		WitnessData: nil,
+		CellDep:        cell,
+		GetWitnessData: nil,
 	})
 }
 
