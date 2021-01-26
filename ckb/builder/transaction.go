@@ -59,37 +59,44 @@ func NewTransactionBuilder2(fromScript *types.Script, fee uint64) *TransactionBu
 	}
 }
 
-func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWithWitness) *TransactionBuilder {
+func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWithWitness) (*TransactionBuilder, error) {
 	if cellDep == nil {
-		return builder
+		return builder, nil
 	}
 	// 如果已经存在，那么不再重复添加
 	for _, item := range builder.tx.CellDeps {
 		if item.OutPoint.TxHash == cellDep.CellDep.OutPoint.TxHash && item.OutPoint.Index == cellDep.CellDep.OutPoint.Index {
-			return builder
+			return builder, nil
 		}
 	}
 	builder.tx.CellDeps = append(builder.tx.CellDeps, cellDep.CellDep)
 	if cellDep.GetWitnessData != nil {
 		cellDepIndex := uint32(len(builder.tx.CellDeps)) - 1
-		builder.tx.Witnesses = append(builder.tx.Witnesses, cellDep.GetWitnessData(cellDepIndex))
+		witnessData, err := cellDep.GetWitnessData(cellDepIndex)
+		if err != nil {
+			return nil, fmt.Errorf("AddWitnessCellDep %s", err.Error())
+		}
+		builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)
 	}
-	return builder
+	return builder, nil
 }
 
 func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionBuilder {
-	return builder.AddWitnessCellDep(&celltype.CellDepWithWitness{
+	_, _ = builder.AddWitnessCellDep(&celltype.CellDepWithWitness{
 		CellDep:        cell,
 		GetWitnessData: nil,
 	})
+	return builder
 }
 
-func (builder *TransactionBuilder) AddWitnessCellDeps(cellDeps []celltype.CellDepWithWitness) *TransactionBuilder {
+func (builder *TransactionBuilder) AddWitnessCellDeps(cellDeps []celltype.CellDepWithWitness) (*TransactionBuilder, error) {
 	cellDepsSize := len(cellDeps)
 	for i := 0; i < cellDepsSize; i++ {
-		builder.AddWitnessCellDep(&cellDeps[i])
+		if _, err := builder.AddWitnessCellDep(&cellDeps[i]); err != nil {
+			return nil, fmt.Errorf("AddWitnessCellDeps %s", err.Error())
+		}
 	}
-	return builder
+	return builder, nil
 }
 
 func (builder *TransactionBuilder) AddCellDeps(cellDeps []types.CellDep) *TransactionBuilder {

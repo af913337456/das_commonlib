@@ -22,7 +22,7 @@ type InputWithWitness struct {
 	WitnessData []byte
 }
 
-type CellDepWithWitnessFunc func(index uint32) []byte
+type CellDepWithWitnessFunc func(index uint32) ([]byte, error)
 
 type CellDepWithWitness struct {
 	CellDep        *types.CellDep
