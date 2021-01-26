@@ -212,6 +212,12 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 	return nil, errors.New("FindSenderLockScriptByInputList not found")
 }
 
+const sameIndexMark = 999999
+
+func ChangeMoleculeDataSameIndex(changeType DataEntityChangeType, originWitnessData []byte) ([]byte, error) {
+	return ChangeMoleculeData(changeType, sameIndexMark, originWitnessData)
+}
+
 func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWitnessData []byte) ([]byte, error) {
 	witnessObj, err := NewDasWitnessDataFromSlice(originWitnessData)
 	if err != nil {
@@ -269,9 +275,15 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 		if err != nil {
 			return nil, fmt.Errorf("ChangeMoleculeData dep.IntoDataEntity err: %s", err.Error())
 		}
+		indexUint32 := Uint32{}
+		if index == sameIndexMark {
+			indexUint32 = *depNewDataEntity.Index()
+		} else {
+			indexUint32 = GoUint32ToMoleculeU32(index)
+		}
 		oldDataEntity := NewDataEntityBuilder().
 			Version(*depNewDataEntity.Version()).
-			Index(GoUint32ToMoleculeU32(index)).
+			Index(indexUint32).
 			Entity(*depNewDataEntity.Entity()).
 			Build()
 		oldDataEntityOpt := NewDataEntityOptBuilder().Set(oldDataEntity).Build()

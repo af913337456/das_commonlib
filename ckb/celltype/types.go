@@ -17,6 +17,7 @@ import (
  */
 
 type InputWithWitness struct {
+	Index       uint32
 	CellInput   *types.CellInput
 	WitnessData []byte
 }
