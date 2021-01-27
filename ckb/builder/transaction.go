@@ -264,18 +264,18 @@ func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
 	}
 	message := append(hash.Bytes(), length...)
 	message = append(message, data...)
-
-	// 从 1 开始，多个相同 input，填充空 []byte
+	// input，填充空 []byte
 	inputSize := len(builder.tx.Inputs)
-	emptyWitnessList := make([][]byte, 0, inputSize-1)
-	for i := 1; i < inputSize; i++ {
+	emptyWitnessList := make([][]byte, 0, inputSize)
+	for i := 0; i < inputSize; i++ {
 		emptyWitnessList = append(emptyWitnessList, []byte{})
 	}
-	// 添加自定义的 witness 见证数据到签名
+	// 添加自定义的 witness 见证数据
 	if len(emptyWitnessList) > 0 {
 		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
 		builder.tx.Witnesses = emptyWitnessList
 	}
+	// 开始逐个拼接到待签名字节中
 	witnessSize := len(builder.tx.Witnesses)
 	for i := 0; i < witnessSize; i++ {
 		_wData := builder.tx.Witnesses[i]
