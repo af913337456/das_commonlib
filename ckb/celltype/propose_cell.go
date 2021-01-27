@@ -148,10 +148,7 @@ func (c *ProposeCell) TypeScript() *types.Script {
 }
 
 func (c *ProposeCell) Data() ([]byte, error) {
-	hashBys, err := blake2b.Blake160(c.ProposalCellData())
-	if err != nil {
-		return nil, err
-	}
+	hashBys, _ := blake2b.Blake160(c.ProposalCellData())
 	return hashBys, nil
 }
 

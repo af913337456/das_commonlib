@@ -158,24 +158,15 @@ func (c *AccountCell) Data() ([]byte, error) {
 	dataBytes := []byte{}
 	newAccountObj := c.p.AccountCellDatas.NewAccountCellData
 	accountBytes := newAccountObj.AccountInfo.Account().AsSlice()
-	accountIdBytes, err := blake2b.Blake160(accountBytes)
-	if err != nil {
-		return nil, err
-	}
+	accountIdBytes, _ := blake2b.Blake160(accountBytes)
 	dataBytes = append(dataBytes, accountIdBytes...)
 	if len(newAccountObj.NextAccountId) > 0 {
-		if nextBytes, err := blake2b.Blake160(newAccountObj.NextAccountId); err != nil {
-			return nil, err
-		} else {
-			dataBytes = append(dataBytes, nextBytes...)
-		}
+		nextBytes, _ := blake2b.Blake160(newAccountObj.NextAccountId)
+		dataBytes = append(dataBytes, nextBytes...)
 	} else {
 		dataBytes = append(dataBytes, EmptyAccountId...)
 	}
-	accountInfoDataBytes, err := blake2b.Blake160(newAccountObj.AccountInfo.AsSlice())
-	if err != nil {
-		return nil, err
-	}
+	accountInfoDataBytes, _ := blake2b.Blake160(newAccountObj.AccountInfo.AsSlice())
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	dataBytes = append(dataBytes, accountBytes...)
 	return dataBytes, nil

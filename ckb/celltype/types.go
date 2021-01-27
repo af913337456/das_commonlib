@@ -130,6 +130,19 @@ type ApplyRegisterCellParam struct {
 	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`
 }
 
+type PreAccountCellDatas struct {
+	DepAccountCellData *PreAccountCellData `json:"-"`
+	OldAccountCellData *PreAccountCellData `json:"-"`
+	NewAccountCellData *PreAccountCellData `json:"-"`
+}
+type PreAccountCellCellParam struct {
+	Version                   uint32              `json:"version"`
+	Data                      Data                `json:"data"`
+	PreAccountCellDatas       PreAccountCellDatas `json:"-"`
+	CellCodeInfo              DASCellBaseInfo     `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo     `json:"always_spendable_script_info"`
+}
+
 //
 // type StateCellParam struct {
 // 	Version                   uint32          `json:"version"`
