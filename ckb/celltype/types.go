@@ -189,8 +189,8 @@ type AccountCellFullData struct {
 }
 
 type AccountCellDatas struct {
-	DepAccountCellData *AccountCellFullData `json:"-"`
-	OldAccountCellData *AccountCellFullData `json:"-"`
+	DepAccountCellData *AccountCellData     `json:"-"`
+	OldAccountCellData *AccountCellData     `json:"-"`
 	NewAccountCellData *AccountCellFullData `json:"-"`
 }
 type AccountCellParam struct {
