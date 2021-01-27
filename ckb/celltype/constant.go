@@ -23,11 +23,11 @@ type DataEntityChangeType uint
 
 func (a AccountCellStatus) Str() string {
 	switch a {
-	case AccountCellStatus_Exist:
+	case AccountWitnessStatus_Exist:
 		return "exist"
-	case AccountCellStatus_New:
+	case AccountWitnessStatus_New:
 		return "new"
-	case AccountCellStatus_Proposed:
+	case AccountWitnessStatus_Proposed:
 		return "proposed"
 	}
 	return "unknown"
@@ -46,9 +46,21 @@ const (
 )
 
 const (
-	AccountCellStatus_Exist    AccountCellStatus = 0
-	AccountCellStatus_Proposed AccountCellStatus = 1
-	AccountCellStatus_New      AccountCellStatus = 2
+	/**
+	- status ，状态字段：
+	  - 0 ，正常；
+	  - 1 ，出售中；
+	  - 2 ，拍卖中；
+	*/
+	AccountCellStatus_Normal AccountCellStatus = 0
+	AccountCellStatus_OnSale AccountCellStatus = 1
+	AccountCellStatus_OnBid  AccountCellStatus = 2
+)
+
+const (
+	AccountWitnessStatus_Exist    AccountCellStatus = 0
+	AccountWitnessStatus_Proposed AccountCellStatus = 1
+	AccountWitnessStatus_New      AccountCellStatus = 2
 )
 
 const (
