@@ -1,0 +1,81 @@
+
+Tx:
+Inputs:
+    FeeCell
+    FeeCell
+    AnyOneCanUseCell
+    AnyOneCanUseCell
+witness:
+    [signature]
+    [0x]
+    [0x]
+    [0x]
+    [custom witness]
+    [custom witness]
+    [custom witness]
+
+上面交易，是使用下面的签名方式后呈现的结构化事例。
+
+func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
+	data, _ := transaction.EmptyWitnessArg.Serialize() // 对应前 65 字节的签名信息
+	length := make([]byte, 8)
+	binary.LittleEndian.PutUint64(length, uint64(len(data)))
+	hash, err := builder.tx.ComputeHash()
+	if err != nil {
+		return nil, err
+	}
+	message := append(hash.Bytes(), length...)
+	message = append(message, data...)
+	// 从 1 开始，多个相同的 input 对应的 wintness，填充空 []byte
+	inputSize := len(builder.tx.Inputs)
+	emptyWitnessList := make([][]byte, 0, inputSize-1)
+	for i := 1; i < inputSize; i++ {
+		emptyWitnessList = append(emptyWitnessList, []byte{})
+	}
+	// 添加自定义的 witness
+	if len(emptyWitnessList) > 0 {
+		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
+		builder.tx.Witnesses = emptyWitnessList
+	}
+	// 添加 witness 到待签名的字节中
+	witnessSize := len(builder.tx.Witnesses)
+	for i := 0; i < witnessSize; i++ {
+		_wData := builder.tx.Witnesses[i]
+		length := make([]byte, 8)
+		binary.LittleEndian.PutUint64(length, uint64(len(_wData)))
+		message = append(message, length...)
+		message = append(message, _wData...)
+	}
+	if message, err = blake2b.Blake256(message); err != nil {
+		return nil, err
+	} else {
+		return message, nil
+	}
+}
+
+func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
+	message, err := builder.BuildTransaction()
+	if err != nil {
+		return err
+	}
+	if signed, err := key.Sign(message); err != nil {
+		return err
+	} else {
+		wa := &types.WitnessArgs{
+			Lock:       signed,
+			InputType:  nil,
+			OutputType: nil,
+		}
+		if wab, err := wa.Serialize(); err != nil {
+			return err
+		} else {
+			if len(builder.tx.Witnesses) == 0 {
+				builder.tx.Witnesses = append(builder.tx.Witnesses, wab)
+			} else {
+				witness := [][]byte{wab} // 第一组放置签名的65字节
+				builder.tx.Witnesses = append(witness,builder.tx.Witnesses...)
+			}
+		}
+	}
+	return nil
+}

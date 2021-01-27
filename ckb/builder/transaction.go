@@ -264,25 +264,25 @@ func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
 	}
 	message := append(hash.Bytes(), length...)
 	message = append(message, data...)
-	// input，填充空 []byte
+	// 从 1 开始，多个相同的 input 对应的 wintness，填充空 []byte
 	inputSize := len(builder.tx.Inputs)
-	emptyWitnessList := make([][]byte, 0, inputSize)
-	for i := 0; i < inputSize; i++ {
+	emptyWitnessList := make([][]byte, 0, inputSize-1)
+	for i := 1; i < inputSize; i++ {
 		emptyWitnessList = append(emptyWitnessList, []byte{})
 	}
-	// 添加自定义的 witness 见证数据
+	// 添加自定义的 witness
 	if len(emptyWitnessList) > 0 {
 		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
 		builder.tx.Witnesses = emptyWitnessList
 	}
-	// 开始逐个拼接到待签名字节中
+	// 添加 witness 到待签名的字节中
 	witnessSize := len(builder.tx.Witnesses)
 	for i := 0; i < witnessSize; i++ {
 		_wData := builder.tx.Witnesses[i]
 		length := make([]byte, 8)
 		binary.LittleEndian.PutUint64(length, uint64(len(_wData)))
-		message = append(message, length...) // 前 8 字节不变
-		message = append(message, _wData...) // 实际数据
+		message = append(message, length...)
+		message = append(message, _wData...)
 	}
 	if message, err = blake2b.Blake256(message); err != nil {
 		return nil, err
@@ -310,7 +310,8 @@ func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
 			if len(builder.tx.Witnesses) == 0 {
 				builder.tx.Witnesses = append(builder.tx.Witnesses, wab)
 			} else {
-				builder.tx.Witnesses[0] = wab // 第一组放置签名的65字节
+				witness := [][]byte{wab} // 第一组放置签名的65字节
+				builder.tx.Witnesses = append(witness, builder.tx.Witnesses...)
 			}
 		}
 	}
