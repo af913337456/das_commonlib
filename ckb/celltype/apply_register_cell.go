@@ -87,9 +87,13 @@ func (c *ApplyRegisterCell) TableType() TableType {
 }
 
 func (c *ApplyRegisterCell) Data() ([]byte, error) {
-	return blake2b.Blake256([]byte(c.p.PubkeyHash + c.p.Account))
+	return ApplyRegisterDataId(c.p.PubkeyHash, c.p.Account)
 }
 
 func (c *ApplyRegisterCell) TableData() []byte {
 	return nil
+}
+
+func ApplyRegisterDataId(pubKeyHash, account string) ([]byte, error) {
+	return blake2b.Blake256([]byte(pubKeyHash + account))
 }
