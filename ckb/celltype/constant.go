@@ -9,6 +9,7 @@ package celltype
  */
 
 const witnessDas = "das"
+const oneYearDays = uint32(365)
 const CellVersionByteLen = 4
 const MoleculeBytesHeaderSize = 4
 const OneCkb = uint64(1e8)

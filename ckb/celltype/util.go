@@ -123,6 +123,15 @@ func MoleculeU32ToGo(bys []byte) (uint32, error) {
 	return t, nil
 }
 
+func MoleculeU64ToGo(bys []byte) (uint64, error) {
+	var t uint64
+	bytesBuffer := bytes.NewBuffer(bys)
+	if err := binary.Read(bytesBuffer, binary.LittleEndian, &t); err != nil {
+		return 0, err
+	}
+	return t, nil
+}
+
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)
@@ -298,4 +307,18 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	newDataBytes := (&newData).AsSlice()
 	newWitnessData := NewDasWitnessData(witnessObj.TableType, newDataBytes)
 	return newWitnessData.ToWitness(), nil
+}
+
+/**
+ConfigCell.price * quote * account.bytes.length 这个是 365 天的单价，
+expiredAt = ((PreAccountCell.capacity - AccountCell.capacity) /
+		(ConfigCell.price * quote * account.bytes.length)) * 365
+*/
+func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint32, error) {
+	perDayPrice := param.AccountConfigPrice * param.Quote * param.AccountBytesLen
+	if param.PreAccountCellCap <= param.AccountCellCap {
+		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
+	}
+	dis := param.PreAccountCellCap - param.AccountCellCap
+	return uint32(registerAt) + (dis/perDayPrice)*oneYearDays, nil
 }

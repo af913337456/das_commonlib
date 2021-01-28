@@ -169,7 +169,7 @@ func (c *AccountCell) Data() ([]byte, error) {
 	accountInfoDataBytes, _ := blake2b.Blake160(newAccountObj.AccountInfo.AsSlice())
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	// expired_at
-
+	dataBytes = append(dataBytes, newAccountObj.AccountInfo.ExpiredAt().AsSlice()...)
 	dataBytes = append(dataBytes, accountBytes...)
 	return dataBytes, nil
 }

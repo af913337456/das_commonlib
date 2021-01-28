@@ -2,8 +2,11 @@ package celltype
 
 import (
 	"encoding/hex"
+	"encoding/json"
+	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"testing"
+	"time"
 )
 
 /**
@@ -14,8 +17,29 @@ import (
  * Description:
  */
 
+func Test_CalAccountCellExpiredAt(t *testing.T) {
+	// registerAt:=
+	// 2021-01-28 18:02:50, 1611828171
+	param := CalAccountCellExpiredAtParam{
+		Quote:              1,
+		AccountCellCap:     178,
+		AccountConfigPrice: 10,
+		AccountBytesLen:    uint32(len([]byte("nice.bit"))),
+		PreAccountCellCap:  300,
+	}
+	timeSec, err := CalAccountCellExpiredAt(param, 1611828171)
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println(timeSec)
+		fmt.Println(time.Unix(int64(timeSec), 0).String())
+		bys, _ := json.Marshal(param)
+		t.Log(string(bys))
+	}
+}
+
 func Test_Blake2b_256(t *testing.T) {
-	bys, _ := blake2b.Blake256([]byte("lala"))
+	bys, _ := blake2b.Blake256([]byte("lafdqalqvbappo"))
 	t.Log(len(bys), bys)
 }
 

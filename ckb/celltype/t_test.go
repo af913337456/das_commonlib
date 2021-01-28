@@ -1,7 +1,6 @@
 package celltype
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -25,11 +24,7 @@ func Test_NewDasWitnessData(t *testing.T) {
 }
 
 func Test_AppendProposeWitnessSliceDataObjectList(t *testing.T) {
-	p := ProposeWitnessSliceDataObjectList{}
-	p.Add([]byte("1"), []byte("2"), AccountCellStatus_Proposed)
-	p.Add([]byte("11"), []byte("21"), AccountCellStatus_Proposed)
-	fmt.Println(string(p[0].AccountId))
-	fmt.Println(string(p[1].AccountId))
+
 }
 
 func Test_SliceValue(t *testing.T) {
