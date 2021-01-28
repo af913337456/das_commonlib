@@ -76,7 +76,7 @@ const (
 )
 
 const (
-	Action_ConfigState           = "config_state"
+	Action_Config                = "config"
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"
 	Action_Propose               = "propose"

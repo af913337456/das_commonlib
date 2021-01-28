@@ -94,6 +94,6 @@ func (c *ApplyRegisterCell) TableData() []byte {
 	return nil
 }
 
-func ApplyRegisterDataId(pubKeyHash, account string) ([]byte, error) {
-	return blake2b.Blake256([]byte(pubKeyHash + account))
+func ApplyRegisterDataId(pubKeyHex, account string) ([]byte, error) {
+	return blake2b.Blake256([]byte(pubKeyHex + account))
 }
