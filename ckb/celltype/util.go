@@ -47,10 +47,14 @@ func GoUint32ToMoleculeU32(i uint32) Uint32 {
 	return *Uint32FromSliceUnchecked(bytebuf.Bytes())
 }
 
-func GoUint64ToMoleculeU64(i uint64) Uint64 {
+func GoUint64ToBytes(i uint64) []byte {
 	bytebuf := bytes.NewBuffer([]byte{})
 	_ = binary.Write(bytebuf, binary.LittleEndian, i)
-	return *Uint64FromSliceUnchecked(bytebuf.Bytes())
+	return bytebuf.Bytes()
+}
+
+func GoUint64ToMoleculeU64(i uint64) Uint64 {
+	return *Uint64FromSliceUnchecked(GoUint64ToBytes(i))
 }
 
 func GoStrToMoleculeBytes(str string) Bytes {
