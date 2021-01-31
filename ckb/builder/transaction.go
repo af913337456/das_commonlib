@@ -293,7 +293,7 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 			list = []*types.CellInput{}
 		}
 		list = append(list, &builder.inputList[i].Input)
-		recordMap[builder.inputList[i].LockType] = list
+		recordMap[builder.inputList[i].LockType] = list // same lockType is one group
 	}
 	retList := make([]celltype.BuildTransactionRet, 0, len(recordMap))
 	for _, item := range recordMap {
@@ -307,6 +307,17 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 		})
 	}
 	return retList, nil
+}
+
+func (builder *TransactionBuilder) SingleCombineSignTransaction(list []celltype.BuildTransactionRet, key crypto.Key) error {
+	size := len(list)
+	for i := 0; i < size; i++ {
+		item := list[i]
+		if err := builder.SingleSignTransaction(item.Group, item.WitnessArg, key); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (builder *TransactionBuilder) SingleSignTransaction(group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
