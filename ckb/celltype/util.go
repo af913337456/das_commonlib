@@ -315,7 +315,9 @@ expiredAt = ((PreAccountCell.capacity - AccountCell.capacity) /
 		(ConfigCell.price * quote * account.bytes.length)) * 365
 */
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint32, error) {
-	perDayPrice := param.AccountConfigPrice * param.Quote * param.AccountBytesLen
+	// 1000000 ckb = 1 usd
+
+	perDayPrice := param.AccountConfigPrice * param.Quote
 	if param.PreAccountCellCap <= param.AccountCellCap {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	}

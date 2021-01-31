@@ -21,7 +21,7 @@ var TestNetApplyRegisterCell = func(pubkey []byte, account string, timestamp uin
 		PubkeyHash:   hex.EncodeToString(pubkeyHash),
 		Account:      account,
 		Timestamp:    timestamp,
-		CellCodeInfo: TestNet_ApplyRegisterCellScript,
+		CellCodeInfo: DasApplyRegisterCellScript,
 		SenderLockScriptInfo: DASCellBaseInfo{
 			Dep: DASCellBaseInfoDep{
 				TxHash:  types.HexToHash("0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6"),

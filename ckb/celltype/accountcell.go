@@ -25,7 +25,7 @@ var TestNetAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old *Acc
 		Version: 1,
 		Data: *buildDasCommonMoleculeDataObj(
 			depIndex, oldIndex, newIndex, dep, old, &new.AccountInfo),
-		CellCodeInfo: TestNet_AccountCellScript,
+		CellCodeInfo: DasAccountCellScript,
 		AccountCellDatas: AccountCellDatas{
 			DepAccountCellData: dep,
 			OldAccountCellData: old,

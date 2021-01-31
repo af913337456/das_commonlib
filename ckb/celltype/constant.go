@@ -72,8 +72,7 @@ const (
 )
 
 const (
-	CkbSize_AccountCell    = 147 * OneCkb
-	CkbSize_PreAccountCell = 147 * OneCkb
+	CkbSize_AccountCell = 147 * OneCkb
 )
 
 const (

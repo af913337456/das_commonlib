@@ -17,7 +17,7 @@ package celltype
 // 	return &RefcellParam{
 // 		Version:      1,
 // 		Data:         "",
-// 		CellCodeInfo: TestNet_OwnerCellScript,
+// 		CellCodeInfo: DasOwnerCellScript,
 // 		UserLockScript: DASCellBaseInfo{
 // 			Dep: DASCellBaseInfoDep{
 // 				// secp256h1

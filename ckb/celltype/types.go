@@ -301,6 +301,6 @@ type CalAccountCellExpiredAtParam struct {
 	Quote              uint32 `json:"quote"`
 	AccountCellCap     uint32 `json:"account_cell_cap"`
 	AccountConfigPrice uint32 `json:"account_config_price"`
-	AccountBytesLen    uint32 `json:"account_bytes_len"`
-	PreAccountCellCap  uint32 `json:"pre_account_cell_cap"`
+	// AccountBytesLen    uint32 `json:"account_bytes_len"`
+	PreAccountCellCap uint32 `json:"pre_account_cell_cap"`
 }

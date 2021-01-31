@@ -11,7 +11,7 @@ import "github.com/nervosnetwork/ckb-sdk-go/types"
  */
 
 var (
-	TestNet_ConfigCellScript = DASCellBaseInfo{
+	DasConfigCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -23,7 +23,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_StateCellScript = DASCellBaseInfo{
+	DasStateCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -35,7 +35,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_ActionCellScript = DASCellBaseInfo{
+	DasActionCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -47,7 +47,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_ApplyRegisterCellScript = DASCellBaseInfo{
+	DasApplyRegisterCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -59,7 +59,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_RegisterCellScript = DASCellBaseInfo{
+	DasRegisterCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -71,7 +71,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_OwnerCellScript = DASCellBaseInfo{
+	DasOwnerCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -83,7 +83,7 @@ var (
 			Args:         nil, // [id, account_id]
 		},
 	}
-	TestNet_PreAccountCellScript = DASCellBaseInfo{
+	DasPreAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -95,7 +95,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_ProposeCellScript = DASCellBaseInfo{
+	DasProposeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -107,7 +107,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_AccountCellScript = DASCellBaseInfo{
+	DasAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -119,7 +119,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_PaymentCellScript = DASCellBaseInfo{
+	DasPaymentCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -131,7 +131,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_QuoteCellScript = DASCellBaseInfo{
+	DasQuoteCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
@@ -143,7 +143,7 @@ var (
 			Args:         nil,
 		},
 	}
-	TestNet_TimeCellScript = DASCellBaseInfo{
+	DasTimeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,

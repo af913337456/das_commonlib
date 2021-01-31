@@ -41,7 +41,7 @@ func Test_BatchWrite(t *testing.T) {
 	}
 }
 func Test_BatchRead(t *testing.T) {
-	db, err := NewDefaultRocksNormalDb("/Users/DA-Services/go/src/src/das_commonlib/data")
+	db, err := NewDefaultRocksNormalDb("data")
 	if err != nil {
 		t.Error(err)
 	}
@@ -67,8 +67,24 @@ func Test_BatchRead(t *testing.T) {
 	}
 }
 
+func Test_BatchRead2(t *testing.T) {
+	db, err := NewDefaultRocksNormalDb("data")
+	if err != nil {
+		t.Error(err)
+	}
+	readOpt := gorocksdb.NewDefaultReadOptions()
+	reader := db.NewIterator(readOpt)
+	keyPrefix := []byte("name3_")
+	for reader.Seek(keyPrefix); ; reader.Next() {
+		if valid := reader.ValidForPrefix(keyPrefix); !valid {
+			break
+		}
+		t.Log(string(reader.Key().Data()), string(reader.Value().Data()))
+	}
+}
+
 func Test_BatchWrite2(t *testing.T) {
-	db, err := NewDefaultRocksNormalDb("/Users/DA-Services/go/src/src/das_commonlib/data")
+	db, err := NewDefaultRocksNormalDb("data")
 	if err != nil {
 		t.Error(err)
 	}
@@ -88,5 +104,19 @@ func Test_BatchWrite2(t *testing.T) {
 	if err = db.Write(gorocksdb.NewDefaultWriteOptions(), wb); err != nil {
 		t.Error(err)
 	}
+}
 
+func Test_BatchDel(t *testing.T) {
+	db, err := NewDefaultRocksNormalDb("data")
+	if err != nil {
+		t.Error(err)
+	}
+	wb := gorocksdb.NewWriteBatch()
+	keyStrs := []string{"1234431", "name3_0x0000"}
+	for i := 0; i < len(keyStrs); i++ {
+		wb.Delete([]byte(keyStrs[i]))
+	}
+	if err = db.Write(gorocksdb.NewDefaultWriteOptions(), wb); err != nil {
+		fmt.Println(err.Error())
+	}
 }
