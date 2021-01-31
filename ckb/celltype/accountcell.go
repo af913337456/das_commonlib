@@ -181,3 +181,15 @@ func (c *AccountCell) TableType() TableType {
 func (c *AccountCell) TableData() []byte {
 	return c.p.Data.AsSlice()
 }
+
+func (c *AccountCell) CellCap() (uint64, error) {
+	output := types.CellOutput{
+		Lock: c.LockScript(),
+		Type: c.TypeScript(),
+	}
+	dataBytes, err := c.Data()
+	if err != nil {
+		return 0, err
+	}
+	return output.OccupiedCapacity(dataBytes), nil
+}
