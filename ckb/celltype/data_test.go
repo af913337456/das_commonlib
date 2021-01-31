@@ -17,6 +17,12 @@ import (
  * Description:
  */
 
+func Test_U64Bytes(t *testing.T) {
+	d, _ := blake2b.Blake256([]byte("0"))
+	t.Log(len(d))
+	t.Log(len(GoUint64ToBytes(0)))
+}
+
 func Test_AccountChar(t *testing.T) {
 	t.Log(len([]byte("account")))
 }

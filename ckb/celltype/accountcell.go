@@ -152,24 +152,23 @@ data:
 
 func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes := []byte{}
+	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
+	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	accountBytes := newData.AccountInfo.Account().AsSlice()
 	accountIdBytes, _ := blake2b.Blake160(accountBytes)
-	dataBytes = append(dataBytes, accountIdBytes...)
+	dataBytes = append(dataBytes, accountIdBytes...) // id
 	if len(newData.NextAccountId) > 0 {
 		nextBytes, _ := blake2b.Blake160(newData.NextAccountId)
-		dataBytes = append(dataBytes, nextBytes...)
+		dataBytes = append(dataBytes, nextBytes...) // next
 	} else {
 		dataBytes = append(dataBytes, EmptyAccountId...)
 	}
-	accountInfoDataBytes, _ := blake2b.Blake160(newData.AccountInfo.AsSlice())
-	dataBytes = append(dataBytes, accountInfoDataBytes...)
-	// expired_at
-	dataBytes = append(dataBytes, newData.AccountInfo.ExpiredAt().AsSlice()...)
-	dataBytes = append(dataBytes, accountBytes...)
+	dataBytes = append(dataBytes, newData.AccountInfo.ExpiredAt().AsSlice()...) // expired_at
+	dataBytes = append(dataBytes, accountBytes...)                              // account
 	return dataBytes, nil
 }
 
-func AccountCellCap(newData *AccountCellFullData) (uint64, error) {
+func AccountCellCap(account string) (uint64, error) {
 	output := types.CellOutput{
 		Lock: &types.Script{
 			CodeHash: DasAnyOneCanSendCellInfo.CodeHash,
@@ -182,10 +181,19 @@ func AccountCellCap(newData *AccountCellFullData) (uint64, error) {
 			Args:     DasAccountCellScript.Out.Args,
 		},
 	}
-	dataBytes, err := accountCellOutputData(newData)
-	if err != nil {
-		return 0, err
-	}
+	dataBytes := []byte{}
+	dataHash, _ := blake2b.Blake256([]byte("0"))
+	idBytes, _ := blake2b.Blake160([]byte("0"))
+	nextBytes, _ := blake2b.Blake160([]byte("0"))
+	expiredAtBytes := GoUint64ToBytes(0)
+	accountBytes := []byte(account)
+
+	dataBytes = append(dataBytes, dataHash...)
+	dataBytes = append(dataBytes, idBytes...)
+	dataBytes = append(dataBytes, nextBytes...)
+	dataBytes = append(dataBytes, expiredAtBytes...)
+	dataBytes = append(dataBytes, accountBytes...)
+
 	return output.OccupiedCapacity(dataBytes), nil
 }
 
