@@ -22,8 +22,8 @@ type TypeInputCell struct {
 }
 
 type BuildTransactionRet struct {
-	Group      []int
-	WitnessArg *types.WitnessArgs
+	Group      []int              `json:"group"`
+	WitnessArg *types.WitnessArgs `json:"witness_arg"`
 }
 
 type InputWithWitness struct {

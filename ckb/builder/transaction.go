@@ -273,7 +273,8 @@ func (builder *TransactionBuilder) addInputsForTransaction(inputs []*types.CellI
 		return nil, nil, errors.New("input cells empty")
 	}
 	group := make([]int, len(inputs))
-	start := len(builder.tx.Witnesses)
+	preInputSize := len(builder.tx.Inputs)
+	start := preInputSize
 	for i := 0; i < len(inputs); i++ {
 		input := inputs[i]
 		builder.tx.Inputs = append(builder.tx.Inputs, input)
