@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
+	"math"
+	"math/big"
 )
 
 /**
@@ -315,12 +317,15 @@ expiredAt = ((PreAccountCell.capacity - AccountCell.capacity) /
 		(ConfigCell.price * quote * account.bytes.length)) * 365
 */
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint32, error) {
-	// 1000000 ckb = 1 usd
+	divPerDayPrice := new(big.Rat).SetFrac(new(big.Int).
+		SetInt64(int64(param.PriceConfigNew)), new(big.Int).
+		SetInt64(int64(param.Quote)))
 
-	perDayPrice := param.AccountConfigPrice * param.Quote
-	if param.PreAccountCellCap <= param.AccountCellCap {
+	if dis := param.PreAccountCellCap - param.AccountCellCap; dis <= 0 {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
+	} else {
+		disRat := new(big.Rat).SetInt64(int64(dis))
+		div, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
+		return uint32(registerAt) + uint32(math.Floor(div*oneYearDays*oneDaySec)), nil
 	}
-	dis := param.PreAccountCellCap - param.AccountCellCap
-	return uint32(registerAt) + (dis/perDayPrice)*oneYearDays, nil
 }

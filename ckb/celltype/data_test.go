@@ -17,17 +17,20 @@ import (
  * Description:
  */
 
+func Test_AccountChar(t *testing.T) {
+	t.Log(len([]byte("account")))
+}
+
 func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// registerAt:=
 	// 2021-01-28 18:02:50, 1611828171
 	param := CalAccountCellExpiredAtParam{
-		Quote:              1,
-		AccountCellCap:     178,
-		AccountConfigPrice: 10,
-		AccountBytesLen:    uint32(len([]byte("nice.bit"))),
-		PreAccountCellCap:  300,
+		Quote:             1000, // 1000 ckb = 1 usd
+		AccountCellCap:    178,
+		PriceConfigNew:    1000000, // 10 usd
+		PreAccountCellCap: 200,
 	}
-	timeSec, err := CalAccountCellExpiredAt(param, 1611828171)
+	timeSec, err := CalAccountCellExpiredAt(param, time.Now().Unix())
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {

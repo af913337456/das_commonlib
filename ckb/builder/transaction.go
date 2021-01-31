@@ -2,12 +2,12 @@ package builder
 
 import (
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
 	"github.com/nervosnetwork/ckb-sdk-go/address"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
-	"github.com/nervosnetwork/ckb-sdk-go/transaction"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
 )
@@ -23,11 +23,22 @@ import (
 // systemScript info:
 // https://github.com/nervosnetwork/ckb-sdk-js/blob/4921bfb1546467130898e942c2f262e3006c9ed8/packages/ckb-sdk-utils/__tests__/systemScripts/fixtures.json
 
+var (
+	EmptyWitnessArg = &types.WitnessArgs{
+		Lock:       make([]byte, 65),
+		InputType:  nil,
+		OutputType: nil,
+	}
+	EmptyWitnessArgPlaceholder = make([]byte, 89)
+	SignaturePlaceholder       = make([]byte, 65)
+)
+
 type TransactionBuilder struct {
 	fromAddress    *types.Script
 	totalInputCap  uint64
 	totalOutputCap uint64
 	fee            uint64
+	inputList      []celltype.TypeInputCell
 	tx             *types.Transaction
 }
 
@@ -107,9 +118,9 @@ func (builder *TransactionBuilder) AddCellDeps(cellDeps []types.CellDep) *Transa
 	return builder
 }
 
-func (builder *TransactionBuilder) AddInput(cell *types.CellInput, thisCellCap uint64) *TransactionBuilder {
+func (builder *TransactionBuilder) AddInput(typeInput celltype.TypeInputCell, thisCellCap uint64) *TransactionBuilder {
 	builder.totalInputCap = builder.totalInputCap + thisCellCap
-	builder.tx.Inputs = append(builder.tx.Inputs, cell)
+	builder.inputList = append(builder.inputList, typeInput)
 	return builder
 }
 
@@ -138,7 +149,7 @@ func (builder *TransactionBuilder) AddWitnessInput(cellInput celltype.InputWithW
 }
 
 // 自动计算需要的 input
-func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCellList *utils.LiveCellCollectResult) error {
+func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCellList *utils.LiveCellCollectResult, lockType celltype.LockScriptType) error {
 	if needCap := builder.NeedCapacityValue(); liveCellList.Capacity < needCap {
 		return fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", liveCellList.Capacity, needCap)
 	} else {
@@ -147,12 +158,15 @@ func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCellList *utils.
 		for _, cell := range liveCellList.LiveCells {
 			if capCounter < needCap {
 				thisCellCap := cell.Output.Capacity
-				input := &types.CellInput{
-					Since: 0,
-					PreviousOutput: &types.OutPoint{
-						TxHash: cell.OutPoint.TxHash,
-						Index:  cell.OutPoint.Index,
+				input := celltype.TypeInputCell{
+					Input: types.CellInput{
+						Since: 0,
+						PreviousOutput: &types.OutPoint{
+							TxHash: cell.OutPoint.TxHash,
+							Index:  cell.OutPoint.Index,
+						},
 					},
+					LockType: lockType,
 				}
 				builder.AddInput(input, thisCellCap)
 				capCounter = capCounter + thisCellCap
@@ -230,7 +244,7 @@ func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signC
 
 func (builder *TransactionBuilder) Log() string {
 	depCellCou := len(builder.tx.CellDeps)
-	inputCount := len(builder.tx.Inputs)
+	inputCount := len(builder.inputList)
 	outputCoun := len(builder.tx.Outputs)
 	capInfo :=
 		fmt.Sprintf("input cap: %d, output cap without charge: %d, need cap include fee: %d",
@@ -254,66 +268,161 @@ func (builder *TransactionBuilder) Tx() *types.Transaction {
 	return builder.tx
 }
 
-func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
-	data, _ := transaction.EmptyWitnessArg.Serialize() // 对应前 65 字节的签名信息
+func (builder *TransactionBuilder) addInputsForTransaction(inputs []*types.CellInput) ([]int, *types.WitnessArgs, error) {
+	if len(inputs) == 0 {
+		return nil, nil, errors.New("input cells empty")
+	}
+	group := make([]int, len(inputs))
+	start := len(builder.tx.Witnesses)
+	for i := 0; i < len(inputs); i++ {
+		input := inputs[i]
+		builder.tx.Inputs = append(builder.tx.Inputs, input)
+		builder.tx.Witnesses = append(builder.tx.Witnesses, []byte{})
+		group[i] = start + i
+	}
+	builder.tx.Witnesses[start] = EmptyWitnessArgPlaceholder
+	return group, EmptyWitnessArg, nil
+}
+
+func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransactionRet, error) {
+	size := len(builder.inputList)
+	recordMap := map[celltype.LockScriptType][]*types.CellInput{}
+	for i := 0; i < size; i++ {
+		list := recordMap[builder.inputList[i].LockType]
+		if list == nil {
+			list = []*types.CellInput{}
+		}
+		list = append(list, &builder.inputList[i].Input)
+		recordMap[builder.inputList[i].LockType] = list
+	}
+	retList := make([]celltype.BuildTransactionRet, 0, len(recordMap))
+	for _, item := range recordMap {
+		group, wArgs, err := builder.addInputsForTransaction(item)
+		if err != nil {
+			return nil, fmt.Errorf("BuildTransaction addInputsForTransaction err: %s", err.Error())
+		}
+		retList = append(retList, celltype.BuildTransactionRet{
+			Group:      group,
+			WitnessArg: wArgs,
+		})
+	}
+	return retList, nil
+}
+
+func (builder *TransactionBuilder) SingleSignTransaction(group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
+	data, err := witnessArgs.Serialize()
+	if err != nil {
+		return err
+	}
 	length := make([]byte, 8)
 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
 	hash, err := builder.tx.ComputeHash()
 	if err != nil {
-		return nil, err
+		return err
 	}
+
 	message := append(hash.Bytes(), length...)
 	message = append(message, data...)
-	// 从 1 开始，多个相同的 input 对应的 wintness，填充空 []byte
-	inputSize := len(builder.tx.Inputs)
-	emptyWitnessList := make([][]byte, 0, inputSize-1)
-	for i := 1; i < inputSize; i++ {
-		emptyWitnessList = append(emptyWitnessList, []byte{})
-	}
-	// 添加自定义的 witness
-	if len(emptyWitnessList) > 0 {
-		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
-		builder.tx.Witnesses = emptyWitnessList
-	}
-	// 添加 witness 到待签名的字节中
-	witnessSize := len(builder.tx.Witnesses)
-	for i := 0; i < witnessSize; i++ {
-		_wData := builder.tx.Witnesses[i]
-		length := make([]byte, 8)
-		binary.LittleEndian.PutUint64(length, uint64(len(_wData)))
-		message = append(message, length...)
-		message = append(message, _wData...)
-	}
-	if message, err = blake2b.Blake256(message); err != nil {
-		return nil, err
-	} else {
-		return message, nil
-	}
-}
 
-func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
-	message, err := builder.BuildTransaction()
+	// hash the other witnesses in the group
+	if len(group) > 1 {
+		for i := 1; i < len(group); i++ {
+			data := builder.tx.Witnesses[i]
+			length := make([]byte, 8)
+			binary.LittleEndian.PutUint64(length, uint64(len(data)))
+			message = append(message, length...)
+			message = append(message, data...)
+		}
+	}
+	// hash witnesses which do not in any input group
+	for _, witness := range builder.tx.Witnesses[len(builder.tx.Inputs):] {
+		length := make([]byte, 8)
+		binary.LittleEndian.PutUint64(length, uint64(len(witness)))
+		message = append(message, length...)
+		message = append(message, witness...)
+	}
+
+	message, err = blake2b.Blake256(message)
 	if err != nil {
 		return err
 	}
-	if signed, err := key.Sign(message); err != nil {
+	signed, err := key.Sign(message)
+	if err != nil {
 		return err
-	} else {
-		wa := &types.WitnessArgs{
-			Lock:       signed,
-			InputType:  nil,
-			OutputType: nil,
-		}
-		if wab, err := wa.Serialize(); err != nil {
-			return err
-		} else {
-			if len(builder.tx.Witnesses) == 0 {
-				builder.tx.Witnesses = append(builder.tx.Witnesses, wab)
-			} else {
-				witness := [][]byte{wab} // 第一组放置签名的65字节
-				builder.tx.Witnesses = append(witness, builder.tx.Witnesses...)
-			}
-		}
 	}
+	wa := &types.WitnessArgs{
+		Lock:       signed,
+		InputType:  witnessArgs.InputType,
+		OutputType: witnessArgs.OutputType,
+	}
+	wab, err := wa.Serialize()
+	if err != nil {
+		return err
+	}
+	builder.tx.Witnesses[group[0]] = wab
 	return nil
 }
+
+// func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
+// 	data, _ := transaction.EmptyWitnessArg.Serialize() // 对应前 65 字节的签名信息
+// 	length := make([]byte, 8)
+// 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
+// 	hash, err := builder.tx.ComputeHash()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	message := append(hash.Bytes(), length...)
+// 	message = append(message, data...)
+// 	// 从 1 开始，多个相同的 input 对应的 wintness，填充空 []byte
+// 	inputSize := len(builder.tx.Inputs)
+// 	emptyWitnessList := make([][]byte, 0, inputSize-1)
+// 	for i := 1; i < inputSize; i++ {
+// 		emptyWitnessList = append(emptyWitnessList, []byte{})
+// 	}
+// 	// 添加自定义的 witness
+// 	if len(emptyWitnessList) > 0 {
+// 		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
+// 		builder.tx.Witnesses = emptyWitnessList
+// 	}
+// 	// 添加 witness 到待签名的字节中
+// 	witnessSize := len(builder.tx.Witnesses)
+// 	for i := 0; i < witnessSize; i++ {
+// 		_wData := builder.tx.Witnesses[i]
+// 		length := make([]byte, 8)
+// 		binary.LittleEndian.PutUint64(length, uint64(len(_wData)))
+// 		message = append(message, length...)
+// 		message = append(message, _wData...)
+// 	}
+// 	if message, err = blake2b.Blake256(message); err != nil {
+// 		return nil, err
+// 	} else {
+// 		return message, nil
+// 	}
+// }
+
+// func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
+// 	message, err := builder.BuildTransaction()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	if signed, err := key.Sign(message); err != nil {
+// 		return err
+// 	} else {
+// 		wa := &types.WitnessArgs{
+// 			Lock:       signed,
+// 			InputType:  nil,
+// 			OutputType: nil,
+// 		}
+// 		if wab, err := wa.Serialize(); err != nil {
+// 			return err
+// 		} else {
+// 			if len(builder.tx.Witnesses) == 0 {
+// 				builder.tx.Witnesses = append(builder.tx.Witnesses, wab)
+// 			} else {
+// 				witness := [][]byte{wab} // 第一组放置签名的65字节
+// 				builder.tx.Witnesses = append(witness, builder.tx.Witnesses...)
+// 			}
+// 		}
+// 	}
+// 	return nil
+// }

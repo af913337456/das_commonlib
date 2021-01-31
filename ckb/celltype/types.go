@@ -16,10 +16,20 @@ import (
  * Description:
  */
 
+type TypeInputCell struct {
+	Input    types.CellInput `json:"input"`
+	LockType LockScriptType  `json:"lock_type"`
+}
+
+type BuildTransactionRet struct {
+	Group      []int
+	WitnessArg *types.WitnessArgs
+}
+
 type InputWithWitness struct {
-	CellCap        uint64
-	CellInput      *types.CellInput
-	GetWitnessData CellDepWithWitnessFunc
+	CellCap        uint64                 `json:"cell_cap"`
+	CellInput      TypeInputCell          `json:"cell_input"`
+	GetWitnessData CellDepWithWitnessFunc `json:"-"`
 }
 
 type CellDepWithWitnessFunc func(index uint32) ([]byte, error)
@@ -298,9 +308,9 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 }
 
 type CalAccountCellExpiredAtParam struct {
-	Quote              uint32 `json:"quote"`
-	AccountCellCap     uint32 `json:"account_cell_cap"`
-	AccountConfigPrice uint32 `json:"account_config_price"`
+	Quote          uint32 `json:"quote"`
+	AccountCellCap uint32 `json:"account_cell_cap"`
+	PriceConfigNew uint32 `json:"price_config_new"`
 	// AccountBytesLen    uint32 `json:"account_bytes_len"`
 	PreAccountCellCap uint32 `json:"pre_account_cell_cap"`
 }

@@ -9,7 +9,8 @@ package celltype
  */
 
 const witnessDas = "das"
-const oneYearDays = uint32(365)
+const oneDaySec = float64(24 * 2600)
+const oneYearDays = float64(365)
 const CellVersionByteLen = 4
 const MoleculeBytesHeaderSize = 4
 const OneCkb = uint64(1e8)
@@ -33,6 +34,13 @@ func (a AccountCellStatus) Str() string {
 	}
 	return "unknown"
 }
+
+type LockScriptType uint
+
+const (
+	ScriptType_User LockScriptType = 0
+	ScriptType_Any  LockScriptType = 1
+)
 
 const (
 	TableType_ACTION       TableType = 0
