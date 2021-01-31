@@ -29,11 +29,7 @@ var TestNetPreAccountCellCell = func(depIndex, oldIndex, newIndex uint32, dep, o
 				TxIndex: 0,
 				DepType: types.DepTypeDepGroup,
 			},
-			Out: DASCellBaseInfoOut{
-				CodeHash:     types.HexToHash("0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356"),
-				CodeHashType: types.HashTypeType,
-				Args:         nil,
-			},
+			Out: DasAnyOneCanSendCellInfo,
 		},
 	}
 }

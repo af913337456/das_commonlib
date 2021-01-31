@@ -37,11 +37,7 @@ var TestNetAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old *Acc
 				TxIndex: 0,
 				DepType: types.DepTypeDepGroup,
 			},
-			Out: DASCellBaseInfoOut{
-				CodeHash:     types.HexToHash("0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356"),
-				CodeHashType: types.HashTypeType,
-				Args:         nil,
-			},
+			Out: DasAnyOneCanSendCellInfo,
 		},
 	}
 	return acp
@@ -154,24 +150,47 @@ data:
   account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息
 */
 
-func (c *AccountCell) Data() ([]byte, error) {
+func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes := []byte{}
-	newAccountObj := c.p.AccountCellDatas.NewAccountCellData
-	accountBytes := newAccountObj.AccountInfo.Account().AsSlice()
+	accountBytes := newData.AccountInfo.Account().AsSlice()
 	accountIdBytes, _ := blake2b.Blake160(accountBytes)
 	dataBytes = append(dataBytes, accountIdBytes...)
-	if len(newAccountObj.NextAccountId) > 0 {
-		nextBytes, _ := blake2b.Blake160(newAccountObj.NextAccountId)
+	if len(newData.NextAccountId) > 0 {
+		nextBytes, _ := blake2b.Blake160(newData.NextAccountId)
 		dataBytes = append(dataBytes, nextBytes...)
 	} else {
 		dataBytes = append(dataBytes, EmptyAccountId...)
 	}
-	accountInfoDataBytes, _ := blake2b.Blake160(newAccountObj.AccountInfo.AsSlice())
+	accountInfoDataBytes, _ := blake2b.Blake160(newData.AccountInfo.AsSlice())
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	// expired_at
-	dataBytes = append(dataBytes, newAccountObj.AccountInfo.ExpiredAt().AsSlice()...)
+	dataBytes = append(dataBytes, newData.AccountInfo.ExpiredAt().AsSlice()...)
 	dataBytes = append(dataBytes, accountBytes...)
 	return dataBytes, nil
+}
+
+func AccountCellCap(newData *AccountCellFullData) (uint64, error) {
+	output := types.CellOutput{
+		Lock: &types.Script{
+			CodeHash: DasAnyOneCanSendCellInfo.CodeHash,
+			HashType: DasAnyOneCanSendCellInfo.CodeHashType,
+			Args:     DasAnyOneCanSendCellInfo.Args,
+		},
+		Type: &types.Script{
+			CodeHash: DasAccountCellScript.Out.CodeHash,
+			HashType: DasAccountCellScript.Out.CodeHashType,
+			Args:     DasAccountCellScript.Out.Args,
+		},
+	}
+	dataBytes, err := accountCellOutputData(newData)
+	if err != nil {
+		return 0, err
+	}
+	return output.OccupiedCapacity(dataBytes), nil
+}
+
+func (c *AccountCell) Data() ([]byte, error) {
+	return accountCellOutputData(c.p.AccountCellDatas.NewAccountCellData)
 }
 
 func (c *AccountCell) TableType() TableType {
@@ -180,16 +199,4 @@ func (c *AccountCell) TableType() TableType {
 
 func (c *AccountCell) TableData() []byte {
 	return c.p.Data.AsSlice()
-}
-
-func (c *AccountCell) CellCap() (uint64, error) {
-	output := types.CellOutput{
-		Lock: c.LockScript(),
-		Type: c.TypeScript(),
-	}
-	dataBytes, err := c.Data()
-	if err != nil {
-		return 0, err
-	}
-	return output.OccupiedCapacity(dataBytes), nil
 }

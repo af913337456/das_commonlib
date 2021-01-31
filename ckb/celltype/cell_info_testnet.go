@@ -11,6 +11,11 @@ import "github.com/nervosnetwork/ckb-sdk-go/types"
  */
 
 var (
+	DasAnyOneCanSendCellInfo = DASCellBaseInfoOut{
+		CodeHash:     types.HexToHash(""),
+		CodeHashType: "",
+		Args:         nil,
+	}
 	DasConfigCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
