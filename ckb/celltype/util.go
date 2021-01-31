@@ -316,7 +316,7 @@ ConfigCell.price * quote * account.bytes.length 这个是 365 天的单价，
 expiredAt = ((PreAccountCell.capacity - AccountCell.capacity) /
 		(ConfigCell.price * quote * account.bytes.length)) * 365
 */
-func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint32, error) {
+func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {
 	divPerDayPrice := new(big.Rat).SetFrac(new(big.Int).
 		SetInt64(int64(param.PriceConfigNew)), new(big.Int).
 		SetInt64(int64(param.Quote)))
@@ -326,6 +326,6 @@ func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int6
 	} else {
 		disRat := new(big.Rat).SetInt64(int64(dis))
 		div, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
-		return uint32(registerAt) + uint32(math.Floor(div*oneYearDays*oneDaySec)), nil
+		return uint64(registerAt) + uint64(math.Floor(div*oneYearDays*oneDaySec)), nil
 	}
 }

@@ -3594,7 +3594,7 @@ type PreAccountCellDataBuilder struct {
 	refund_lock Script
 	owner_lock  Script
 	price       PriceConfig
-	quote       Uint32
+	quote       Uint64
 	created_at  Timestamp
 }
 
@@ -3652,7 +3652,7 @@ func (s *PreAccountCellDataBuilder) Price(v PriceConfig) *PreAccountCellDataBuil
 	return s
 }
 
-func (s *PreAccountCellDataBuilder) Quote(v Uint32) *PreAccountCellDataBuilder {
+func (s *PreAccountCellDataBuilder) Quote(v Uint64) *PreAccountCellDataBuilder {
 	s.quote = v
 	return s
 }
@@ -3663,7 +3663,7 @@ func (s *PreAccountCellDataBuilder) CreatedAt(v Timestamp) *PreAccountCellDataBu
 }
 
 func NewPreAccountCellDataBuilder() *PreAccountCellDataBuilder {
-	return &PreAccountCellDataBuilder{account: AccountCharsDefault(), refund_lock: ScriptDefault(), owner_lock: ScriptDefault(), price: PriceConfigDefault(), quote: Uint32Default(), created_at: TimestampDefault()}
+	return &PreAccountCellDataBuilder{account: AccountCharsDefault(), refund_lock: ScriptDefault(), owner_lock: ScriptDefault(), price: PriceConfigDefault(), quote: Uint64Default(), created_at: TimestampDefault()}
 }
 
 type PreAccountCellData struct {
@@ -3678,7 +3678,7 @@ func (s *PreAccountCellData) AsSlice() []byte {
 }
 
 func PreAccountCellDataDefault() PreAccountCellData {
-	return *PreAccountCellDataFromSliceUnchecked([]byte{183, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 85, 0, 0, 0, 138, 0, 0, 0, 171, 0, 0, 0, 175, 0, 0, 0, 4, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *PreAccountCellDataFromSliceUnchecked([]byte{187, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 85, 0, 0, 0, 138, 0, 0, 0, 171, 0, 0, 0, 179, 0, 0, 0, 4, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCellData, error) {
@@ -3757,7 +3757,7 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[4]:offsets[5]], compatible)
+	_, err = Uint64FromSlice(slice[offsets[4]:offsets[5]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -3819,10 +3819,10 @@ func (s *PreAccountCellData) Price() *PriceConfig {
 	return PriceConfigFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *PreAccountCellData) Quote() *Uint32 {
+func (s *PreAccountCellData) Quote() *Uint64 {
 	start := unpackNumber(s.inner[20:])
 	end := unpackNumber(s.inner[24:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
+	return Uint64FromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *PreAccountCellData) CreatedAt() *Timestamp {
