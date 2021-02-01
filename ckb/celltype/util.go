@@ -123,7 +123,7 @@ func MoleculeScriptToGo(s Script) (*types.Script, error) {
 	}, nil
 }
 
-func MoleculeAccountToRawAccount(accountChars AccountChars) (DasAccountId, error) {
+func MoleculeAccountToRawAccount(accountChars AccountChars) DasAccountId {
 	/**
 	[
 		{
@@ -145,7 +145,7 @@ func MoleculeAccountToRawAccount(accountChars AccountChars) (DasAccountId, error
 	for char := accountChars.Get(index); !char.IsEmpty(); index++ {
 		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
 	}
-	return accountRawBytes, nil
+	return accountRawBytes
 }
 
 func MoleculeU8ToGo(bys []byte) (uint8, error) {
