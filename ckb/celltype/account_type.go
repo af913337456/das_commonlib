@@ -26,6 +26,11 @@ func (a DasAccount) AccountId() DasAccountId {
 
 type DasAccountId []byte
 
+func DasAccountIdFromBytes(accountRawBytes []byte) DasAccountId {
+	bys, _ := blake2b.Blake160(accountRawBytes)
+	return bys
+}
+
 func (a DasAccountId) HexStr() string {
 	return hex.EncodeToString(a)
 }
