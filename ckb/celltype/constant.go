@@ -20,6 +20,7 @@ const AccountCellDataAccountIdStartIndex = 72
 var EmptyAccountId = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 type TableType uint32
+type AccountCharType uint32
 type AccountCellStatus uint8
 type DataEntityChangeType uint
 
@@ -40,6 +41,12 @@ type LockScriptType uint
 const (
 	ScriptType_User LockScriptType = 0
 	ScriptType_Any  LockScriptType = 1
+)
+
+const (
+	AccountChar_Emoji AccountCharType = 0
+	AccountChar_En    AccountCharType = 1
+	AccountChar_Zh_Cn AccountCharType = 2
 )
 
 const (
