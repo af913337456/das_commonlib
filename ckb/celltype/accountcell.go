@@ -1,6 +1,7 @@
 package celltype
 
 import (
+	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -149,6 +150,13 @@ data:
   hash(data: AccountCellData)
   account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息
 */
+
+func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
+	if size := len(data); size < 52 {
+		return nil, fmt.Errorf("AccountIdFromOutputData invalid data, len not enough: %d", size)
+	}
+	return data[32:52], nil
+}
 
 func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes := []byte{}
