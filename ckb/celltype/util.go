@@ -102,9 +102,25 @@ func GoCkbScriptToMoleculeScript(script types.Script) Script {
 	}
 	return NewScriptBuilder().
 		CodeHash(GoHexToMoleculeHash(script.CodeHash.String())).
-		HashType(GoByteToMoleculeByte(byte(ht))). // todo
+		HashType(GoByteToMoleculeByte(byte(ht))).
 		Args(GoBytesToMoleculeBytes(script.Args)).
 		Build()
+}
+
+func MoleculeScriptToGo(s Script) (*types.Script, error) {
+	t, err := MoleculeU8ToGo(s.HashType().AsSlice())
+	if err != nil {
+		return nil, err
+	}
+	hashType := types.HashTypeData
+	if t == 1 {
+		hashType = types.HashTypeType
+	}
+	return &types.Script{
+		CodeHash: types.BytesToHash(s.CodeHash().RawData()),
+		HashType: hashType,
+		Args:     s.Args().RawData(),
+	}, nil
 }
 
 func MoleculeU8ToGo(bys []byte) (uint8, error) {
