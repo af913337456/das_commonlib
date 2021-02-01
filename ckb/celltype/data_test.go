@@ -17,6 +17,13 @@ import (
  * Description:
  */
 
+func Test_AccountCharLen(t *testing.T) {
+	// accountId 包含 bit
+	// 取价格，不需要
+	//
+	fmt.Println(len([]rune("xx🌹你")))
+}
+
 func Test_U64Bytes(t *testing.T) {
 	d, _ := blake2b.Blake256([]byte("0"))
 	t.Log(len(d))

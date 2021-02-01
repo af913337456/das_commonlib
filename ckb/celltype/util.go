@@ -123,6 +123,14 @@ func MoleculeScriptToGo(s Script) (*types.Script, error) {
 	}, nil
 }
 
+// func MoleculeAccountToRawAccount(accountChars AccountChars) (string, error) {
+// 	index := uint(0)
+// 	for accountChars.Get(index) {
+//
+// 	}
+// 	return "", nil
+// }
+
 func MoleculeU8ToGo(bys []byte) (uint8, error) {
 	var t uint8
 	bytesBuffer := bytes.NewBuffer(bys)
