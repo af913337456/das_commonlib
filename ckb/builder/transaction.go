@@ -211,7 +211,7 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 // 强制每笔交易都要有找零
 func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 	if min := celltype.CkbTxMinOutputCKBValue + builder.fee; builder.totalOutputCap >= min {
-		return builder.totalOutputCap + builder.fee
+		return builder.totalOutputCap + builder.fee - builder.totalInputCap
 	} else {
 		return min // 最少 61 kb + fee
 	}
