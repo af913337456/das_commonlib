@@ -123,6 +123,15 @@ func MoleculeScriptToGo(s Script) (*types.Script, error) {
 	}, nil
 }
 
+func AccountCharsToAccount(accountChars AccountChars) DasAccount {
+	index := uint(0)
+	accountRawBytes := []byte{}
+	for char := accountChars.Get(index); !char.IsEmpty(); index++ {
+		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
+	}
+	return DasAccount(accountRawBytes)
+}
+
 func AccountCharsToAccountId(accountChars AccountChars) DasAccountId {
 	/**
 	[
