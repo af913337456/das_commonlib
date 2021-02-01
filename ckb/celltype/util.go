@@ -123,13 +123,30 @@ func MoleculeScriptToGo(s Script) (*types.Script, error) {
 	}, nil
 }
 
-// func MoleculeAccountToRawAccount(accountChars AccountChars) (string, error) {
-// 	index := uint(0)
-// 	for accountChars.Get(index) {
-//
-// 	}
-// 	return "", nil
-// }
+func MoleculeAccountToRawAccount(accountChars AccountChars) (DasAccountId, error) {
+	/**
+	[
+		{
+			emoji
+			[]byte("🌹")
+		},
+		{
+			en
+			[]byte("a")
+		},
+		{
+			zh
+			[]byte("你")
+		}
+	]
+	*/
+	index := uint(0)
+	accountRawBytes := DasAccountId{}
+	for char := accountChars.Get(index); !char.IsEmpty(); index++ {
+		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
+	}
+	return accountRawBytes, nil
+}
 
 func MoleculeU8ToGo(bys []byte) (uint8, error) {
 	var t uint8

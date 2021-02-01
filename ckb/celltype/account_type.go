@@ -29,3 +29,7 @@ type DasAccountId []byte
 func (a DasAccountId) HexStr() string {
 	return hex.EncodeToString(a)
 }
+
+func (a DasAccountId) Str() string {
+	return string(a)
+}

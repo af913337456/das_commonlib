@@ -22,6 +22,23 @@ func Test_AccountCharLen(t *testing.T) {
 	// 取价格，不需要
 	//
 	fmt.Println(len([]rune("xx🌹你")))
+	fmt.Println([]byte("🌹"))
+	/**
+	[
+		{
+			emoji
+			[]byte("🌹")
+		},
+		{
+			en
+			[]byte("a")
+		},
+		{
+			zh
+			[]byte("你")
+		}
+	]
+	*/
 }
 
 func Test_U64Bytes(t *testing.T) {
