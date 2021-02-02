@@ -88,6 +88,30 @@ var (
 			Args:         nil,
 		},
 	}
+	DasQuoteCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: "",
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: "",
+			Args:         nil,
+		},
+	}
+	DasConfigCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: "",
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: "",
+			Args:         nil,
+		},
+	}
 	DasTimeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
