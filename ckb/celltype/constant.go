@@ -91,6 +91,13 @@ const (
 )
 
 const (
+	SystemScript_ApplyRegisterCell = "apply_register_cell"
+	SystemScript_PreAccoutnCell    = "preaccount_cell"
+	SystemScript_AccoutnCell       = "account_cell"
+	SystemScript_ProposeCell       = "propose_cell"
+)
+
+const (
 	Action_Config                = "config"
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"
