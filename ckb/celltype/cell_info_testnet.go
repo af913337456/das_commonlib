@@ -40,18 +40,18 @@ var (
 			Args:         nil,
 		},
 	}
-	DasOwnerCellScript = DASCellBaseInfo{
-		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash(""),
-			TxIndex: 0,
-			DepType: "",
-		},
-		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
-			Args:         nil, // [id, account_id]
-		},
-	}
+	// DasOwnerCellScript = DASCellBaseInfo{
+	// 	Dep: DASCellBaseInfoDep{
+	// 		TxHash:  types.HexToHash(""),
+	// 		TxIndex: 0,
+	// 		DepType: "",
+	// 	},
+	// 	Out: DASCellBaseInfoOut{
+	// 		CodeHash:     types.HexToHash(""),
+	// 		CodeHashType: "",
+	// 		Args:         nil, // [id, account_id]
+	// 	},
+	// }
 	DasPreAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
@@ -88,30 +88,30 @@ var (
 			Args:         nil,
 		},
 	}
-	DasQuoteCellScript = DASCellBaseInfo{
-		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash(""),
-			TxIndex: 0,
-			DepType: "",
-		},
-		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
-			Args:         nil,
-		},
-	}
-	DasConfigCellScript = DASCellBaseInfo{
-		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash(""),
-			TxIndex: 0,
-			DepType: "",
-		},
-		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
-			Args:         nil,
-		},
-	}
+	// DasQuoteCellScript = DASCellBaseInfo{
+	// 	Dep: DASCellBaseInfoDep{
+	// 		TxHash:  types.HexToHash(""),
+	// 		TxIndex: 0,
+	// 		DepType: "",
+	// 	},
+	// 	Out: DASCellBaseInfoOut{
+	// 		CodeHash:     types.HexToHash(""),
+	// 		CodeHashType: "",
+	// 		Args:         nil,
+	// 	},
+	// }
+	// DasConfigCellScript = DASCellBaseInfo{
+	// 	Dep: DASCellBaseInfoDep{
+	// 		TxHash:  types.HexToHash(""),
+	// 		TxIndex: 0,
+	// 		DepType: "",
+	// 	},
+	// 	Out: DASCellBaseInfoOut{
+	// 		CodeHash:     types.HexToHash(""),
+	// 		CodeHashType: "",
+	// 		Args:         nil,
+	// 	},
+	// }
 	DasTimeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
