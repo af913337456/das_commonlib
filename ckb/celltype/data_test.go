@@ -17,6 +17,22 @@ import (
  * Description:
  */
 
+func Test_Ticker(t *testing.T) {
+	go func() {
+		ticker := time.NewTicker(time.Second * 2)
+		for {
+			select {
+			case <-ticker.C:
+				fmt.Println("1111")
+			default:
+				time.Sleep(time.Second)
+				fmt.Println("2")
+			}
+		}
+	}()
+	select {}
+}
+
 func Test_AccountCharLen(t *testing.T) {
 	// accountId 包含 bit
 	// 取价格，不需要

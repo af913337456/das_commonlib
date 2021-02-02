@@ -103,7 +103,7 @@ func (c *PreAccountCellCell) Data() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return append(accountId, dataHash...), nil
+	return append(dataHash, accountId...), nil
 }
 
 func (c *PreAccountCellCell) TableData() []byte {
