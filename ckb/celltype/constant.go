@@ -100,6 +100,7 @@ const (
 const (
 	Action_Deploy                = "deploy"
 	Action_Config                = "config"
+	Action_InitLink              = "init_linked_list"
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"
 	Action_Propose               = "propose"
