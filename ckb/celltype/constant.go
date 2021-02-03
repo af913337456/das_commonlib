@@ -98,6 +98,7 @@ const (
 )
 
 const (
+	Action_Deploy                = "deploy"
 	Action_Config                = "config"
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"

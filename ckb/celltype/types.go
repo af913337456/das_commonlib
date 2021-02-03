@@ -296,7 +296,6 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 				ItemType(GoUint8ToMoleculeU8(uint8(item.ItemType))).
 				Build()
 			proposeItemList = append(proposeItemList, proposeItem)
-			NewSLBuilder().Set(proposeItemList)
 		}
 		sliceList = append(sliceList, NewSLBuilder().Set(proposeItemList).Build())
 	}
