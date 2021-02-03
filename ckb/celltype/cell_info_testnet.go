@@ -127,7 +127,15 @@ var (
 			Args:         nil,
 		},
 	}
+	SystemCodeScriptMap = map[string]*DASCellBaseInfo{}
 )
+
+func init() {
+	SystemCodeScriptMap[SystemScript_ApplyRegisterCell] = &DasApplyRegisterCellScript
+	SystemCodeScriptMap[SystemScript_PreAccoutnCell] = &DasPreAccountCellScript
+	SystemCodeScriptMap[SystemScript_AccoutnCell] = &DasAccountCellScript
+	SystemCodeScriptMap[SystemScript_ProposeCell] = &DasProposeCellScript
+}
 
 func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	applyRegisterCodeHash := types.BytesToHash(data.TypeIdTable().ApplyRegisterCell().RawData())
@@ -142,20 +150,9 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	return retMap
 }
 
-func InitSystemScript(scriptName string, dasCellBaseInfo DASCellBaseInfo) error {
-	switch scriptName {
-	case SystemScript_ApplyRegisterCell:
-		DasApplyRegisterCellScript = dasCellBaseInfo
-		return nil
-	case SystemScript_PreAccoutnCell:
-		DasPreAccountCellScript = dasCellBaseInfo
-		return nil
-	case SystemScript_AccoutnCell:
-		DasAccountCellScript = dasCellBaseInfo
-		return nil
-	case SystemScript_ProposeCell:
-		DasProposeCellScript = dasCellBaseInfo
-		return nil
+func SetSystemScript(scriptName string, dasCellBaseInfo *DASCellBaseInfo) error {
+	if v := SystemCodeScriptMap[scriptName]; v != nil {
+		*SystemCodeScriptMap[scriptName] = *dasCellBaseInfo
 	}
 	return errors.New("unSupport script")
 }

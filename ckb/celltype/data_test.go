@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
+	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"testing"
 	"time"
 )
@@ -16,6 +17,14 @@ import (
  * Date:     2020/12/20 2:57 下午
  * Description:
  */
+
+func Test_InitSystemScript(t *testing.T) {
+	InitSystemScript(SystemScript_ProposeCell, &DASCellBaseInfo{Out: DASCellBaseInfoOut{CodeHash: types.HexToHash("ab")}})
+	fmt.Println(DasProposeCellScript.Out.CodeHash.String())
+	fmt.Println(SystemCodeScriptMap[SystemScript_ProposeCell].Out.CodeHash.String())
+	InitSystemScript(SystemScript_ProposeCell, &DASCellBaseInfo{Out: DASCellBaseInfoOut{CodeHash: types.HexToHash("abcc")}})
+	fmt.Println(DasProposeCellScript.Out.CodeHash.String())
+}
 
 func Test_Ticker(t *testing.T) {
 	go func() {
