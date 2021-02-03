@@ -1,6 +1,9 @@
 package celltype
 
-import "github.com/nervosnetwork/ckb-sdk-go/types"
+import (
+	"errors"
+	"github.com/nervosnetwork/ckb-sdk-go/types"
+)
 
 /**
  * Copyright (C), 2019-2020
@@ -137,4 +140,22 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	retMap[accountCellCodeHash] = SystemScript_AccoutnCell
 	retMap[proposeCellCodeHash] = SystemScript_ProposeCell
 	return retMap
+}
+
+func InitSystemScript(scriptName string, dasCellBaseInfo DASCellBaseInfo) error {
+	switch scriptName {
+	case SystemScript_ApplyRegisterCell:
+		DasApplyRegisterCellScript = dasCellBaseInfo
+		return nil
+	case SystemScript_PreAccoutnCell:
+		DasPreAccountCellScript = dasCellBaseInfo
+		return nil
+	case SystemScript_AccoutnCell:
+		DasAccountCellScript = dasCellBaseInfo
+		return nil
+	case SystemScript_ProposeCell:
+		DasProposeCellScript = dasCellBaseInfo
+		return nil
+	}
+	return errors.New("unSupport script")
 }
