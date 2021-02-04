@@ -19,10 +19,10 @@ import (
  */
 
 func Test_InitSystemScript(t *testing.T) {
-	InitSystemScript(SystemScript_ProposeCell, &DASCellBaseInfo{Out: DASCellBaseInfoOut{CodeHash: types.HexToHash("ab")}})
+	SetSystemScript(SystemScript_ProposeCell, &DASCellBaseInfo{Out: DASCellBaseInfoOut{CodeHash: types.HexToHash("ab")}})
 	fmt.Println(DasProposeCellScript.Out.CodeHash.String())
 	fmt.Println(SystemCodeScriptMap[SystemScript_ProposeCell].Out.CodeHash.String())
-	InitSystemScript(SystemScript_ProposeCell, &DASCellBaseInfo{Out: DASCellBaseInfoOut{CodeHash: types.HexToHash("abcc")}})
+	SetSystemScript(SystemScript_ProposeCell, &DASCellBaseInfo{Out: DASCellBaseInfoOut{CodeHash: types.HexToHash("abcc")}})
 	fmt.Println(DasProposeCellScript.Out.CodeHash.String())
 }
 
@@ -97,7 +97,9 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 }
 
 func Test_Blake2b_256(t *testing.T) {
-	bys, _ := blake2b.Blake256([]byte("lafdqalqvbappo"))
+	// 0xc9804583fc51c64512c0153264a707c254ae81ff
+	bys, _ := blake2b.Blake160([]byte("das00007.bit"))
+	t.Log(hex.EncodeToString(bys))
 	t.Log(len(bys), bys)
 }
 

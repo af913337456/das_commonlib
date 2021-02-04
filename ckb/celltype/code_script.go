@@ -153,6 +153,7 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 func SetSystemScript(scriptName string, dasCellBaseInfo *DASCellBaseInfo) error {
 	if v := SystemCodeScriptMap[scriptName]; v != nil {
 		*SystemCodeScriptMap[scriptName] = *dasCellBaseInfo
+		return nil
 	}
 	return errors.New("unSupport script")
 }
