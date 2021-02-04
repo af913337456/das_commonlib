@@ -310,25 +310,25 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 	return retList, nil
 }
 
-func (builder *TransactionBuilder) SingleCombineSignTransaction(list []celltype.BuildTransactionRet, key crypto.Key) error {
+func SingleCombineSignTransaction(tx *types.Transaction, list []celltype.BuildTransactionRet, key crypto.Key) error {
 	size := len(list)
 	for i := 0; i < size; i++ {
 		item := list[i]
-		if err := builder.SingleSignTransaction(item.Group, item.WitnessArg, key); err != nil {
+		if err := SingleSignTransaction(tx, item.Group, item.WitnessArg, key); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (builder *TransactionBuilder) SingleSignTransaction(group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
+func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
 	data, err := witnessArgs.Serialize()
 	if err != nil {
 		return err
 	}
 	length := make([]byte, 8)
 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
-	hash, err := builder.tx.ComputeHash()
+	hash, err := tx.ComputeHash()
 	if err != nil {
 		return err
 	}
@@ -339,7 +339,7 @@ func (builder *TransactionBuilder) SingleSignTransaction(group []int, witnessArg
 	// hash the other witnesses in the group
 	if len(group) > 1 {
 		for i := 1; i < len(group); i++ {
-			data := builder.tx.Witnesses[i]
+			data := tx.Witnesses[i]
 			length := make([]byte, 8)
 			binary.LittleEndian.PutUint64(length, uint64(len(data)))
 			message = append(message, length...)
@@ -347,7 +347,7 @@ func (builder *TransactionBuilder) SingleSignTransaction(group []int, witnessArg
 		}
 	}
 	// hash witnesses which do not in any input group
-	for _, witness := range builder.tx.Witnesses[len(builder.tx.Inputs):] {
+	for _, witness := range tx.Witnesses[len(tx.Inputs):] {
 		length := make([]byte, 8)
 		binary.LittleEndian.PutUint64(length, uint64(len(witness)))
 		message = append(message, length...)
@@ -371,70 +371,6 @@ func (builder *TransactionBuilder) SingleSignTransaction(group []int, witnessArg
 	if err != nil {
 		return err
 	}
-	builder.tx.Witnesses[group[0]] = wab
+	tx.Witnesses[group[0]] = wab
 	return nil
 }
-
-// func (builder *TransactionBuilder) BuildTransaction() ([]byte, error) {
-// 	data, _ := transaction.EmptyWitnessArg.Serialize() // 对应前 65 字节的签名信息
-// 	length := make([]byte, 8)
-// 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
-// 	hash, err := builder.tx.ComputeHash()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	message := append(hash.Bytes(), length...)
-// 	message = append(message, data...)
-// 	// 从 1 开始，多个相同的 input 对应的 wintness，填充空 []byte
-// 	inputSize := len(builder.tx.Inputs)
-// 	emptyWitnessList := make([][]byte, 0, inputSize-1)
-// 	for i := 1; i < inputSize; i++ {
-// 		emptyWitnessList = append(emptyWitnessList, []byte{})
-// 	}
-// 	// 添加自定义的 witness
-// 	if len(emptyWitnessList) > 0 {
-// 		emptyWitnessList = append(emptyWitnessList, builder.tx.Witnesses...)
-// 		builder.tx.Witnesses = emptyWitnessList
-// 	}
-// 	// 添加 witness 到待签名的字节中
-// 	witnessSize := len(builder.tx.Witnesses)
-// 	for i := 0; i < witnessSize; i++ {
-// 		_wData := builder.tx.Witnesses[i]
-// 		length := make([]byte, 8)
-// 		binary.LittleEndian.PutUint64(length, uint64(len(_wData)))
-// 		message = append(message, length...)
-// 		message = append(message, _wData...)
-// 	}
-// 	if message, err = blake2b.Blake256(message); err != nil {
-// 		return nil, err
-// 	} else {
-// 		return message, nil
-// 	}
-// }
-
-// func (builder *TransactionBuilder) SingleSignTransaction(key crypto.Key) error {
-// 	message, err := builder.BuildTransaction()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if signed, err := key.Sign(message); err != nil {
-// 		return err
-// 	} else {
-// 		wa := &types.WitnessArgs{
-// 			Lock:       signed,
-// 			InputType:  nil,
-// 			OutputType: nil,
-// 		}
-// 		if wab, err := wa.Serialize(); err != nil {
-// 			return err
-// 		} else {
-// 			if len(builder.tx.Witnesses) == 0 {
-// 				builder.tx.Witnesses = append(builder.tx.Witnesses, wab)
-// 			} else {
-// 				witness := [][]byte{wab} // 第一组放置签名的65字节
-// 				builder.tx.Witnesses = append(witness, builder.tx.Witnesses...)
-// 			}
-// 		}
-// 	}
-// 	return nil
-// }
