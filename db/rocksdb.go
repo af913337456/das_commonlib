@@ -13,8 +13,12 @@ import (
  * Description:
  */
 
+func defaultRateLimiter() *gorocksdb.RateLimiter {
+	return gorocksdb.NewRateLimiter(1024, 100*1000, 10)
+}
+
 func NewDefaultRocksTxDb(dataDir string) (*gorocksdb.TransactionDB, error) {
-	rateLimiter := gorocksdb.NewRateLimiter(1024, 100*1000, 10)
+	rateLimiter := defaultRateLimiter()
 	txOpts := gorocksdb.NewDefaultOptions()
 	txOpts.SetRateLimiter(rateLimiter)
 	txOpts.SetCreateIfMissing(true)
@@ -26,7 +30,7 @@ func NewDefaultRocksTxDb(dataDir string) (*gorocksdb.TransactionDB, error) {
 }
 
 func NewDefaultRocksNormalDb(dataDir string) (*gorocksdb.DB, error) {
-	rateLimiter := gorocksdb.NewRateLimiter(1024, 100*1000, 10)
+	rateLimiter := defaultRateLimiter()
 	opts := gorocksdb.NewDefaultOptions()
 	opts.SetRateLimiter(rateLimiter)
 	opts.SetCreateIfMissing(true)
@@ -38,13 +42,13 @@ func NewDefaultRocksNormalDb(dataDir string) (*gorocksdb.DB, error) {
 }
 
 func NewDefaultReadOnlyRocksDb(dataDir string) (*gorocksdb.DB, error) {
-	rateLimiter := gorocksdb.NewRateLimiter(1024, 100*1000, 10)
+	rateLimiter := defaultRateLimiter()
 	opts := gorocksdb.NewDefaultOptions()
 	opts.SetRateLimiter(rateLimiter)
 	opts.SetCreateIfMissing(true)
 	db, err := gorocksdb.OpenDbForReadOnly(opts, dataDir, false)
 	if err != nil {
-		return nil, fmt.Errorf("NewDefaultRocksNormalDb failed: (%s)", err.Error())
+		return nil, fmt.Errorf("NewDefaultReadOnlyRocksDb failed: (%s)", err.Error())
 	}
 	return db, nil
 }
