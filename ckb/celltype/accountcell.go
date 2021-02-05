@@ -158,6 +158,11 @@ func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 	return data[32:52], nil
 }
 
+func DefaultAccountCellDataBytes(accountId, nextAccountId []byte) []byte {
+	holder, _ := blake2b.Blake256([]byte(""))
+	return append(append(holder, accountId...), nextAccountId...)
+}
+
 func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes := []byte{}
 	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
