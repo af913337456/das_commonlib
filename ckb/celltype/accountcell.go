@@ -159,6 +159,12 @@ func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 }
 
 func DefaultAccountCellDataBytes(accountId, nextAccountId []byte) []byte {
+	if accountId == nil || len(accountId) != 20 {
+		accountId = EmptyAccountId
+	}
+	if nextAccountId == nil || len(nextAccountId) != 20 {
+		nextAccountId = EmptyAccountId
+	}
 	holder, _ := blake2b.Blake256([]byte(""))
 	return append(append(holder, accountId...), nextAccountId...)
 }
