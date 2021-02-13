@@ -158,7 +158,7 @@ func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 	return data[32:52], nil
 }
 
-func DefaultAccountCellDataBytes(accountId, nextAccountId []byte) []byte {
+func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 	if accountId == nil || len(accountId) != 20 {
 		accountId = EmptyAccountId
 	}
