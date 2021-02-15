@@ -32,6 +32,10 @@ import (
 // 	return cellData[CellVersionByteLen:]
 // }
 
+func GoBytesToMoleculeHash(bytes []byte) Hash {
+	return *HashFromSliceUnchecked(bytes)
+}
+
 func GoHexToMoleculeHash(hexStr string) Hash {
 	hexBytes, _ := hex.DecodeString(hexStr)
 	return *HashFromSliceUnchecked(hexBytes)

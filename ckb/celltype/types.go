@@ -300,7 +300,7 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 	}
 	proposalCellData := NewProposalCellDataBuilder().
 		ProposerLock(GoCkbScriptToMoleculeScript(*incomeLockScript)).
-		ProposerWallet(GoHexToMoleculeHash(hex.EncodeToString(incomeLockScript.Args))).
+		ProposerWallet(GoBytesToMoleculeHash(incomeLockScript.Args)).
 		Slices(NewSliceListBuilder().Set(sliceList).Build()).
 		Build()
 	return proposalCellData
