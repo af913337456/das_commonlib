@@ -124,5 +124,5 @@ const (
 	Action_CancelAccountAuction  = "cancel_account_auction"
 	Action_AccuseAccountRepeat   = "accuse_account_repeat"
 	Action_AccuseAccountIllegal  = "accuse_account_illegal"
-	Action_RecycalExpiredAccount = "recycal_expired_account"
+	Action_RecycleExpiredAccount = "recycle_expired_account"
 )
