@@ -208,6 +208,8 @@ type ProposeCellParam struct {
 
 type AccountCellFullData struct {
 	NextAccountId []byte          `json:"next_account_id"`
+	RegisteredAt  uint64          `json:"registered_at"`
+	ExpiredAt     uint64          `json:"expired_at"`
 	AccountInfo   AccountCellData `json:"-"`
 }
 
@@ -289,10 +291,7 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 			nextAccountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.Next)).Build()
 			proposeItem := NewProposalItemBuilder().
 				AccountId(accountId).
-				Next(
-					NewAccountIdOptBuilder().
-						Set(nextAccountId).
-						Build()).
+				Next(nextAccountId).
 				ItemType(GoUint8ToMoleculeU8(uint8(item.ItemType))).
 				Build()
 			proposeItemList = append(proposeItemList, proposeItem)
@@ -300,7 +299,8 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 		sliceList = append(sliceList, NewSLBuilder().Set(proposeItemList).Build())
 	}
 	proposalCellData := NewProposalCellDataBuilder().
-		StarterLock(GoCkbScriptToMoleculeScript(*incomeLockScript)).
+		ProposerLock(GoCkbScriptToMoleculeScript(*incomeLockScript)).
+		ProposerWallet(GoHexToMoleculeHash(hex.EncodeToString(incomeLockScript.Args))).
 		Slices(NewSliceListBuilder().Set(sliceList).Build()).
 		Build()
 	return proposalCellData

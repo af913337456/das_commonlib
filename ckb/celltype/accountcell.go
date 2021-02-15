@@ -52,10 +52,12 @@ type:
   args: []
 data:
   // 20 20 32, account = 72...
+  hash(data: AccountCellData) // 32
   id // 自己的 ID，生成算法为 hash(account)，然后取前 20 bytes
   next // 下一个 AccountCell 的 ID
-  hash(data: AccountCellData)
-  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息
+  registered_at // 小端编码的 u64 时间戳
+  expired_at // 小端编码的 u64 时间戳
+  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息。直接 bytes
 
 witness:
   table Data {
@@ -82,8 +84,6 @@ table AccountCellData {
     account: Bytes,
     // The status of the account, 0 means normal, 1 means being sold, 2 means being auctioned.
     status: Uint8,
-    registered_at: Timestamp,
-    expired_at: Timestamp,
     records: Records,
 }
 
@@ -182,8 +182,9 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	} else {
 		dataBytes = append(dataBytes, EmptyAccountId...)
 	}
-	dataBytes = append(dataBytes, newData.AccountInfo.ExpiredAt().AsSlice()...) // expired_at
-	dataBytes = append(dataBytes, accountBytes...)                              // account
+	dataBytes = append(dataBytes, GoUint64ToBytes(newData.RegisteredAt)...) // registered_at
+	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)    // expired_at
+	dataBytes = append(dataBytes, accountBytes...)                          // account
 	return dataBytes, nil
 }
 

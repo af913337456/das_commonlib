@@ -186,6 +186,7 @@ type ConfigCellDataBuilder struct {
 	reserved_account_filter                   Bytes
 	proposal_min_confirm_require              Uint8
 	proposal_min_extend_interval              Uint8
+	proposal_min_recycle_interval             Uint8
 	proposal_max_account_affect               Uint32
 	proposal_max_pre_account_contain          Uint32
 	apply_min_waiting_time                    Uint32
@@ -202,8 +203,8 @@ type ConfigCellDataBuilder struct {
 func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (14 + 1)
-	offsets := make([]uint32, 0, 14)
+	totalSize := HeaderSizeUint * (15 + 1)
+	offsets := make([]uint32, 0, 15)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.reserved_account_filter.AsSlice()))
@@ -211,6 +212,8 @@ func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	totalSize += uint32(len(s.proposal_min_confirm_require.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposal_min_extend_interval.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.proposal_min_recycle_interval.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposal_max_account_affect.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -243,6 +246,7 @@ func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	b.Write(s.reserved_account_filter.AsSlice())
 	b.Write(s.proposal_min_confirm_require.AsSlice())
 	b.Write(s.proposal_min_extend_interval.AsSlice())
+	b.Write(s.proposal_min_recycle_interval.AsSlice())
 	b.Write(s.proposal_max_account_affect.AsSlice())
 	b.Write(s.proposal_max_pre_account_contain.AsSlice())
 	b.Write(s.apply_min_waiting_time.AsSlice())
@@ -269,6 +273,11 @@ func (s *ConfigCellDataBuilder) ProposalMinConfirmRequire(v Uint8) *ConfigCellDa
 
 func (s *ConfigCellDataBuilder) ProposalMinExtendInterval(v Uint8) *ConfigCellDataBuilder {
 	s.proposal_min_extend_interval = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) ProposalMinRecycleInterval(v Uint8) *ConfigCellDataBuilder {
+	s.proposal_min_recycle_interval = v
 	return s
 }
 
@@ -328,7 +337,7 @@ func (s *ConfigCellDataBuilder) TypeIdTable(v TypeIdTable) *ConfigCellDataBuilde
 }
 
 func NewConfigCellDataBuilder() *ConfigCellDataBuilder {
-	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), type_id_table: TypeIdTableDefault()}
+	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), type_id_table: TypeIdTableDefault()}
 }
 
 type ConfigCellData struct {
@@ -343,7 +352,7 @@ func (s *ConfigCellData) AsSlice() []byte {
 }
 
 func ConfigCellDataDefault() ConfigCellData {
-	return *ConfigCellDataFromSliceUnchecked([]byte{142, 1, 0, 0, 60, 0, 0, 0, 64, 0, 0, 0, 65, 0, 0, 0, 66, 0, 0, 0, 70, 0, 0, 0, 74, 0, 0, 0, 78, 0, 0, 0, 82, 0, 0, 0, 86, 0, 0, 0, 90, 0, 0, 0, 94, 0, 0, 0, 98, 0, 0, 0, 102, 0, 0, 0, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 1, 0, 0, 36, 0, 0, 0, 68, 0, 0, 0, 100, 0, 0, 0, 132, 0, 0, 0, 164, 0, 0, 0, 196, 0, 0, 0, 228, 0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellDataFromSliceUnchecked([]byte{147, 1, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 69, 0, 0, 0, 70, 0, 0, 0, 71, 0, 0, 0, 75, 0, 0, 0, 79, 0, 0, 0, 83, 0, 0, 0, 87, 0, 0, 0, 91, 0, 0, 0, 95, 0, 0, 0, 99, 0, 0, 0, 103, 0, 0, 0, 107, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 1, 0, 0, 36, 0, 0, 0, 68, 0, 0, 0, 100, 0, 0, 0, 132, 0, 0, 0, 164, 0, 0, 0, 196, 0, 0, 0, 228, 0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, error) {
@@ -359,7 +368,7 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 14 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 15 == 0 {
 		return &ConfigCellData{inner: slice}, nil
 	}
 
@@ -375,9 +384,9 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 14 {
+	if fieldCount < 15 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 14 {
+	} else if !compatible && fieldCount > 15 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -417,7 +426,7 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[3]:offsets[4]], compatible)
+	_, err = Uint8FromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -442,17 +451,17 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = PriceConfigListFromSlice(slice[offsets[8]:offsets[9]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[8]:offsets[9]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = CharSetListFromSlice(slice[offsets[9]:offsets[10]], compatible)
+	_, err = PriceConfigListFromSlice(slice[offsets[9]:offsets[10]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[10]:offsets[11]], compatible)
+	_, err = CharSetListFromSlice(slice[offsets[10]:offsets[11]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -467,7 +476,12 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = TypeIdTableFromSlice(slice[offsets[13]:offsets[14]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[13]:offsets[14]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = TypeIdTableFromSlice(slice[offsets[14]:offsets[15]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -493,11 +507,11 @@ func (s *ConfigCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ConfigCellData) CountExtraFields() uint {
-	return s.FieldCount() - 14
+	return s.FieldCount() - 15
 }
 
 func (s *ConfigCellData) HasExtraFields() bool {
-	return 14 != s.FieldCount()
+	return 15 != s.FieldCount()
 }
 
 func (s *ConfigCellData) ReservedAccountFilter() *Bytes {
@@ -518,71 +532,77 @@ func (s *ConfigCellData) ProposalMinExtendInterval() *Uint8 {
 	return Uint8FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ProposalMaxAccountAffect() *Uint32 {
+func (s *ConfigCellData) ProposalMinRecycleInterval() *Uint8 {
 	start := unpackNumber(s.inner[16:])
 	end := unpackNumber(s.inner[20:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
+	return Uint8FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ProposalMaxPreAccountContain() *Uint32 {
+func (s *ConfigCellData) ProposalMaxAccountAffect() *Uint32 {
 	start := unpackNumber(s.inner[20:])
 	end := unpackNumber(s.inner[24:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ApplyMinWaitingTime() *Uint32 {
+func (s *ConfigCellData) ProposalMaxPreAccountContain() *Uint32 {
 	start := unpackNumber(s.inner[24:])
 	end := unpackNumber(s.inner[28:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ApplyMaxWaitingTime() *Uint32 {
+func (s *ConfigCellData) ApplyMinWaitingTime() *Uint32 {
 	start := unpackNumber(s.inner[28:])
 	end := unpackNumber(s.inner[32:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) AccountMaxLength() *Uint32 {
+func (s *ConfigCellData) ApplyMaxWaitingTime() *Uint32 {
 	start := unpackNumber(s.inner[32:])
 	end := unpackNumber(s.inner[36:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
+func (s *ConfigCellData) AccountMaxLength() *Uint32 {
 	start := unpackNumber(s.inner[36:])
 	end := unpackNumber(s.inner[40:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
+	start := unpackNumber(s.inner[40:])
+	end := unpackNumber(s.inner[44:])
 	return PriceConfigListFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ConfigCellData) CharSets() *CharSetList {
-	start := unpackNumber(s.inner[40:])
-	end := unpackNumber(s.inner[44:])
+	start := unpackNumber(s.inner[44:])
+	end := unpackNumber(s.inner[48:])
 	return CharSetListFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ConfigCellData) MinTtl() *Uint32 {
-	start := unpackNumber(s.inner[44:])
-	end := unpackNumber(s.inner[48:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ClosingLimitOfPrimaryMarketAuction() *Uint32 {
 	start := unpackNumber(s.inner[48:])
 	end := unpackNumber(s.inner[52:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ClosingLimitOfSecondaryMarketAuction() *Uint32 {
+func (s *ConfigCellData) ClosingLimitOfPrimaryMarketAuction() *Uint32 {
 	start := unpackNumber(s.inner[52:])
 	end := unpackNumber(s.inner[56:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
+func (s *ConfigCellData) ClosingLimitOfSecondaryMarketAuction() *Uint32 {
+	start := unpackNumber(s.inner[56:])
+	end := unpackNumber(s.inner[60:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
 func (s *ConfigCellData) TypeIdTable() *TypeIdTable {
 	var ret *TypeIdTable
-	start := unpackNumber(s.inner[56:])
+	start := unpackNumber(s.inner[60:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[60:])
+		end := unpackNumber(s.inner[64:])
 		ret = TypeIdTableFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = TypeIdTableFromSliceUnchecked(s.inner[start:])
@@ -591,7 +611,7 @@ func (s *ConfigCellData) TypeIdTable() *TypeIdTable {
 }
 
 func (s *ConfigCellData) AsBuilder() ConfigCellDataBuilder {
-	ret := NewConfigCellDataBuilder().ReservedAccountFilter(*s.ReservedAccountFilter()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).PriceConfigs(*s.PriceConfigs()).CharSets(*s.CharSets()).MinTtl(*s.MinTtl()).ClosingLimitOfPrimaryMarketAuction(*s.ClosingLimitOfPrimaryMarketAuction()).ClosingLimitOfSecondaryMarketAuction(*s.ClosingLimitOfSecondaryMarketAuction()).TypeIdTable(*s.TypeIdTable())
+	ret := NewConfigCellDataBuilder().ReservedAccountFilter(*s.ReservedAccountFilter()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).PriceConfigs(*s.PriceConfigs()).CharSets(*s.CharSets()).MinTtl(*s.MinTtl()).ClosingLimitOfPrimaryMarketAuction(*s.ClosingLimitOfPrimaryMarketAuction()).ClosingLimitOfSecondaryMarketAuction(*s.ClosingLimitOfSecondaryMarketAuction()).TypeIdTable(*s.TypeIdTable())
 	return *ret
 }
 
@@ -1824,18 +1844,21 @@ func (s *TypeIdTable) AsBuilder() TypeIdTableBuilder {
 }
 
 type ProposalCellDataBuilder struct {
-	starter_lock Script
-	slices       SliceList
+	proposer_lock   Script
+	proposer_wallet Hash
+	slices          SliceList
 }
 
 func (s *ProposalCellDataBuilder) Build() ProposalCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (2 + 1)
-	offsets := make([]uint32, 0, 2)
+	totalSize := HeaderSizeUint * (3 + 1)
+	offsets := make([]uint32, 0, 3)
 
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.starter_lock.AsSlice()))
+	totalSize += uint32(len(s.proposer_lock.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.proposer_wallet.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.slices.AsSlice()))
 
@@ -1845,13 +1868,19 @@ func (s *ProposalCellDataBuilder) Build() ProposalCellData {
 		b.Write(packNumber(Number(offsets[i])))
 	}
 
-	b.Write(s.starter_lock.AsSlice())
+	b.Write(s.proposer_lock.AsSlice())
+	b.Write(s.proposer_wallet.AsSlice())
 	b.Write(s.slices.AsSlice())
 	return ProposalCellData{inner: b.Bytes()}
 }
 
-func (s *ProposalCellDataBuilder) StarterLock(v Script) *ProposalCellDataBuilder {
-	s.starter_lock = v
+func (s *ProposalCellDataBuilder) ProposerLock(v Script) *ProposalCellDataBuilder {
+	s.proposer_lock = v
+	return s
+}
+
+func (s *ProposalCellDataBuilder) ProposerWallet(v Hash) *ProposalCellDataBuilder {
+	s.proposer_wallet = v
 	return s
 }
 
@@ -1861,7 +1890,7 @@ func (s *ProposalCellDataBuilder) Slices(v SliceList) *ProposalCellDataBuilder {
 }
 
 func NewProposalCellDataBuilder() *ProposalCellDataBuilder {
-	return &ProposalCellDataBuilder{starter_lock: ScriptDefault(), slices: SliceListDefault()}
+	return &ProposalCellDataBuilder{proposer_lock: ScriptDefault(), proposer_wallet: HashDefault(), slices: SliceListDefault()}
 }
 
 type ProposalCellData struct {
@@ -1876,7 +1905,7 @@ func (s *ProposalCellData) AsSlice() []byte {
 }
 
 func ProposalCellDataDefault() ProposalCellData {
-	return *ProposalCellDataFromSliceUnchecked([]byte{69, 0, 0, 0, 12, 0, 0, 0, 65, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
+	return *ProposalCellDataFromSliceUnchecked([]byte{105, 0, 0, 0, 16, 0, 0, 0, 69, 0, 0, 0, 101, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
 }
 
 func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData, error) {
@@ -1892,7 +1921,7 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 2 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 3 == 0 {
 		return &ProposalCellData{inner: slice}, nil
 	}
 
@@ -1908,9 +1937,9 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 2 {
+	if fieldCount < 3 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 2 {
+	} else if !compatible && fieldCount > 3 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -1940,7 +1969,12 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 		return nil, err
 	}
 
-	_, err = SliceListFromSlice(slice[offsets[1]:offsets[2]], compatible)
+	_, err = HashFromSlice(slice[offsets[1]:offsets[2]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = SliceListFromSlice(slice[offsets[2]:offsets[3]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -1966,24 +2000,30 @@ func (s *ProposalCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ProposalCellData) CountExtraFields() uint {
-	return s.FieldCount() - 2
+	return s.FieldCount() - 3
 }
 
 func (s *ProposalCellData) HasExtraFields() bool {
-	return 2 != s.FieldCount()
+	return 3 != s.FieldCount()
 }
 
-func (s *ProposalCellData) StarterLock() *Script {
+func (s *ProposalCellData) ProposerLock() *Script {
 	start := unpackNumber(s.inner[4:])
 	end := unpackNumber(s.inner[8:])
 	return ScriptFromSliceUnchecked(s.inner[start:end])
 }
 
+func (s *ProposalCellData) ProposerWallet() *Hash {
+	start := unpackNumber(s.inner[8:])
+	end := unpackNumber(s.inner[12:])
+	return HashFromSliceUnchecked(s.inner[start:end])
+}
+
 func (s *ProposalCellData) Slices() *SliceList {
 	var ret *SliceList
-	start := unpackNumber(s.inner[8:])
+	start := unpackNumber(s.inner[12:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[12:])
+		end := unpackNumber(s.inner[16:])
 		ret = SliceListFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = SliceListFromSliceUnchecked(s.inner[start:])
@@ -1992,7 +2032,7 @@ func (s *ProposalCellData) Slices() *SliceList {
 }
 
 func (s *ProposalCellData) AsBuilder() ProposalCellDataBuilder {
-	ret := NewProposalCellDataBuilder().StarterLock(*s.StarterLock()).Slices(*s.Slices())
+	ret := NewProposalCellDataBuilder().ProposerLock(*s.ProposerLock()).ProposerWallet(*s.ProposerWallet()).Slices(*s.Slices())
 	return *ret
 }
 
@@ -2365,7 +2405,7 @@ func (s *SL) AsBuilder() SLBuilder {
 type ProposalItemBuilder struct {
 	account_id AccountId
 	item_type  Uint8
-	next       AccountIdOpt
+	next       AccountId
 }
 
 func (s *ProposalItemBuilder) Build() ProposalItem {
@@ -2403,13 +2443,13 @@ func (s *ProposalItemBuilder) ItemType(v Uint8) *ProposalItemBuilder {
 	return s
 }
 
-func (s *ProposalItemBuilder) Next(v AccountIdOpt) *ProposalItemBuilder {
+func (s *ProposalItemBuilder) Next(v AccountId) *ProposalItemBuilder {
 	s.next = v
 	return s
 }
 
 func NewProposalItemBuilder() *ProposalItemBuilder {
-	return &ProposalItemBuilder{account_id: AccountIdDefault(), item_type: Uint8Default(), next: AccountIdOptDefault()}
+	return &ProposalItemBuilder{account_id: AccountIdDefault(), item_type: Uint8Default(), next: AccountIdDefault()}
 }
 
 type ProposalItem struct {
@@ -2424,7 +2464,7 @@ func (s *ProposalItem) AsSlice() []byte {
 }
 
 func ProposalItemDefault() ProposalItem {
-	return *ProposalItemFromSliceUnchecked([]byte{37, 0, 0, 0, 16, 0, 0, 0, 36, 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ProposalItemFromSliceUnchecked([]byte{57, 0, 0, 0, 16, 0, 0, 0, 36, 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ProposalItemFromSlice(slice []byte, compatible bool) (*ProposalItem, error) {
@@ -2493,7 +2533,7 @@ func ProposalItemFromSlice(slice []byte, compatible bool) (*ProposalItem, error)
 		return nil, err
 	}
 
-	_, err = AccountIdOptFromSlice(slice[offsets[2]:offsets[3]], compatible)
+	_, err = AccountIdFromSlice(slice[offsets[2]:offsets[3]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -2538,14 +2578,14 @@ func (s *ProposalItem) ItemType() *Uint8 {
 	return Uint8FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ProposalItem) Next() *AccountIdOpt {
-	var ret *AccountIdOpt
+func (s *ProposalItem) Next() *AccountId {
+	var ret *AccountId
 	start := unpackNumber(s.inner[12:])
 	if s.HasExtraFields() {
 		end := unpackNumber(s.inner[16:])
-		ret = AccountIdOptFromSliceUnchecked(s.inner[start:end])
+		ret = AccountIdFromSliceUnchecked(s.inner[start:end])
 	} else {
-		ret = AccountIdOptFromSliceUnchecked(s.inner[start:])
+		ret = AccountIdFromSliceUnchecked(s.inner[start:])
 	}
 	return ret
 }
@@ -2556,36 +2596,30 @@ func (s *ProposalItem) AsBuilder() ProposalItemBuilder {
 }
 
 type AccountCellDataBuilder struct {
-	id            AccountId
-	owner         Script
-	manager       Script
-	account       AccountChars
-	status        Uint8
-	registered_at Timestamp
-	expired_at    Timestamp
-	records       Records
+	id           AccountId
+	owner_lock   Script
+	manager_lock Script
+	account      AccountChars
+	status       Uint8
+	records      Records
 }
 
 func (s *AccountCellDataBuilder) Build() AccountCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (8 + 1)
-	offsets := make([]uint32, 0, 8)
+	totalSize := HeaderSizeUint * (6 + 1)
+	offsets := make([]uint32, 0, 6)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.id.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.owner.AsSlice()))
+	totalSize += uint32(len(s.owner_lock.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.manager.AsSlice()))
+	totalSize += uint32(len(s.manager_lock.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.account.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.status.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.registered_at.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.expired_at.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.records.AsSlice()))
 
@@ -2596,12 +2630,10 @@ func (s *AccountCellDataBuilder) Build() AccountCellData {
 	}
 
 	b.Write(s.id.AsSlice())
-	b.Write(s.owner.AsSlice())
-	b.Write(s.manager.AsSlice())
+	b.Write(s.owner_lock.AsSlice())
+	b.Write(s.manager_lock.AsSlice())
 	b.Write(s.account.AsSlice())
 	b.Write(s.status.AsSlice())
-	b.Write(s.registered_at.AsSlice())
-	b.Write(s.expired_at.AsSlice())
 	b.Write(s.records.AsSlice())
 	return AccountCellData{inner: b.Bytes()}
 }
@@ -2611,13 +2643,13 @@ func (s *AccountCellDataBuilder) Id(v AccountId) *AccountCellDataBuilder {
 	return s
 }
 
-func (s *AccountCellDataBuilder) Owner(v Script) *AccountCellDataBuilder {
-	s.owner = v
+func (s *AccountCellDataBuilder) OwnerLock(v Script) *AccountCellDataBuilder {
+	s.owner_lock = v
 	return s
 }
 
-func (s *AccountCellDataBuilder) Manager(v Script) *AccountCellDataBuilder {
-	s.manager = v
+func (s *AccountCellDataBuilder) ManagerLock(v Script) *AccountCellDataBuilder {
+	s.manager_lock = v
 	return s
 }
 
@@ -2631,23 +2663,13 @@ func (s *AccountCellDataBuilder) Status(v Uint8) *AccountCellDataBuilder {
 	return s
 }
 
-func (s *AccountCellDataBuilder) RegisteredAt(v Timestamp) *AccountCellDataBuilder {
-	s.registered_at = v
-	return s
-}
-
-func (s *AccountCellDataBuilder) ExpiredAt(v Timestamp) *AccountCellDataBuilder {
-	s.expired_at = v
-	return s
-}
-
 func (s *AccountCellDataBuilder) Records(v Records) *AccountCellDataBuilder {
 	s.records = v
 	return s
 }
 
 func NewAccountCellDataBuilder() *AccountCellDataBuilder {
-	return &AccountCellDataBuilder{id: AccountIdDefault(), owner: ScriptDefault(), manager: ScriptDefault(), account: AccountCharsDefault(), status: Uint8Default(), registered_at: TimestampDefault(), expired_at: TimestampDefault(), records: RecordsDefault()}
+	return &AccountCellDataBuilder{id: AccountIdDefault(), owner_lock: ScriptDefault(), manager_lock: ScriptDefault(), account: AccountCharsDefault(), status: Uint8Default(), records: RecordsDefault()}
 }
 
 type AccountCellData struct {
@@ -2662,7 +2684,7 @@ func (s *AccountCellData) AsSlice() []byte {
 }
 
 func AccountCellDataDefault() AccountCellData {
-	return *AccountCellDataFromSliceUnchecked([]byte{187, 0, 0, 0, 36, 0, 0, 0, 56, 0, 0, 0, 109, 0, 0, 0, 162, 0, 0, 0, 166, 0, 0, 0, 167, 0, 0, 0, 175, 0, 0, 0, 183, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
+	return *AccountCellDataFromSliceUnchecked([]byte{163, 0, 0, 0, 28, 0, 0, 0, 48, 0, 0, 0, 101, 0, 0, 0, 154, 0, 0, 0, 158, 0, 0, 0, 159, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0})
 }
 
 func AccountCellDataFromSlice(slice []byte, compatible bool) (*AccountCellData, error) {
@@ -2678,7 +2700,7 @@ func AccountCellDataFromSlice(slice []byte, compatible bool) (*AccountCellData, 
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 8 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 6 == 0 {
 		return &AccountCellData{inner: slice}, nil
 	}
 
@@ -2694,9 +2716,9 @@ func AccountCellDataFromSlice(slice []byte, compatible bool) (*AccountCellData, 
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 8 {
+	if fieldCount < 6 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 8 {
+	} else if !compatible && fieldCount > 6 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -2746,17 +2768,7 @@ func AccountCellDataFromSlice(slice []byte, compatible bool) (*AccountCellData, 
 		return nil, err
 	}
 
-	_, err = TimestampFromSlice(slice[offsets[5]:offsets[6]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = TimestampFromSlice(slice[offsets[6]:offsets[7]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = RecordsFromSlice(slice[offsets[7]:offsets[8]], compatible)
+	_, err = RecordsFromSlice(slice[offsets[5]:offsets[6]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -2782,11 +2794,11 @@ func (s *AccountCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *AccountCellData) CountExtraFields() uint {
-	return s.FieldCount() - 8
+	return s.FieldCount() - 6
 }
 
 func (s *AccountCellData) HasExtraFields() bool {
-	return 8 != s.FieldCount()
+	return 6 != s.FieldCount()
 }
 
 func (s *AccountCellData) Id() *AccountId {
@@ -2795,13 +2807,13 @@ func (s *AccountCellData) Id() *AccountId {
 	return AccountIdFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *AccountCellData) Owner() *Script {
+func (s *AccountCellData) OwnerLock() *Script {
 	start := unpackNumber(s.inner[8:])
 	end := unpackNumber(s.inner[12:])
 	return ScriptFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *AccountCellData) Manager() *Script {
+func (s *AccountCellData) ManagerLock() *Script {
 	start := unpackNumber(s.inner[12:])
 	end := unpackNumber(s.inner[16:])
 	return ScriptFromSliceUnchecked(s.inner[start:end])
@@ -2819,23 +2831,11 @@ func (s *AccountCellData) Status() *Uint8 {
 	return Uint8FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *AccountCellData) RegisteredAt() *Timestamp {
-	start := unpackNumber(s.inner[24:])
-	end := unpackNumber(s.inner[28:])
-	return TimestampFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *AccountCellData) ExpiredAt() *Timestamp {
-	start := unpackNumber(s.inner[28:])
-	end := unpackNumber(s.inner[32:])
-	return TimestampFromSliceUnchecked(s.inner[start:end])
-}
-
 func (s *AccountCellData) Records() *Records {
 	var ret *Records
-	start := unpackNumber(s.inner[32:])
+	start := unpackNumber(s.inner[24:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[36:])
+		end := unpackNumber(s.inner[28:])
 		ret = RecordsFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = RecordsFromSliceUnchecked(s.inner[start:])
@@ -2844,7 +2844,7 @@ func (s *AccountCellData) Records() *Records {
 }
 
 func (s *AccountCellData) AsBuilder() AccountCellDataBuilder {
-	ret := NewAccountCellDataBuilder().Id(*s.Id()).Owner(*s.Owner()).Manager(*s.Manager()).Account(*s.Account()).Status(*s.Status()).RegisteredAt(*s.RegisteredAt()).ExpiredAt(*s.ExpiredAt()).Records(*s.Records())
+	ret := NewAccountCellDataBuilder().Id(*s.Id()).OwnerLock(*s.OwnerLock()).ManagerLock(*s.ManagerLock()).Account(*s.Account()).Status(*s.Status()).Records(*s.Records())
 	return *ret
 }
 
@@ -3121,76 +3121,6 @@ func (s *AccountId) AsBuilder() AccountIdBuilder {
 	t.Nth18(*s.Nth18())
 	t.Nth19(*s.Nth19())
 	return *t
-}
-
-type AccountIdOptBuilder struct {
-	isNone bool
-	inner  AccountId
-}
-
-func NewAccountIdOptBuilder() *AccountIdOptBuilder {
-	return &AccountIdOptBuilder{isNone: true, inner: AccountIdDefault()}
-}
-func (s *AccountIdOptBuilder) Set(v AccountId) *AccountIdOptBuilder {
-	s.isNone = false
-	s.inner = v
-	return s
-}
-func (s *AccountIdOptBuilder) Build() AccountIdOpt {
-	var ret AccountIdOpt
-	if s.isNone {
-		ret = AccountIdOpt{inner: []byte{}}
-	} else {
-		ret = AccountIdOpt{inner: s.inner.AsSlice()}
-	}
-	return ret
-}
-
-type AccountIdOpt struct {
-	inner []byte
-}
-
-func AccountIdOptFromSliceUnchecked(slice []byte) *AccountIdOpt {
-	return &AccountIdOpt{inner: slice}
-}
-func (s *AccountIdOpt) AsSlice() []byte {
-	return s.inner
-}
-
-func AccountIdOptDefault() AccountIdOpt {
-	return *AccountIdOptFromSliceUnchecked([]byte{})
-}
-
-func AccountIdOptFromSlice(slice []byte, compatible bool) (*AccountIdOpt, error) {
-	if len(slice) == 0 {
-		return &AccountIdOpt{inner: slice}, nil
-	}
-
-	_, err := AccountIdFromSlice(slice, compatible)
-	if err != nil {
-		return nil, err
-	}
-	return &AccountIdOpt{inner: slice}, nil
-}
-
-func (s *AccountIdOpt) IntoAccountId() (*AccountId, error) {
-	if s.IsNone() {
-		return nil, errors.New("No data")
-	}
-	return AccountIdFromSliceUnchecked(s.AsSlice()), nil
-}
-func (s *AccountIdOpt) IsSome() bool {
-	return len(s.inner) != 0
-}
-func (s *AccountIdOpt) IsNone() bool {
-	return len(s.inner) == 0
-}
-func (s *AccountIdOpt) AsBuilder() AccountIdOptBuilder {
-	var ret = NewAccountIdOptBuilder()
-	if s.IsSome() {
-		ret.Set(*AccountIdFromSliceUnchecked(s.AsSlice()))
-	}
-	return *ret
 }
 
 type RecordBuilder struct {
@@ -3590,19 +3520,21 @@ func (s *Records) AsBuilder() RecordsBuilder {
 }
 
 type PreAccountCellDataBuilder struct {
-	account     AccountChars
-	refund_lock Script
-	owner_lock  Script
-	price       PriceConfig
-	quote       Uint64
-	created_at  Timestamp
+	account        AccountChars
+	refund_lock    Script
+	owner_lock     Script
+	inviter_wallet Hash
+	channel_wallet Hash
+	price          PriceConfig
+	quote          Uint64
+	created_at     Timestamp
 }
 
 func (s *PreAccountCellDataBuilder) Build() PreAccountCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (6 + 1)
-	offsets := make([]uint32, 0, 6)
+	totalSize := HeaderSizeUint * (8 + 1)
+	offsets := make([]uint32, 0, 8)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.account.AsSlice()))
@@ -3610,6 +3542,10 @@ func (s *PreAccountCellDataBuilder) Build() PreAccountCellData {
 	totalSize += uint32(len(s.refund_lock.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.owner_lock.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.inviter_wallet.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.channel_wallet.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.price.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -3626,6 +3562,8 @@ func (s *PreAccountCellDataBuilder) Build() PreAccountCellData {
 	b.Write(s.account.AsSlice())
 	b.Write(s.refund_lock.AsSlice())
 	b.Write(s.owner_lock.AsSlice())
+	b.Write(s.inviter_wallet.AsSlice())
+	b.Write(s.channel_wallet.AsSlice())
 	b.Write(s.price.AsSlice())
 	b.Write(s.quote.AsSlice())
 	b.Write(s.created_at.AsSlice())
@@ -3647,6 +3585,16 @@ func (s *PreAccountCellDataBuilder) OwnerLock(v Script) *PreAccountCellDataBuild
 	return s
 }
 
+func (s *PreAccountCellDataBuilder) InviterWallet(v Hash) *PreAccountCellDataBuilder {
+	s.inviter_wallet = v
+	return s
+}
+
+func (s *PreAccountCellDataBuilder) ChannelWallet(v Hash) *PreAccountCellDataBuilder {
+	s.channel_wallet = v
+	return s
+}
+
 func (s *PreAccountCellDataBuilder) Price(v PriceConfig) *PreAccountCellDataBuilder {
 	s.price = v
 	return s
@@ -3663,7 +3611,7 @@ func (s *PreAccountCellDataBuilder) CreatedAt(v Timestamp) *PreAccountCellDataBu
 }
 
 func NewPreAccountCellDataBuilder() *PreAccountCellDataBuilder {
-	return &PreAccountCellDataBuilder{account: AccountCharsDefault(), refund_lock: ScriptDefault(), owner_lock: ScriptDefault(), price: PriceConfigDefault(), quote: Uint64Default(), created_at: TimestampDefault()}
+	return &PreAccountCellDataBuilder{account: AccountCharsDefault(), refund_lock: ScriptDefault(), owner_lock: ScriptDefault(), inviter_wallet: HashDefault(), channel_wallet: HashDefault(), price: PriceConfigDefault(), quote: Uint64Default(), created_at: TimestampDefault()}
 }
 
 type PreAccountCellData struct {
@@ -3678,7 +3626,7 @@ func (s *PreAccountCellData) AsSlice() []byte {
 }
 
 func PreAccountCellDataDefault() PreAccountCellData {
-	return *PreAccountCellDataFromSliceUnchecked([]byte{187, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 85, 0, 0, 0, 138, 0, 0, 0, 171, 0, 0, 0, 179, 0, 0, 0, 4, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *PreAccountCellDataFromSliceUnchecked([]byte{3, 1, 0, 0, 36, 0, 0, 0, 40, 0, 0, 0, 93, 0, 0, 0, 146, 0, 0, 0, 178, 0, 0, 0, 210, 0, 0, 0, 243, 0, 0, 0, 251, 0, 0, 0, 4, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCellData, error) {
@@ -3694,7 +3642,7 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 6 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 8 == 0 {
 		return &PreAccountCellData{inner: slice}, nil
 	}
 
@@ -3710,9 +3658,9 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 6 {
+	if fieldCount < 8 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 6 {
+	} else if !compatible && fieldCount > 8 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -3752,17 +3700,27 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
 		return nil, err
 	}
 
-	_, err = PriceConfigFromSlice(slice[offsets[3]:offsets[4]], compatible)
+	_, err = HashFromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint64FromSlice(slice[offsets[4]:offsets[5]], compatible)
+	_, err = HashFromSlice(slice[offsets[4]:offsets[5]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = TimestampFromSlice(slice[offsets[5]:offsets[6]], compatible)
+	_, err = PriceConfigFromSlice(slice[offsets[5]:offsets[6]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint64FromSlice(slice[offsets[6]:offsets[7]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = TimestampFromSlice(slice[offsets[7]:offsets[8]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -3788,11 +3746,11 @@ func (s *PreAccountCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *PreAccountCellData) CountExtraFields() uint {
-	return s.FieldCount() - 6
+	return s.FieldCount() - 8
 }
 
 func (s *PreAccountCellData) HasExtraFields() bool {
-	return 6 != s.FieldCount()
+	return 8 != s.FieldCount()
 }
 
 func (s *PreAccountCellData) Account() *AccountChars {
@@ -3813,23 +3771,35 @@ func (s *PreAccountCellData) OwnerLock() *Script {
 	return ScriptFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *PreAccountCellData) Price() *PriceConfig {
+func (s *PreAccountCellData) InviterWallet() *Hash {
 	start := unpackNumber(s.inner[16:])
 	end := unpackNumber(s.inner[20:])
+	return HashFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *PreAccountCellData) ChannelWallet() *Hash {
+	start := unpackNumber(s.inner[20:])
+	end := unpackNumber(s.inner[24:])
+	return HashFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *PreAccountCellData) Price() *PriceConfig {
+	start := unpackNumber(s.inner[24:])
+	end := unpackNumber(s.inner[28:])
 	return PriceConfigFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *PreAccountCellData) Quote() *Uint64 {
-	start := unpackNumber(s.inner[20:])
-	end := unpackNumber(s.inner[24:])
+	start := unpackNumber(s.inner[28:])
+	end := unpackNumber(s.inner[32:])
 	return Uint64FromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *PreAccountCellData) CreatedAt() *Timestamp {
 	var ret *Timestamp
-	start := unpackNumber(s.inner[24:])
+	start := unpackNumber(s.inner[32:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[28:])
+		end := unpackNumber(s.inner[36:])
 		ret = TimestampFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = TimestampFromSliceUnchecked(s.inner[start:])
@@ -3838,7 +3808,7 @@ func (s *PreAccountCellData) CreatedAt() *Timestamp {
 }
 
 func (s *PreAccountCellData) AsBuilder() PreAccountCellDataBuilder {
-	ret := NewPreAccountCellDataBuilder().Account(*s.Account()).RefundLock(*s.RefundLock()).OwnerLock(*s.OwnerLock()).Price(*s.Price()).Quote(*s.Quote()).CreatedAt(*s.CreatedAt())
+	ret := NewPreAccountCellDataBuilder().Account(*s.Account()).RefundLock(*s.RefundLock()).OwnerLock(*s.OwnerLock()).InviterWallet(*s.InviterWallet()).ChannelWallet(*s.ChannelWallet()).Price(*s.Price()).Quote(*s.Quote()).CreatedAt(*s.CreatedAt())
 	return *ret
 }
 
