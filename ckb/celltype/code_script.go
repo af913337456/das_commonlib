@@ -23,7 +23,7 @@ var (
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
-			DepType: "",
+			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
@@ -35,7 +35,7 @@ var (
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
-			DepType: "",
+			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
@@ -47,7 +47,7 @@ var (
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
-			DepType: "",
+			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
@@ -71,7 +71,7 @@ var (
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
-			DepType: "",
+			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
@@ -83,7 +83,7 @@ var (
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
-			DepType: "",
+			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
@@ -95,7 +95,7 @@ var (
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
 			TxIndex: 0,
-			DepType: "",
+			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
