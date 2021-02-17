@@ -104,6 +104,7 @@ const (
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"
 	Action_CreateWallet          = "create_wallet"
+	Action_DeleteWallet          = "delete_wallet"
 	Action_Propose               = "propose"
 	Action_ExtendPropose         = "extend_propose"
 	Action_ConfirmProposal       = "confirm_proposal"

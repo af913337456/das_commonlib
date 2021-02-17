@@ -282,7 +282,7 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 
 type ProposeWitnessSliceDataObjectLL []ProposeWitnessSliceDataObjectList
 
-func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockScript *types.Script) ProposalCellData {
+func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockScript *types.Script, proposerWalletId []byte) ProposalCellData {
 	sliceList := make([]SL, 0, len(p))
 	for _, slice := range p {
 		proposeItemList := make([]ProposalItem, 0, len(slice))
@@ -300,7 +300,7 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 	}
 	proposalCellData := NewProposalCellDataBuilder().
 		ProposerLock(GoCkbScriptToMoleculeScript(*incomeLockScript)).
-		ProposerWallet(GoBytesToMoleculeHash(incomeLockScript.Args)).
+		ProposerWallet(GoBytesToMoleculeHash(proposerWalletId)).
 		Slices(NewSliceListBuilder().Set(sliceList).Build()).
 		Build()
 	return proposalCellData
