@@ -103,6 +103,7 @@ const (
 	Action_InitLink              = "init_linked_list"
 	Action_ApplyRegister         = "apply_register"
 	Action_PreRegister           = "pre_register"
+	Action_CreateWallet          = "create_wallet"
 	Action_Propose               = "propose"
 	Action_ExtendPropose         = "extend_propose"
 	Action_ConfirmProposal       = "confirm_proposal"
