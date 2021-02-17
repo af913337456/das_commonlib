@@ -31,6 +31,18 @@ var (
 			Args:         nil,
 		},
 	}
+	DasWalletCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: "",
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: "",
+			Args:         nil,
+		},
+	}
 	DasApplyRegisterCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
@@ -142,6 +154,7 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	preAccountCellCodeHash := types.BytesToHash(data.TypeIdTable().PreAccountCell().RawData())
 	accountCellCodeHash := types.BytesToHash(data.TypeIdTable().AccountCell().RawData())
 	proposeCellCodeHash := types.BytesToHash(data.TypeIdTable().ProposalCell().RawData())
+
 	retMap := map[types.Hash]string{}
 	retMap[applyRegisterCodeHash] = SystemScript_ApplyRegisterCell
 	retMap[preAccountCellCodeHash] = SystemScript_PreAccoutnCell
