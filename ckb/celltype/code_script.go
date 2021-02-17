@@ -16,7 +16,7 @@ import (
 var (
 	DasAnyOneCanSendCellInfo = DASCellBaseInfoOut{
 		CodeHash:     types.HexToHash(""),
-		CodeHashType: "",
+		CodeHashType: types.HashTypeType,
 		Args:         nil,
 	}
 	DasActionCellScript = DASCellBaseInfo{
@@ -27,7 +27,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
@@ -39,7 +39,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
@@ -51,7 +51,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
@@ -75,7 +75,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
@@ -87,7 +87,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
@@ -99,7 +99,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
@@ -135,7 +135,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash(""),
-			CodeHashType: "",
+			CodeHashType: types.HashTypeType,
 			Args:         nil,
 		},
 	}
