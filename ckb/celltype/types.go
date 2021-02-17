@@ -131,6 +131,11 @@ type DASCellBaseInfo struct {
 	Out DASCellBaseInfoOut `json:"out"`
 }
 
+type WalletCellParam struct {
+	CellCodeInfo           DASCellBaseInfo `json:"cell_code_info"`
+	AnyoneCanPayScriptInfo DASCellBaseInfo `json:"anyone_can_pay_script_info"`
+}
+
 type ApplyRegisterCellParam struct {
 	Version              uint32          `json:"version"`
 	PubkeyHash           string          `json:"pubkey_hash"`
@@ -145,7 +150,7 @@ type PreAccountCellDatas struct {
 	OldAccountCellData *PreAccountCellData `json:"-"`
 	NewAccountCellData *PreAccountCellData `json:"-"`
 }
-type PreAccountCellCellParam struct {
+type PreAccountCellParam struct {
 	Version                   uint32              `json:"version"`
 	Data                      Data                `json:"data"`
 	PreAccountCellDatas       PreAccountCellDatas `json:"-"`

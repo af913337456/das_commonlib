@@ -13,8 +13,8 @@ import (
  * Description:
  */
 
-var TestNetPreAccountCellCell = func(depIndex, oldIndex, newIndex uint32, dep, old, new *PreAccountCellData) *PreAccountCellCellParam {
-	return &PreAccountCellCellParam{
+var TestNetPreAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old, new *PreAccountCellData) *PreAccountCellParam {
+	return &PreAccountCellParam{
 		Version:      1,
 		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
 		CellCodeInfo: DasActionCellScript,
@@ -42,15 +42,15 @@ data:
   Timestamp // cell 创建时 TimeCell 的时间
 */
 
-type PreAccountCellCell struct {
-	p *PreAccountCellCellParam
+type PreAccountCell struct {
+	p *PreAccountCellParam
 }
 
-func NewPreAccountCellCell(p *PreAccountCellCellParam) *PreAccountCellCell {
-	return &PreAccountCellCell{p: p}
+func NewPreAccountCell(p *PreAccountCellParam) *PreAccountCell {
+	return &PreAccountCell{p: p}
 }
 
-func (c *PreAccountCellCell) LockDepCell() *types.CellDep {
+func (c *PreAccountCell) LockDepCell() *types.CellDep {
 	return &types.CellDep{
 		OutPoint: &types.OutPoint{
 			TxHash: c.p.AlwaysSpendableScriptInfo.Dep.TxHash,
@@ -59,7 +59,7 @@ func (c *PreAccountCellCell) LockDepCell() *types.CellDep {
 		DepType: c.p.AlwaysSpendableScriptInfo.Dep.DepType,
 	}
 }
-func (c *PreAccountCellCell) TypeDepCell() *types.CellDep {
+func (c *PreAccountCell) TypeDepCell() *types.CellDep {
 	return &types.CellDep{
 		OutPoint: &types.OutPoint{
 			TxHash: c.p.CellCodeInfo.Dep.TxHash,
@@ -68,14 +68,14 @@ func (c *PreAccountCellCell) TypeDepCell() *types.CellDep {
 		DepType: c.p.CellCodeInfo.Dep.DepType,
 	}
 }
-func (c *PreAccountCellCell) LockScript() *types.Script {
+func (c *PreAccountCell) LockScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.AlwaysSpendableScriptInfo.Out.CodeHash,
 		HashType: c.p.AlwaysSpendableScriptInfo.Out.CodeHashType,
 		Args:     c.p.AlwaysSpendableScriptInfo.Out.Args,
 	}
 }
-func (c *PreAccountCellCell) TypeScript() *types.Script {
+func (c *PreAccountCell) TypeScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.CellCodeInfo.Out.CodeHash,
 		HashType: c.p.CellCodeInfo.Out.CodeHashType,
@@ -83,7 +83,7 @@ func (c *PreAccountCellCell) TypeScript() *types.Script {
 	}
 }
 
-func (c *PreAccountCellCell) TableType() TableType {
+func (c *PreAccountCell) TableType() TableType {
 	return TableTyte_APPLY_REGISTER_CELL
 }
 
@@ -94,7 +94,7 @@ data:
   id // account ID，生成算法为 hash(account)，然后取前 20 bytes
   hash(data: PreAccountCellData)
 */
-func (c *PreAccountCellCell) Data() ([]byte, error) {
+func (c *PreAccountCell) Data() ([]byte, error) {
 	accountId, err := blake2b.Blake160(c.p.PreAccountCellDatas.NewAccountCellData.Account().AsSlice())
 	if err != nil {
 		return nil, err
@@ -106,6 +106,6 @@ func (c *PreAccountCellCell) Data() ([]byte, error) {
 	return append(dataHash, accountId...), nil
 }
 
-func (c *PreAccountCellCell) TableData() []byte {
+func (c *PreAccountCell) TableData() []byte {
 	return nil
 }
