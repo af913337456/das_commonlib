@@ -321,16 +321,16 @@ func SingleCombineSignTransaction(tx *types.Transaction, list []celltype.BuildTr
 	return nil
 }
 
-func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
+func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs) ([]byte, error) {
 	data, err := witnessArgs.Serialize()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	length := make([]byte, 8)
 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
 	hash, err := tx.ComputeHash()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	message := append(hash.Bytes(), length...)
@@ -356,12 +356,12 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 
 	message, err = blake2b.Blake256(message)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	signed, err := key.Sign(message)
-	if err != nil {
-		return err
-	}
+	return message, nil
+}
+
+func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, signed []byte) error {
 	wa := &types.WitnessArgs{
 		Lock:       signed,
 		InputType:  witnessArgs.InputType,
@@ -372,5 +372,20 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 		return err
 	}
 	tx.Witnesses[group[0]] = wab
+	return nil
+}
+
+func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
+	message, err := BuildTxMessageWithoutSign(tx, group, witnessArgs)
+	if err != nil {
+		return err
+	}
+	signed, err := key.Sign(message)
+	if err != nil {
+		return err
+	}
+	if err = AppendSignedMsgToTx(tx, group, witnessArgs, signed); err != nil {
+		return err
+	}
 	return nil
 }
