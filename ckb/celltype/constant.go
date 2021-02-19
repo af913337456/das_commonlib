@@ -44,6 +44,18 @@ const (
 	ScriptType_Any  LockScriptType = 1
 )
 
+type DasAccountSearchStatus int
+
+const (
+	SearchStatus_NotOpenRegister  DasAccountSearchStatus = -1
+	SearchStatus_Registerable     DasAccountSearchStatus = 0
+	SearchStatus_ReservedAccount  DasAccountSearchStatus = 1 // 候选
+	SearchStatus_OnePriceSell     DasAccountSearchStatus = 2
+	SearchStatus_AuctionSell      DasAccountSearchStatus = 3 // 竞拍，候选 -> 竞拍
+	SearchStatus_CandidateAccount DasAccountSearchStatus = 4
+	SearchStatus_Registered       DasAccountSearchStatus = 5
+)
+
 const (
 	AccountChar_Emoji AccountCharType = 0
 	AccountChar_En    AccountCharType = 1
