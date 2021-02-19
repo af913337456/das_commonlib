@@ -110,6 +110,7 @@ const (
 	SystemScript_AccoutnCell       = "account_cell"
 	SystemScript_ProposeCell       = "propose_cell"
 	SystemScript_WalletCell        = "wallet_cell"
+	SystemScript_RefCell           = "ref_cell"
 )
 
 const (

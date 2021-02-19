@@ -55,18 +55,18 @@ var (
 			Args:         nil,
 		},
 	}
-	// DasOwnerCellScript = DASCellBaseInfo{
-	// 	Dep: DASCellBaseInfoDep{
-	// 		TxHash:  types.HexToHash(""),
-	// 		TxIndex: 0,
-	// 		DepType: "",
-	// 	},
-	// 	Out: DASCellBaseInfoOut{
-	// 		CodeHash:     types.HexToHash(""),
-	// 		CodeHashType: "",
-	// 		Args:         nil, // [id, account_id]
-	// 	},
-	// }
+	DasRefCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: types.HashTypeType,
+			Args:         nil,
+		},
+	}
 	DasPreAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
@@ -148,6 +148,7 @@ func init() {
 	SystemCodeScriptMap[SystemScript_AccoutnCell] = &DasAccountCellScript
 	SystemCodeScriptMap[SystemScript_ProposeCell] = &DasProposeCellScript
 	SystemCodeScriptMap[SystemScript_WalletCell] = &DasWalletCellScript
+	SystemCodeScriptMap[SystemScript_RefCell] = &DasRefCellScript
 }
 
 func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
@@ -155,14 +156,16 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	preAccountCellCodeHash := types.BytesToHash(data.TypeIdTable().PreAccountCell().RawData())
 	accountCellCodeHash := types.BytesToHash(data.TypeIdTable().AccountCell().RawData())
 	proposeCellCodeHash := types.BytesToHash(data.TypeIdTable().ProposalCell().RawData())
-	wallwtCellCodeHash := types.BytesToHash(data.TypeIdTable().WalletCell().RawData())
+	walletCellCodeHash := types.BytesToHash(data.TypeIdTable().WalletCell().RawData())
+	refCellCodeHash := types.BytesToHash(data.TypeIdTable().RefCell().RawData())
 
 	retMap := map[types.Hash]string{}
 	retMap[applyRegisterCodeHash] = SystemScript_ApplyRegisterCell
 	retMap[preAccountCellCodeHash] = SystemScript_PreAccoutnCell
 	retMap[accountCellCodeHash] = SystemScript_AccoutnCell
 	retMap[proposeCellCodeHash] = SystemScript_ProposeCell
-	retMap[wallwtCellCodeHash] = SystemScript_WalletCell
+	retMap[walletCellCodeHash] = SystemScript_WalletCell
+	retMap[refCellCodeHash] = SystemScript_RefCell
 	return retMap
 }
 

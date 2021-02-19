@@ -178,6 +178,7 @@ data:
 type RefcellParam struct {
 	Version        uint32          `json:"version"`
 	Data           string          `json:"data"`
+	AccountId      DasAccountId    `json:"-"`
 	CellCodeInfo   DASCellBaseInfo `json:"cell_code_info"`
 	UserLockScript DASCellBaseInfo `json:"user_lock_script"`
 }
