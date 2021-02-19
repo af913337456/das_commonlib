@@ -147,6 +147,7 @@ func init() {
 	SystemCodeScriptMap[SystemScript_PreAccoutnCell] = &DasPreAccountCellScript
 	SystemCodeScriptMap[SystemScript_AccoutnCell] = &DasAccountCellScript
 	SystemCodeScriptMap[SystemScript_ProposeCell] = &DasProposeCellScript
+	SystemCodeScriptMap[SystemScript_WalletCell] = &DasWalletCellScript
 }
 
 func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
@@ -154,12 +155,14 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	preAccountCellCodeHash := types.BytesToHash(data.TypeIdTable().PreAccountCell().RawData())
 	accountCellCodeHash := types.BytesToHash(data.TypeIdTable().AccountCell().RawData())
 	proposeCellCodeHash := types.BytesToHash(data.TypeIdTable().ProposalCell().RawData())
+	wallwtCellCodeHash := types.BytesToHash(data.TypeIdTable().WalletCell().RawData())
 
 	retMap := map[types.Hash]string{}
 	retMap[applyRegisterCodeHash] = SystemScript_ApplyRegisterCell
 	retMap[preAccountCellCodeHash] = SystemScript_PreAccoutnCell
 	retMap[accountCellCodeHash] = SystemScript_AccoutnCell
 	retMap[proposeCellCodeHash] = SystemScript_ProposeCell
+	retMap[wallwtCellCodeHash] = SystemScript_WalletCell
 	return retMap
 }
 

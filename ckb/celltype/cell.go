@@ -4,6 +4,7 @@ package celltype
 
 import (
 	"bytes"
+	"encoding/binary"
 	"errors"
 	"strconv"
 	"strings"
@@ -352,7 +353,7 @@ func (s *ConfigCellData) AsSlice() []byte {
 }
 
 func ConfigCellDataDefault() ConfigCellData {
-	return *ConfigCellDataFromSliceUnchecked([]byte{147, 1, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 69, 0, 0, 0, 70, 0, 0, 0, 71, 0, 0, 0, 75, 0, 0, 0, 79, 0, 0, 0, 83, 0, 0, 0, 87, 0, 0, 0, 91, 0, 0, 0, 95, 0, 0, 0, 99, 0, 0, 0, 103, 0, 0, 0, 107, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 1, 0, 0, 36, 0, 0, 0, 68, 0, 0, 0, 100, 0, 0, 0, 132, 0, 0, 0, 164, 0, 0, 0, 196, 0, 0, 0, 228, 0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellDataFromSliceUnchecked([]byte{183, 1, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 69, 0, 0, 0, 70, 0, 0, 0, 71, 0, 0, 0, 75, 0, 0, 0, 79, 0, 0, 0, 83, 0, 0, 0, 87, 0, 0, 0, 91, 0, 0, 0, 95, 0, 0, 0, 99, 0, 0, 0, 103, 0, 0, 0, 107, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, error) {
@@ -1559,13 +1560,14 @@ type TypeIdTableBuilder struct {
 	on_sale_cell        Hash
 	bidding_cell        Hash
 	primary_market_cell Hash
+	wallet_cell         Hash
 }
 
 func (s *TypeIdTableBuilder) Build() TypeIdTable {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (8 + 1)
-	offsets := make([]uint32, 0, 8)
+	totalSize := HeaderSizeUint * (9 + 1)
+	offsets := make([]uint32, 0, 9)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.apply_register_cell.AsSlice()))
@@ -1583,6 +1585,8 @@ func (s *TypeIdTableBuilder) Build() TypeIdTable {
 	totalSize += uint32(len(s.bidding_cell.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.primary_market_cell.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.wallet_cell.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -1598,6 +1602,7 @@ func (s *TypeIdTableBuilder) Build() TypeIdTable {
 	b.Write(s.on_sale_cell.AsSlice())
 	b.Write(s.bidding_cell.AsSlice())
 	b.Write(s.primary_market_cell.AsSlice())
+	b.Write(s.wallet_cell.AsSlice())
 	return TypeIdTable{inner: b.Bytes()}
 }
 
@@ -1641,8 +1646,13 @@ func (s *TypeIdTableBuilder) PrimaryMarketCell(v Hash) *TypeIdTableBuilder {
 	return s
 }
 
+func (s *TypeIdTableBuilder) WalletCell(v Hash) *TypeIdTableBuilder {
+	s.wallet_cell = v
+	return s
+}
+
 func NewTypeIdTableBuilder() *TypeIdTableBuilder {
-	return &TypeIdTableBuilder{apply_register_cell: HashDefault(), pre_account_cell: HashDefault(), proposal_cell: HashDefault(), ref_cell: HashDefault(), account_cell: HashDefault(), on_sale_cell: HashDefault(), bidding_cell: HashDefault(), primary_market_cell: HashDefault()}
+	return &TypeIdTableBuilder{apply_register_cell: HashDefault(), pre_account_cell: HashDefault(), proposal_cell: HashDefault(), ref_cell: HashDefault(), account_cell: HashDefault(), on_sale_cell: HashDefault(), bidding_cell: HashDefault(), primary_market_cell: HashDefault(), wallet_cell: HashDefault()}
 }
 
 type TypeIdTable struct {
@@ -1657,7 +1667,7 @@ func (s *TypeIdTable) AsSlice() []byte {
 }
 
 func TypeIdTableDefault() TypeIdTable {
-	return *TypeIdTableFromSliceUnchecked([]byte{36, 1, 0, 0, 36, 0, 0, 0, 68, 0, 0, 0, 100, 0, 0, 0, 132, 0, 0, 0, 164, 0, 0, 0, 196, 0, 0, 0, 228, 0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *TypeIdTableFromSliceUnchecked([]byte{72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
@@ -1673,7 +1683,7 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 8 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 9 == 0 {
 		return &TypeIdTable{inner: slice}, nil
 	}
 
@@ -1689,9 +1699,9 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 8 {
+	if fieldCount < 9 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 8 {
+	} else if !compatible && fieldCount > 9 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -1756,6 +1766,11 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
 		return nil, err
 	}
 
+	_, err = HashFromSlice(slice[offsets[8]:offsets[9]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
 	return &TypeIdTable{inner: slice}, nil
 }
 
@@ -1777,11 +1792,11 @@ func (s *TypeIdTable) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *TypeIdTable) CountExtraFields() uint {
-	return s.FieldCount() - 8
+	return s.FieldCount() - 9
 }
 
 func (s *TypeIdTable) HasExtraFields() bool {
-	return 8 != s.FieldCount()
+	return 9 != s.FieldCount()
 }
 
 func (s *TypeIdTable) ApplyRegisterCell() *Hash {
@@ -1827,10 +1842,16 @@ func (s *TypeIdTable) BiddingCell() *Hash {
 }
 
 func (s *TypeIdTable) PrimaryMarketCell() *Hash {
-	var ret *Hash
 	start := unpackNumber(s.inner[32:])
+	end := unpackNumber(s.inner[36:])
+	return HashFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *TypeIdTable) WalletCell() *Hash {
+	var ret *Hash
+	start := unpackNumber(s.inner[36:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[36:])
+		end := unpackNumber(s.inner[40:])
 		ret = HashFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = HashFromSliceUnchecked(s.inner[start:])
@@ -1839,7 +1860,7 @@ func (s *TypeIdTable) PrimaryMarketCell() *Hash {
 }
 
 func (s *TypeIdTable) AsBuilder() TypeIdTableBuilder {
-	ret := NewTypeIdTableBuilder().ApplyRegisterCell(*s.ApplyRegisterCell()).PreAccountCell(*s.PreAccountCell()).ProposalCell(*s.ProposalCell()).RefCell(*s.RefCell()).AccountCell(*s.AccountCell()).OnSaleCell(*s.OnSaleCell()).BiddingCell(*s.BiddingCell()).PrimaryMarketCell(*s.PrimaryMarketCell())
+	ret := NewTypeIdTableBuilder().ApplyRegisterCell(*s.ApplyRegisterCell()).PreAccountCell(*s.PreAccountCell()).ProposalCell(*s.ProposalCell()).RefCell(*s.RefCell()).AccountCell(*s.AccountCell()).OnSaleCell(*s.OnSaleCell()).BiddingCell(*s.BiddingCell()).PrimaryMarketCell(*s.PrimaryMarketCell()).WalletCell(*s.WalletCell())
 	return *ret
 }
 

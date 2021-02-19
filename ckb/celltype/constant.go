@@ -17,6 +17,7 @@ const OneCkb = uint64(1e8)
 const DasAccountSuffix = ".bit"
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
+const RefCellCap = 114 * OneCkb
 
 var EmptyAccountId = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
@@ -108,6 +109,7 @@ const (
 	SystemScript_PreAccoutnCell    = "preaccount_cell"
 	SystemScript_AccoutnCell       = "account_cell"
 	SystemScript_ProposeCell       = "propose_cell"
+	SystemScript_WalletCell        = "wallet_cell"
 )
 
 const (
