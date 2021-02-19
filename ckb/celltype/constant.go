@@ -14,6 +14,7 @@ const oneYearDays = float64(365)
 const CellVersionByteLen = 4
 const MoleculeBytesHeaderSize = 4
 const OneCkb = uint64(1e8)
+const DasAccountSuffix = ".bit"
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
 
