@@ -4,7 +4,6 @@ package celltype
 
 import (
 	"bytes"
-	"encoding/binary"
 	"errors"
 	"strconv"
 	"strings"
@@ -1866,7 +1865,7 @@ func (s *TypeIdTable) AsBuilder() TypeIdTableBuilder {
 
 type ProposalCellDataBuilder struct {
 	proposer_lock   Script
-	proposer_wallet Hash
+	proposer_wallet Bytes
 	slices          SliceList
 }
 
@@ -1900,7 +1899,7 @@ func (s *ProposalCellDataBuilder) ProposerLock(v Script) *ProposalCellDataBuilde
 	return s
 }
 
-func (s *ProposalCellDataBuilder) ProposerWallet(v Hash) *ProposalCellDataBuilder {
+func (s *ProposalCellDataBuilder) ProposerWallet(v Bytes) *ProposalCellDataBuilder {
 	s.proposer_wallet = v
 	return s
 }
@@ -1911,7 +1910,7 @@ func (s *ProposalCellDataBuilder) Slices(v SliceList) *ProposalCellDataBuilder {
 }
 
 func NewProposalCellDataBuilder() *ProposalCellDataBuilder {
-	return &ProposalCellDataBuilder{proposer_lock: ScriptDefault(), proposer_wallet: HashDefault(), slices: SliceListDefault()}
+	return &ProposalCellDataBuilder{proposer_lock: ScriptDefault(), proposer_wallet: BytesDefault(), slices: SliceListDefault()}
 }
 
 type ProposalCellData struct {
@@ -1926,7 +1925,7 @@ func (s *ProposalCellData) AsSlice() []byte {
 }
 
 func ProposalCellDataDefault() ProposalCellData {
-	return *ProposalCellDataFromSliceUnchecked([]byte{105, 0, 0, 0, 16, 0, 0, 0, 69, 0, 0, 0, 101, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
+	return *ProposalCellDataFromSliceUnchecked([]byte{77, 0, 0, 0, 16, 0, 0, 0, 69, 0, 0, 0, 73, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
 }
 
 func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData, error) {
@@ -1990,7 +1989,7 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 		return nil, err
 	}
 
-	_, err = HashFromSlice(slice[offsets[1]:offsets[2]], compatible)
+	_, err = BytesFromSlice(slice[offsets[1]:offsets[2]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -2034,10 +2033,10 @@ func (s *ProposalCellData) ProposerLock() *Script {
 	return ScriptFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ProposalCellData) ProposerWallet() *Hash {
+func (s *ProposalCellData) ProposerWallet() *Bytes {
 	start := unpackNumber(s.inner[8:])
 	end := unpackNumber(s.inner[12:])
-	return HashFromSliceUnchecked(s.inner[start:end])
+	return BytesFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ProposalCellData) Slices() *SliceList {
@@ -3544,8 +3543,8 @@ type PreAccountCellDataBuilder struct {
 	account        AccountChars
 	refund_lock    Script
 	owner_lock     Script
-	inviter_wallet Hash
-	channel_wallet Hash
+	inviter_wallet Bytes
+	channel_wallet Bytes
 	price          PriceConfig
 	quote          Uint64
 	created_at     Timestamp
@@ -3606,12 +3605,12 @@ func (s *PreAccountCellDataBuilder) OwnerLock(v Script) *PreAccountCellDataBuild
 	return s
 }
 
-func (s *PreAccountCellDataBuilder) InviterWallet(v Hash) *PreAccountCellDataBuilder {
+func (s *PreAccountCellDataBuilder) InviterWallet(v Bytes) *PreAccountCellDataBuilder {
 	s.inviter_wallet = v
 	return s
 }
 
-func (s *PreAccountCellDataBuilder) ChannelWallet(v Hash) *PreAccountCellDataBuilder {
+func (s *PreAccountCellDataBuilder) ChannelWallet(v Bytes) *PreAccountCellDataBuilder {
 	s.channel_wallet = v
 	return s
 }
@@ -3632,7 +3631,7 @@ func (s *PreAccountCellDataBuilder) CreatedAt(v Timestamp) *PreAccountCellDataBu
 }
 
 func NewPreAccountCellDataBuilder() *PreAccountCellDataBuilder {
-	return &PreAccountCellDataBuilder{account: AccountCharsDefault(), refund_lock: ScriptDefault(), owner_lock: ScriptDefault(), inviter_wallet: HashDefault(), channel_wallet: HashDefault(), price: PriceConfigDefault(), quote: Uint64Default(), created_at: TimestampDefault()}
+	return &PreAccountCellDataBuilder{account: AccountCharsDefault(), refund_lock: ScriptDefault(), owner_lock: ScriptDefault(), inviter_wallet: BytesDefault(), channel_wallet: BytesDefault(), price: PriceConfigDefault(), quote: Uint64Default(), created_at: TimestampDefault()}
 }
 
 type PreAccountCellData struct {
@@ -3647,7 +3646,7 @@ func (s *PreAccountCellData) AsSlice() []byte {
 }
 
 func PreAccountCellDataDefault() PreAccountCellData {
-	return *PreAccountCellDataFromSliceUnchecked([]byte{3, 1, 0, 0, 36, 0, 0, 0, 40, 0, 0, 0, 93, 0, 0, 0, 146, 0, 0, 0, 178, 0, 0, 0, 210, 0, 0, 0, 243, 0, 0, 0, 251, 0, 0, 0, 4, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *PreAccountCellDataFromSliceUnchecked([]byte{203, 0, 0, 0, 36, 0, 0, 0, 40, 0, 0, 0, 93, 0, 0, 0, 146, 0, 0, 0, 150, 0, 0, 0, 154, 0, 0, 0, 187, 0, 0, 0, 195, 0, 0, 0, 4, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCellData, error) {
@@ -3721,12 +3720,12 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
 		return nil, err
 	}
 
-	_, err = HashFromSlice(slice[offsets[3]:offsets[4]], compatible)
+	_, err = BytesFromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = HashFromSlice(slice[offsets[4]:offsets[5]], compatible)
+	_, err = BytesFromSlice(slice[offsets[4]:offsets[5]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -3792,16 +3791,16 @@ func (s *PreAccountCellData) OwnerLock() *Script {
 	return ScriptFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *PreAccountCellData) InviterWallet() *Hash {
+func (s *PreAccountCellData) InviterWallet() *Bytes {
 	start := unpackNumber(s.inner[16:])
 	end := unpackNumber(s.inner[20:])
-	return HashFromSliceUnchecked(s.inner[start:end])
+	return BytesFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *PreAccountCellData) ChannelWallet() *Hash {
+func (s *PreAccountCellData) ChannelWallet() *Bytes {
 	start := unpackNumber(s.inner[20:])
 	end := unpackNumber(s.inner[24:])
-	return HashFromSliceUnchecked(s.inner[start:end])
+	return BytesFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *PreAccountCellData) Price() *PriceConfig {
