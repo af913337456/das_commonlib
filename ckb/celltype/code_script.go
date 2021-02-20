@@ -115,6 +115,18 @@ var (
 			Args:         nil,
 		},
 	}
+	DasOnSaleCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: types.HashTypeType,
+			Args:         nil,
+		},
+	}
 	// DasQuoteCellScript = DASCellBaseInfo{
 	// 	Dep: DASCellBaseInfoDep{
 	// 		TxHash:  types.HexToHash(""),
@@ -159,6 +171,7 @@ func init() {
 	SystemCodeScriptMap[SystemScript_PreAccoutnCell] = &DasPreAccountCellScript
 	SystemCodeScriptMap[SystemScript_BiddingCell] = &DasBiddingCellScript
 	SystemCodeScriptMap[SystemScript_AccoutnCell] = &DasAccountCellScript
+	SystemCodeScriptMap[SystemScript_OnSaleCell] = &DasOnSaleCellScript
 	SystemCodeScriptMap[SystemScript_ProposeCell] = &DasProposeCellScript
 	SystemCodeScriptMap[SystemScript_WalletCell] = &DasWalletCellScript
 	SystemCodeScriptMap[SystemScript_RefCell] = &DasRefCellScript
@@ -170,6 +183,7 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	biddingCellCodeHash := types.BytesToHash(data.TypeIdTable().BiddingCell().RawData())
 	accountCellCodeHash := types.BytesToHash(data.TypeIdTable().AccountCell().RawData())
 	proposeCellCodeHash := types.BytesToHash(data.TypeIdTable().ProposalCell().RawData())
+	onSaleCellCodeHash := types.BytesToHash(data.TypeIdTable().OnSaleCell().RawData())
 	walletCellCodeHash := types.BytesToHash(data.TypeIdTable().WalletCell().RawData())
 	refCellCodeHash := types.BytesToHash(data.TypeIdTable().RefCell().RawData())
 
@@ -179,6 +193,7 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	retMap[biddingCellCodeHash] = SystemScript_BiddingCell
 	retMap[accountCellCodeHash] = SystemScript_AccoutnCell
 	retMap[proposeCellCodeHash] = SystemScript_ProposeCell
+	retMap[onSaleCellCodeHash] = SystemScript_OnSaleCell
 	retMap[walletCellCodeHash] = SystemScript_WalletCell
 	retMap[refCellCodeHash] = SystemScript_RefCell
 	return retMap
