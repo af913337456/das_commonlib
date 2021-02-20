@@ -18,9 +18,12 @@ github.com/eapache/queue
 github.com/elastic/gosigar
 github.com/elastic/gosigar/sys/windows
 # github.com/ethereum/go-ethereum v1.9.14
+github.com/ethereum/go-ethereum/rlp
 github.com/ethereum/go-ethereum/rpc
 github.com/ethereum/go-ethereum/common
 github.com/ethereum/go-ethereum/common/hexutil
+github.com/ethereum/go-ethereum/common/math
+github.com/ethereum/go-ethereum/crypto/secp256k1
 github.com/ethereum/go-ethereum/log
 github.com/ethereum/go-ethereum/metrics
 github.com/ethereum/go-ethereum/p2p/netutil
@@ -55,12 +58,13 @@ github.com/minio/blake2b-simd
 github.com/nervosnetwork/ckb-sdk-go/address
 github.com/nervosnetwork/ckb-sdk-go/crypto
 github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b
-github.com/nervosnetwork/ckb-sdk-go/indexer
-github.com/nervosnetwork/ckb-sdk-go/rpc
-github.com/nervosnetwork/ckb-sdk-go/transaction
 github.com/nervosnetwork/ckb-sdk-go/types
 github.com/nervosnetwork/ckb-sdk-go/utils
+github.com/nervosnetwork/ckb-sdk-go/rpc
+github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1
+github.com/nervosnetwork/ckb-sdk-go/indexer
 github.com/nervosnetwork/ckb-sdk-go/crypto/bech32
+github.com/nervosnetwork/ckb-sdk-go/transaction
 # github.com/pierrec/lz4 v2.5.2+incompatible
 github.com/pierrec/lz4
 github.com/pierrec/lz4/internal/xxh32
