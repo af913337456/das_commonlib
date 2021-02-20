@@ -108,6 +108,7 @@ const (
 	SystemScript_ApplyRegisterCell = "apply_register_cell"
 	SystemScript_PreAccoutnCell    = "preaccount_cell"
 	SystemScript_AccoutnCell       = "account_cell"
+	SystemScript_BiddingCell       = "bidding_cell"
 	SystemScript_ProposeCell       = "propose_cell"
 	SystemScript_WalletCell        = "wallet_cell"
 	SystemScript_RefCell           = "ref_cell"

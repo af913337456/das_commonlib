@@ -103,6 +103,18 @@ var (
 			Args:         nil,
 		},
 	}
+	DasBiddingCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: types.HashTypeType,
+			Args:         nil,
+		},
+	}
 	// DasQuoteCellScript = DASCellBaseInfo{
 	// 	Dep: DASCellBaseInfoDep{
 	// 		TxHash:  types.HexToHash(""),
@@ -145,6 +157,7 @@ var (
 func init() {
 	SystemCodeScriptMap[SystemScript_ApplyRegisterCell] = &DasApplyRegisterCellScript
 	SystemCodeScriptMap[SystemScript_PreAccoutnCell] = &DasPreAccountCellScript
+	SystemCodeScriptMap[SystemScript_BiddingCell] = &DasBiddingCellScript
 	SystemCodeScriptMap[SystemScript_AccoutnCell] = &DasAccountCellScript
 	SystemCodeScriptMap[SystemScript_ProposeCell] = &DasProposeCellScript
 	SystemCodeScriptMap[SystemScript_WalletCell] = &DasWalletCellScript
@@ -154,6 +167,7 @@ func init() {
 func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	applyRegisterCodeHash := types.BytesToHash(data.TypeIdTable().ApplyRegisterCell().RawData())
 	preAccountCellCodeHash := types.BytesToHash(data.TypeIdTable().PreAccountCell().RawData())
+	biddingCellCodeHash := types.BytesToHash(data.TypeIdTable().BiddingCell().RawData())
 	accountCellCodeHash := types.BytesToHash(data.TypeIdTable().AccountCell().RawData())
 	proposeCellCodeHash := types.BytesToHash(data.TypeIdTable().ProposalCell().RawData())
 	walletCellCodeHash := types.BytesToHash(data.TypeIdTable().WalletCell().RawData())
@@ -162,6 +176,7 @@ func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
 	retMap := map[types.Hash]string{}
 	retMap[applyRegisterCodeHash] = SystemScript_ApplyRegisterCell
 	retMap[preAccountCellCodeHash] = SystemScript_PreAccoutnCell
+	retMap[biddingCellCodeHash] = SystemScript_BiddingCell
 	retMap[accountCellCodeHash] = SystemScript_AccoutnCell
 	retMap[proposeCellCodeHash] = SystemScript_ProposeCell
 	retMap[walletCellCodeHash] = SystemScript_WalletCell
