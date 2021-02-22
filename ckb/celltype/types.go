@@ -158,23 +158,6 @@ type PreAccountCellParam struct {
 	AlwaysSpendableScriptInfo DASCellBaseInfo     `json:"always_spendable_script_info"`
 }
 
-//
-// type StateCellParam struct {
-// 	Version                   uint32          `json:"version"`
-// 	Data                      *StateCellData  `json:"data"`
-// 	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
-// 	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
-// }
-
-/**
-lock: <use_lock_script>
-type: <owner_cell_script>
-data:
-  [version: u32]
-  table RefCellData {
-    account_id: Hash, // 由于 AccountCell 可能被单独花费，所以 RefCell 采用 ID 来表达对 AccountCell 的引用关系
-}
-*/
 type RefcellParam struct {
 	Version        uint32          `json:"version"`
 	Data           string          `json:"data"`
@@ -212,6 +195,49 @@ table OnSaleCellData {
 }
 */
 type OnSaleCellParam struct {
+	Version                   uint32          `json:"version"`
+	Data                      Data            `json:"data"`
+	Price                     uint64          `json:"price"`
+	AccountId                 DasAccountId    `json:"account_id"`
+	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+}
+
+/**
+lock: <always_success>
+type:
+  code_hash: <bidding_script>
+  type: type
+  args: [id] // AccountCell 的 ID
+data: hash(data: BiddingCellData)
+
+witness:
+  table Data {
+    old: table DataEntityOpt {
+    	index: Uint32,
+    	version: Uint32,
+    	entity: BiddingCellData
+    },
+    new: table DataEntityOpt {
+      index: Uint32,
+      version: Uint32,
+      entity: BiddingCellData
+    },
+  }
+
+======
+table BiddingCellData {
+    // market type, 0x01 for primary，0x02 for secondary
+    market_type: Uint8,
+    // starting bidding price
+    starting_price: Uint64,
+    // current bidding price
+    current_price: Uint64,
+    // latest bidder's lock script
+    current_bidder: ScriptOpt,
+}
+*/
+type BiddingCellParam struct {
 	Version                   uint32          `json:"version"`
 	Data                      Data            `json:"data"`
 	Price                     uint64          `json:"price"`

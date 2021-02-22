@@ -57,6 +57,14 @@ const (
 	SearchStatus_Registered       DasAccountSearchStatus = 5
 )
 
+type MarketType int
+
+// 0x01 for primary，0x02 for secondary
+const (
+	MarketType_Primary   = 1
+	MarketType_Secondary = 2
+)
+
 const (
 	AccountChar_Emoji AccountCharType = 0
 	AccountChar_En    AccountCharType = 1
@@ -145,5 +153,6 @@ const (
 	Action_CancelAccountAuction  = "cancel_account_auction"
 	Action_AccuseAccountRepeat   = "accuse_account_repeat"
 	Action_AccuseAccountIllegal  = "accuse_account_illegal"
-	Action_RecycleExpiredAccount = "recycle_expired_account"
+	Action_RecycleExpiredAccount = "recycle_expired_account_by_keeper"
+	Action_CancelSaleByKeeper    = "cancel_sale_by_keeper"
 )
