@@ -124,7 +124,7 @@ func (builder *TransactionBuilder) AddInput(typeInput celltype.TypeInputCell) *T
 	return builder
 }
 
-func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []celltype.InputWithWitness) (*TransactionBuilder, error) {
+func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []*celltype.InputWithWitness) (*TransactionBuilder, error) {
 	size := len(cellInputs)
 	for i := 0; i < size; i++ {
 		input := cellInputs[i]
@@ -135,7 +135,7 @@ func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []celltype.InputW
 	return builder, nil
 }
 
-func (builder *TransactionBuilder) AddWitnessInput(cellInput celltype.InputWithWitness) (*TransactionBuilder, error) {
+func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.InputWithWitness) (*TransactionBuilder, error) {
 	builder.AddInput(cellInput.CellInput)
 	if cellInput.GetWitnessData != nil {
 		index := uint32(len(builder.tx.Inputs) - 1)
