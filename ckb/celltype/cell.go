@@ -192,6 +192,7 @@ type ConfigCellDataBuilder struct {
 	apply_min_waiting_time                    Uint32
 	apply_max_waiting_time                    Uint32
 	account_max_length                        Uint32
+	account_expiration_grace_period           Uint32
 	price_configs                             PriceConfigList
 	char_sets                                 CharSetList
 	min_ttl                                   Uint32
@@ -203,8 +204,8 @@ type ConfigCellDataBuilder struct {
 func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (15 + 1)
-	offsets := make([]uint32, 0, 15)
+	totalSize := HeaderSizeUint * (16 + 1)
+	offsets := make([]uint32, 0, 16)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.reserved_account_filter.AsSlice()))
@@ -224,6 +225,8 @@ func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	totalSize += uint32(len(s.apply_max_waiting_time.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.account_max_length.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.account_expiration_grace_period.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.price_configs.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -252,6 +255,7 @@ func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	b.Write(s.apply_min_waiting_time.AsSlice())
 	b.Write(s.apply_max_waiting_time.AsSlice())
 	b.Write(s.account_max_length.AsSlice())
+	b.Write(s.account_expiration_grace_period.AsSlice())
 	b.Write(s.price_configs.AsSlice())
 	b.Write(s.char_sets.AsSlice())
 	b.Write(s.min_ttl.AsSlice())
@@ -306,6 +310,11 @@ func (s *ConfigCellDataBuilder) AccountMaxLength(v Uint32) *ConfigCellDataBuilde
 	return s
 }
 
+func (s *ConfigCellDataBuilder) AccountExpirationGracePeriod(v Uint32) *ConfigCellDataBuilder {
+	s.account_expiration_grace_period = v
+	return s
+}
+
 func (s *ConfigCellDataBuilder) PriceConfigs(v PriceConfigList) *ConfigCellDataBuilder {
 	s.price_configs = v
 	return s
@@ -337,7 +346,7 @@ func (s *ConfigCellDataBuilder) TypeIdTable(v TypeIdTable) *ConfigCellDataBuilde
 }
 
 func NewConfigCellDataBuilder() *ConfigCellDataBuilder {
-	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), type_id_table: TypeIdTableDefault()}
+	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), account_expiration_grace_period: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), type_id_table: TypeIdTableDefault()}
 }
 
 type ConfigCellData struct {
@@ -352,7 +361,7 @@ func (s *ConfigCellData) AsSlice() []byte {
 }
 
 func ConfigCellDataDefault() ConfigCellData {
-	return *ConfigCellDataFromSliceUnchecked([]byte{183, 1, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 69, 0, 0, 0, 70, 0, 0, 0, 71, 0, 0, 0, 75, 0, 0, 0, 79, 0, 0, 0, 83, 0, 0, 0, 87, 0, 0, 0, 91, 0, 0, 0, 95, 0, 0, 0, 99, 0, 0, 0, 103, 0, 0, 0, 107, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellDataFromSliceUnchecked([]byte{191, 1, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 73, 0, 0, 0, 74, 0, 0, 0, 75, 0, 0, 0, 79, 0, 0, 0, 83, 0, 0, 0, 87, 0, 0, 0, 91, 0, 0, 0, 95, 0, 0, 0, 99, 0, 0, 0, 103, 0, 0, 0, 107, 0, 0, 0, 111, 0, 0, 0, 115, 0, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, error) {
@@ -368,7 +377,7 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 15 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 16 == 0 {
 		return &ConfigCellData{inner: slice}, nil
 	}
 
@@ -384,9 +393,9 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 15 {
+	if fieldCount < 16 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 15 {
+	} else if !compatible && fieldCount > 16 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -456,17 +465,17 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = PriceConfigListFromSlice(slice[offsets[9]:offsets[10]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[9]:offsets[10]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = CharSetListFromSlice(slice[offsets[10]:offsets[11]], compatible)
+	_, err = PriceConfigListFromSlice(slice[offsets[10]:offsets[11]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[11]:offsets[12]], compatible)
+	_, err = CharSetListFromSlice(slice[offsets[11]:offsets[12]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -481,7 +490,12 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = TypeIdTableFromSlice(slice[offsets[14]:offsets[15]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[14]:offsets[15]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = TypeIdTableFromSlice(slice[offsets[15]:offsets[16]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -507,11 +521,11 @@ func (s *ConfigCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ConfigCellData) CountExtraFields() uint {
-	return s.FieldCount() - 15
+	return s.FieldCount() - 16
 }
 
 func (s *ConfigCellData) HasExtraFields() bool {
-	return 15 != s.FieldCount()
+	return 16 != s.FieldCount()
 }
 
 func (s *ConfigCellData) ReservedAccountFilter() *Bytes {
@@ -568,41 +582,47 @@ func (s *ConfigCellData) AccountMaxLength() *Uint32 {
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
+func (s *ConfigCellData) AccountExpirationGracePeriod() *Uint32 {
 	start := unpackNumber(s.inner[40:])
 	end := unpackNumber(s.inner[44:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
+	start := unpackNumber(s.inner[44:])
+	end := unpackNumber(s.inner[48:])
 	return PriceConfigListFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ConfigCellData) CharSets() *CharSetList {
-	start := unpackNumber(s.inner[44:])
-	end := unpackNumber(s.inner[48:])
+	start := unpackNumber(s.inner[48:])
+	end := unpackNumber(s.inner[52:])
 	return CharSetListFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ConfigCellData) MinTtl() *Uint32 {
-	start := unpackNumber(s.inner[48:])
-	end := unpackNumber(s.inner[52:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ClosingLimitOfPrimaryMarketAuction() *Uint32 {
 	start := unpackNumber(s.inner[52:])
 	end := unpackNumber(s.inner[56:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ClosingLimitOfSecondaryMarketAuction() *Uint32 {
+func (s *ConfigCellData) ClosingLimitOfPrimaryMarketAuction() *Uint32 {
 	start := unpackNumber(s.inner[56:])
 	end := unpackNumber(s.inner[60:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
+func (s *ConfigCellData) ClosingLimitOfSecondaryMarketAuction() *Uint32 {
+	start := unpackNumber(s.inner[60:])
+	end := unpackNumber(s.inner[64:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
 func (s *ConfigCellData) TypeIdTable() *TypeIdTable {
 	var ret *TypeIdTable
-	start := unpackNumber(s.inner[60:])
+	start := unpackNumber(s.inner[64:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[64:])
+		end := unpackNumber(s.inner[68:])
 		ret = TypeIdTableFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = TypeIdTableFromSliceUnchecked(s.inner[start:])
@@ -611,7 +631,7 @@ func (s *ConfigCellData) TypeIdTable() *TypeIdTable {
 }
 
 func (s *ConfigCellData) AsBuilder() ConfigCellDataBuilder {
-	ret := NewConfigCellDataBuilder().ReservedAccountFilter(*s.ReservedAccountFilter()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).PriceConfigs(*s.PriceConfigs()).CharSets(*s.CharSets()).MinTtl(*s.MinTtl()).ClosingLimitOfPrimaryMarketAuction(*s.ClosingLimitOfPrimaryMarketAuction()).ClosingLimitOfSecondaryMarketAuction(*s.ClosingLimitOfSecondaryMarketAuction()).TypeIdTable(*s.TypeIdTable())
+	ret := NewConfigCellDataBuilder().ReservedAccountFilter(*s.ReservedAccountFilter()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).AccountExpirationGracePeriod(*s.AccountExpirationGracePeriod()).PriceConfigs(*s.PriceConfigs()).CharSets(*s.CharSets()).MinTtl(*s.MinTtl()).ClosingLimitOfPrimaryMarketAuction(*s.ClosingLimitOfPrimaryMarketAuction()).ClosingLimitOfSecondaryMarketAuction(*s.ClosingLimitOfSecondaryMarketAuction()).TypeIdTable(*s.TypeIdTable())
 	return *ret
 }
 
