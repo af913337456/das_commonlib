@@ -2,6 +2,7 @@ package celltype
 
 import (
 	"fmt"
+	"github.com/DA-Services/das_commonlib/common"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -158,6 +159,13 @@ func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 	return data[32:52], nil
 }
 
+func ExpiredAtFromOutputData(data []byte) (int64, error) {
+	if size := len(data); size < 88 {
+		return 0, fmt.Errorf("ExpiredAtFromOutputData invalid data, len not enough: %d", size)
+	}
+	return common.BytesToInt64(data[80:88]), nil
+}
+
 func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 	if accountId == nil || len(accountId) != 20 {
 		accountId = EmptyAccountId
@@ -186,35 +194,6 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)    // expired_at
 	dataBytes = append(dataBytes, accountBytes...)                          // account
 	return dataBytes, nil
-}
-
-func AccountCellCap(account string) (uint64, error) {
-	output := types.CellOutput{
-		Lock: &types.Script{
-			CodeHash: DasAnyOneCanSendCellInfo.CodeHash,
-			HashType: DasAnyOneCanSendCellInfo.CodeHashType,
-			Args:     DasAnyOneCanSendCellInfo.Args,
-		},
-		Type: &types.Script{
-			CodeHash: DasAccountCellScript.Out.CodeHash,
-			HashType: DasAccountCellScript.Out.CodeHashType,
-			Args:     DasAccountCellScript.Out.Args,
-		},
-	}
-	dataBytes := []byte{}
-	dataHash, _ := blake2b.Blake256([]byte("0"))
-	idBytes, _ := blake2b.Blake160([]byte("0"))
-	nextBytes, _ := blake2b.Blake160([]byte("0"))
-	expiredAtBytes := GoUint64ToBytes(0)
-	accountBytes := []byte(account)
-
-	dataBytes = append(dataBytes, dataHash...)
-	dataBytes = append(dataBytes, idBytes...)
-	dataBytes = append(dataBytes, nextBytes...)
-	dataBytes = append(dataBytes, expiredAtBytes...)
-	dataBytes = append(dataBytes, accountBytes...)
-
-	return output.OccupiedCapacity(dataBytes), nil
 }
 
 func (c *AccountCell) Data() ([]byte, error) {
