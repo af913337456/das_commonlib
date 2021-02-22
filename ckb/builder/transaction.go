@@ -118,8 +118,8 @@ func (builder *TransactionBuilder) AddCellDeps(cellDeps []types.CellDep) *Transa
 	return builder
 }
 
-func (builder *TransactionBuilder) AddInput(typeInput celltype.TypeInputCell, thisCellCap uint64) *TransactionBuilder {
-	builder.totalInputCap = builder.totalInputCap + thisCellCap
+func (builder *TransactionBuilder) AddInput(typeInput celltype.TypeInputCell) *TransactionBuilder {
+	builder.totalInputCap = builder.totalInputCap + typeInput.CellCap
 	builder.inputList = append(builder.inputList, typeInput)
 	return builder
 }
@@ -136,7 +136,7 @@ func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []celltype.InputW
 }
 
 func (builder *TransactionBuilder) AddWitnessInput(cellInput celltype.InputWithWitness) (*TransactionBuilder, error) {
-	builder.AddInput(cellInput.CellInput, cellInput.CellCap)
+	builder.AddInput(cellInput.CellInput)
 	if cellInput.GetWitnessData != nil {
 		index := uint32(len(builder.tx.Inputs) - 1)
 		witnessData, err := cellInput.GetWitnessData(index)
@@ -167,8 +167,9 @@ func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCellList *utils.
 						},
 					},
 					LockType: lockType,
+					CellCap:  thisCellCap,
 				}
-				builder.AddInput(input, thisCellCap)
+				builder.AddInput(input)
 				capCounter = capCounter + thisCellCap
 			}
 		}

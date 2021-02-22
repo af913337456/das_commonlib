@@ -19,6 +19,7 @@ import (
 type TypeInputCell struct {
 	Input    types.CellInput `json:"input"`
 	LockType LockScriptType  `json:"lock_type"`
+	CellCap  uint64          `json:"cell_cap"`
 }
 
 type BuildTransactionRet struct {
@@ -27,7 +28,6 @@ type BuildTransactionRet struct {
 }
 
 type InputWithWitness struct {
-	CellCap        uint64                 `json:"cell_cap"`
 	CellInput      TypeInputCell          `json:"cell_input"`
 	GetWitnessData CellDepWithWitnessFunc `json:"-"`
 }
