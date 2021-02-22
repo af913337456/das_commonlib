@@ -183,6 +183,43 @@ type RefcellParam struct {
 	UserLockScript DASCellBaseInfo `json:"user_lock_script"`
 }
 
+/**
+lock: <always_success>
+type:
+  code_hash: <on_sale_script>
+  type: type
+  args: [id] // AccountCell 的 ID
+data: hash(data: OnSaleCellData)
+
+witness:
+  table Data {
+    old: table DataEntityOpt {
+    	index: Uint32,
+    	version: Uint32,
+    	entity: OnSaleCellData
+    },
+    new: table DataEntityOpt {
+      index: Uint32,
+      version: Uint32,
+      entity: OnSaleCellData
+    },
+  }
+
+======
+table OnSaleCellData {
+    // the price of account
+    price: Uint64,
+}
+*/
+type OnSaleCellParam struct {
+	Version                   uint32          `json:"version"`
+	Data                      Data            `json:"data"`
+	Price                     uint64          `json:"price"`
+	AccountId                 DasAccountId    `json:"account_id"`
+	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+}
+
 // type AccountCommonParam struct {
 // 	InstanceId string `json:"instance_id"`
 // 	// Quantity   uint64 `json:"quantity"`

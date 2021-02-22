@@ -367,7 +367,7 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 
 /**
 ConfigCell.price * quote * account.bytes.length 这个是 365 天的单价，
-expiredAt = ((PreAccountCell.capacity - AccountCell.capacity) /
+expiredAt = ((PreAccountCell.capacity - AccountCell.capacity - RefCell.capacity) /
 		(ConfigCell.price * quote * account.bytes.length)) * 365
 */
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {

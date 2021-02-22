@@ -15,7 +15,6 @@ import (
 var TestNetRefCell = func(lockScript *types.Script, accountId DasAccountId) *RefcellParam {
 	return &RefcellParam{
 		Version:      1,
-		Data:         "",
 		AccountId:    accountId,
 		CellCodeInfo: DasRefCellScript,
 		UserLockScript: DASCellBaseInfo{
