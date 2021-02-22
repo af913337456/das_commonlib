@@ -144,12 +144,12 @@ func (c *AccountCell) TypeScript() *types.Script {
 }
 
 /**
-data:
-  // 20 20 32, account = 72...
+  hash(data: AccountCellData) // 32
   id // 自己的 ID，生成算法为 hash(account)，然后取前 20 bytes
-  next // 下一个 AccountCell 的 ID
-  hash(data: AccountCellData)
-  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息
+  next // 下一个 AccountCell 的 ID 20
+  registered_at // 小端编码的 u64 时间戳 8
+  expired_at // 小端编码的 u64 时间戳 8
+  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息。直接 bytes
 */
 
 func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
@@ -157,6 +157,13 @@ func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 		return nil, fmt.Errorf("AccountIdFromOutputData invalid data, len not enough: %d", size)
 	}
 	return data[32:52], nil
+}
+
+func RegisterAtFromOutputData(data []byte) (int64, error) {
+	if size := len(data); size < 80 {
+		return 0, fmt.Errorf("RegisterAtFromOutputData invalid data, len not enough: %d", size)
+	}
+	return common.BytesToInt64(data[72:80]), nil
 }
 
 func ExpiredAtFromOutputData(data []byte) (int64, error) {
@@ -194,6 +201,37 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)    // expired_at
 	dataBytes = append(dataBytes, accountBytes...)                          // account
 	return dataBytes, nil
+}
+
+func AccountCellCap(account string) (uint64, error) {
+	output := types.CellOutput{
+		Lock: &types.Script{
+			CodeHash: DasAnyOneCanSendCellInfo.CodeHash,
+			HashType: DasAnyOneCanSendCellInfo.CodeHashType,
+			Args:     DasAnyOneCanSendCellInfo.Args,
+		},
+		Type: &types.Script{
+			CodeHash: DasAccountCellScript.Out.CodeHash,
+			HashType: DasAccountCellScript.Out.CodeHashType,
+			Args:     DasAccountCellScript.Out.Args,
+		},
+	}
+	dataBytes := []byte{}
+	dataHash, _ := blake2b.Blake256([]byte("0"))
+	idBytes, _ := blake2b.Blake160([]byte("0"))
+	nextBytes, _ := blake2b.Blake160([]byte("0"))
+	registerAtBytes := GoUint64ToBytes(0)
+	expiredAtBytes := GoUint64ToBytes(0)
+	accountBytes := []byte(account)
+
+	dataBytes = append(dataBytes, dataHash...)
+	dataBytes = append(dataBytes, idBytes...)
+	dataBytes = append(dataBytes, nextBytes...)
+	dataBytes = append(dataBytes, registerAtBytes...)
+	dataBytes = append(dataBytes, expiredAtBytes...)
+	dataBytes = append(dataBytes, accountBytes...)
+
+	return output.OccupiedCapacity(dataBytes), nil
 }
 
 func (c *AccountCell) Data() ([]byte, error) {
