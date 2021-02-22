@@ -148,6 +148,10 @@ func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.InputWith
 	return builder, nil
 }
 
+func (builder *TransactionBuilder) OutputIndex() uint32 {
+	return uint32(len(builder.tx.Outputs) - 1)
+}
+
 // 自动计算需要的 input
 func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCellList *utils.LiveCellCollectResult, lockType celltype.LockScriptType) error {
 	if needCap := builder.NeedCapacityValue(); liveCellList.Capacity < needCap {
