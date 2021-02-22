@@ -137,6 +137,7 @@ const (
 	Action_EditRecords           = "edit_records"
 	Action_CancelBidding         = "cancel_bidding"
 	Action_CloseBidding          = "close_bidding"
+	Action_RefundRegister        = "refund_register"
 	Action_QuotePriceForCkb      = "quote_price_for_ckb"
 	Action_StartAccountSale      = "start_account_sale"
 	Action_CancelAccountSale     = "cancel_account_sale"
