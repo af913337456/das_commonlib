@@ -11,7 +11,7 @@ func NewMysqlDB(addr, user, password, dbName string, maxOpenConn, MaxIdleConn in
 	dataSource := fmt.Sprintf(conn, user, password, addr, dbName)
 	db, err := gorm.Open("mysql", dataSource)
 	if err != nil {
-		return nil, fmt.Errorf("gorm open:%s", err)
+		return nil, fmt.Errorf("gorm open :%s", err)
 	}
 	db.DB().SetMaxOpenConns(maxOpenConn)
 	db.DB().SetMaxIdleConns(MaxIdleConn)
