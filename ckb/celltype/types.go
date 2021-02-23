@@ -32,7 +32,7 @@ type InputWithWitness struct {
 	GetWitnessData CellDepWithWitnessFunc `json:"-"`
 }
 
-type CellDepWithWitnessFunc func(index uint32) ([]byte, error)
+type CellDepWithWitnessFunc func(inputIndex uint32) ([]byte, error)
 
 type CellDepWithWitness struct {
 	CellDep        *types.CellDep
@@ -273,6 +273,16 @@ type ProposeCellParam struct {
 	Data                      Data            `json:"data"`
 	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
 	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+}
+
+type AccountCellDataPreObj_Old_New struct {
+	OldData    *AccountCellData
+	NewData    *AccountCellFullData
+	InputIndex uint32
+}
+
+func (a *AccountCellDataPreObj_Old_New) ToAccountCell(outputIndex uint32) *AccountCell {
+	return NewAccountCell(TestNetAccountCell(0, a.InputIndex, outputIndex, nil, a.OldData, a.NewData))
 }
 
 type AccountCellFullData struct {

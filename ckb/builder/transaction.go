@@ -138,8 +138,8 @@ func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []*celltype.Input
 func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.InputWithWitness) (*TransactionBuilder, error) {
 	builder.AddInput(cellInput.CellInput)
 	if cellInput.GetWitnessData != nil {
-		index := uint32(len(builder.tx.Inputs) - 1)
-		witnessData, err := cellInput.GetWitnessData(index)
+		inputIndex := uint32(len(builder.tx.Inputs) - 1)
+		witnessData, err := cellInput.GetWitnessData(inputIndex)
 		if err != nil {
 			return nil, fmt.Errorf("AddWitnessInput err: %s", err.Error())
 		}
