@@ -4209,17 +4209,20 @@ func (s *AccountChar) AsBuilder() AccountCharBuilder {
 }
 
 type OnSaleCellDataBuilder struct {
-	price Uint64
+	price      Uint64
+	started_at Uint64
 }
 
 func (s *OnSaleCellDataBuilder) Build() OnSaleCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (1 + 1)
-	offsets := make([]uint32, 0, 1)
+	totalSize := HeaderSizeUint * (2 + 1)
+	offsets := make([]uint32, 0, 2)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.price.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.started_at.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -4228,6 +4231,7 @@ func (s *OnSaleCellDataBuilder) Build() OnSaleCellData {
 	}
 
 	b.Write(s.price.AsSlice())
+	b.Write(s.started_at.AsSlice())
 	return OnSaleCellData{inner: b.Bytes()}
 }
 
@@ -4236,8 +4240,13 @@ func (s *OnSaleCellDataBuilder) Price(v Uint64) *OnSaleCellDataBuilder {
 	return s
 }
 
+func (s *OnSaleCellDataBuilder) StartedAt(v Uint64) *OnSaleCellDataBuilder {
+	s.started_at = v
+	return s
+}
+
 func NewOnSaleCellDataBuilder() *OnSaleCellDataBuilder {
-	return &OnSaleCellDataBuilder{price: Uint64Default()}
+	return &OnSaleCellDataBuilder{price: Uint64Default(), started_at: Uint64Default()}
 }
 
 type OnSaleCellData struct {
@@ -4252,7 +4261,7 @@ func (s *OnSaleCellData) AsSlice() []byte {
 }
 
 func OnSaleCellDataDefault() OnSaleCellData {
-	return *OnSaleCellDataFromSliceUnchecked([]byte{16, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *OnSaleCellDataFromSliceUnchecked([]byte{28, 0, 0, 0, 12, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func OnSaleCellDataFromSlice(slice []byte, compatible bool) (*OnSaleCellData, error) {
@@ -4268,7 +4277,7 @@ func OnSaleCellDataFromSlice(slice []byte, compatible bool) (*OnSaleCellData, er
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 1 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 2 == 0 {
 		return &OnSaleCellData{inner: slice}, nil
 	}
 
@@ -4284,9 +4293,9 @@ func OnSaleCellDataFromSlice(slice []byte, compatible bool) (*OnSaleCellData, er
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 1 {
+	if fieldCount < 2 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 1 {
+	} else if !compatible && fieldCount > 2 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -4316,6 +4325,11 @@ func OnSaleCellDataFromSlice(slice []byte, compatible bool) (*OnSaleCellData, er
 		return nil, err
 	}
 
+	_, err = Uint64FromSlice(slice[offsets[1]:offsets[2]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
 	return &OnSaleCellData{inner: slice}, nil
 }
 
@@ -4337,18 +4351,24 @@ func (s *OnSaleCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *OnSaleCellData) CountExtraFields() uint {
-	return s.FieldCount() - 1
+	return s.FieldCount() - 2
 }
 
 func (s *OnSaleCellData) HasExtraFields() bool {
-	return 1 != s.FieldCount()
+	return 2 != s.FieldCount()
 }
 
 func (s *OnSaleCellData) Price() *Uint64 {
-	var ret *Uint64
 	start := unpackNumber(s.inner[4:])
+	end := unpackNumber(s.inner[8:])
+	return Uint64FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *OnSaleCellData) StartedAt() *Uint64 {
+	var ret *Uint64
+	start := unpackNumber(s.inner[8:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[8:])
+		end := unpackNumber(s.inner[12:])
 		ret = Uint64FromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = Uint64FromSliceUnchecked(s.inner[start:])
@@ -4357,7 +4377,7 @@ func (s *OnSaleCellData) Price() *Uint64 {
 }
 
 func (s *OnSaleCellData) AsBuilder() OnSaleCellDataBuilder {
-	ret := NewOnSaleCellDataBuilder().Price(*s.Price())
+	ret := NewOnSaleCellDataBuilder().Price(*s.Price()).StartedAt(*s.StartedAt())
 	return *ret
 }
 
@@ -4366,13 +4386,14 @@ type BiddingCellDataBuilder struct {
 	starting_price Uint64
 	current_price  Uint64
 	current_bidder ScriptOpt
+	started_at     Uint64
 }
 
 func (s *BiddingCellDataBuilder) Build() BiddingCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (4 + 1)
-	offsets := make([]uint32, 0, 4)
+	totalSize := HeaderSizeUint * (5 + 1)
+	offsets := make([]uint32, 0, 5)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.market_type.AsSlice()))
@@ -4382,6 +4403,8 @@ func (s *BiddingCellDataBuilder) Build() BiddingCellData {
 	totalSize += uint32(len(s.current_price.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.current_bidder.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.started_at.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -4393,6 +4416,7 @@ func (s *BiddingCellDataBuilder) Build() BiddingCellData {
 	b.Write(s.starting_price.AsSlice())
 	b.Write(s.current_price.AsSlice())
 	b.Write(s.current_bidder.AsSlice())
+	b.Write(s.started_at.AsSlice())
 	return BiddingCellData{inner: b.Bytes()}
 }
 
@@ -4416,8 +4440,13 @@ func (s *BiddingCellDataBuilder) CurrentBidder(v ScriptOpt) *BiddingCellDataBuil
 	return s
 }
 
+func (s *BiddingCellDataBuilder) StartedAt(v Uint64) *BiddingCellDataBuilder {
+	s.started_at = v
+	return s
+}
+
 func NewBiddingCellDataBuilder() *BiddingCellDataBuilder {
-	return &BiddingCellDataBuilder{market_type: Uint8Default(), starting_price: Uint64Default(), current_price: Uint64Default(), current_bidder: ScriptOptDefault()}
+	return &BiddingCellDataBuilder{market_type: Uint8Default(), starting_price: Uint64Default(), current_price: Uint64Default(), current_bidder: ScriptOptDefault(), started_at: Uint64Default()}
 }
 
 type BiddingCellData struct {
@@ -4432,7 +4461,7 @@ func (s *BiddingCellData) AsSlice() []byte {
 }
 
 func BiddingCellDataDefault() BiddingCellData {
-	return *BiddingCellDataFromSliceUnchecked([]byte{37, 0, 0, 0, 20, 0, 0, 0, 21, 0, 0, 0, 29, 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *BiddingCellDataFromSliceUnchecked([]byte{49, 0, 0, 0, 24, 0, 0, 0, 25, 0, 0, 0, 33, 0, 0, 0, 41, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func BiddingCellDataFromSlice(slice []byte, compatible bool) (*BiddingCellData, error) {
@@ -4448,7 +4477,7 @@ func BiddingCellDataFromSlice(slice []byte, compatible bool) (*BiddingCellData, 
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 4 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 5 == 0 {
 		return &BiddingCellData{inner: slice}, nil
 	}
 
@@ -4464,9 +4493,9 @@ func BiddingCellDataFromSlice(slice []byte, compatible bool) (*BiddingCellData, 
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 4 {
+	if fieldCount < 5 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 4 {
+	} else if !compatible && fieldCount > 5 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -4511,6 +4540,11 @@ func BiddingCellDataFromSlice(slice []byte, compatible bool) (*BiddingCellData, 
 		return nil, err
 	}
 
+	_, err = Uint64FromSlice(slice[offsets[4]:offsets[5]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
 	return &BiddingCellData{inner: slice}, nil
 }
 
@@ -4532,11 +4566,11 @@ func (s *BiddingCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *BiddingCellData) CountExtraFields() uint {
-	return s.FieldCount() - 4
+	return s.FieldCount() - 5
 }
 
 func (s *BiddingCellData) HasExtraFields() bool {
-	return 4 != s.FieldCount()
+	return 5 != s.FieldCount()
 }
 
 func (s *BiddingCellData) MarketType() *Uint8 {
@@ -4558,18 +4592,24 @@ func (s *BiddingCellData) CurrentPrice() *Uint64 {
 }
 
 func (s *BiddingCellData) CurrentBidder() *ScriptOpt {
-	var ret *ScriptOpt
 	start := unpackNumber(s.inner[16:])
+	end := unpackNumber(s.inner[20:])
+	return ScriptOptFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *BiddingCellData) StartedAt() *Uint64 {
+	var ret *Uint64
+	start := unpackNumber(s.inner[20:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[20:])
-		ret = ScriptOptFromSliceUnchecked(s.inner[start:end])
+		end := unpackNumber(s.inner[24:])
+		ret = Uint64FromSliceUnchecked(s.inner[start:end])
 	} else {
-		ret = ScriptOptFromSliceUnchecked(s.inner[start:])
+		ret = Uint64FromSliceUnchecked(s.inner[start:])
 	}
 	return ret
 }
 
 func (s *BiddingCellData) AsBuilder() BiddingCellDataBuilder {
-	ret := NewBiddingCellDataBuilder().MarketType(*s.MarketType()).StartingPrice(*s.StartingPrice()).CurrentPrice(*s.CurrentPrice()).CurrentBidder(*s.CurrentBidder())
+	ret := NewBiddingCellDataBuilder().MarketType(*s.MarketType()).StartingPrice(*s.StartingPrice()).CurrentPrice(*s.CurrentPrice()).CurrentBidder(*s.CurrentBidder()).StartedAt(*s.StartedAt())
 	return *ret
 }
