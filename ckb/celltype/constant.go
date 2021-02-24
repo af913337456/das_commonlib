@@ -132,6 +132,8 @@ const (
 	Action_CreateWallet          = "create_wallet"
 	Action_DeleteWallet          = "delete_wallet"
 	Action_Propose               = "propose"
+	Action_TransferAccount       = "transfer_account"
+	Action_RenewAccount          = "renew_account"
 	Action_ExtendPropose         = "extend_propose"
 	Action_ConfirmProposal       = "confirm_proposal"
 	Action_RecyclePropose        = "recycle_propose"
