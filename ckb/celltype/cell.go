@@ -183,32 +183,47 @@ func (s *ActionData) AsBuilder() ActionDataBuilder {
 }
 
 type ConfigCellDataBuilder struct {
-	reserved_account_filter                   Bytes
-	proposal_min_confirm_require              Uint8
-	proposal_min_extend_interval              Uint8
-	proposal_min_recycle_interval             Uint8
-	proposal_max_account_affect               Uint32
-	proposal_max_pre_account_contain          Uint32
-	apply_min_waiting_time                    Uint32
-	apply_max_waiting_time                    Uint32
-	account_max_length                        Uint32
-	account_expiration_grace_period           Uint32
-	price_configs                             PriceConfigList
-	char_sets                                 CharSetList
-	min_ttl                                   Uint32
-	closing_limit_of_primary_market_auction   Uint32
-	closing_limit_of_secondary_market_auction Uint32
-	type_id_table                             TypeIdTable
+	apply_min_waiting_time           Uint32
+	apply_max_waiting_time           Uint32
+	account_max_length               Uint32
+	account_expiration_grace_period  Uint32
+	char_sets                        CharSetList
+	min_ttl                          Uint32
+	price_configs                    PriceConfigList
+	primary_market                   MarketConfig
+	proposal_min_confirm_require     Uint8
+	proposal_min_extend_interval     Uint8
+	proposal_min_recycle_interval    Uint8
+	proposal_max_account_affect      Uint32
+	proposal_max_pre_account_contain Uint32
+	profit                           ProfitConfig
+	reserved_account_filter          Bytes
+	secondary_market                 MarketConfig
+	type_id_table                    TypeIdTable
 }
 
 func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (16 + 1)
-	offsets := make([]uint32, 0, 16)
+	totalSize := HeaderSizeUint * (17 + 1)
+	offsets := make([]uint32, 0, 17)
 
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.reserved_account_filter.AsSlice()))
+	totalSize += uint32(len(s.apply_min_waiting_time.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.apply_max_waiting_time.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.account_max_length.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.account_expiration_grace_period.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.char_sets.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.min_ttl.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.price_configs.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.primary_market.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposal_min_confirm_require.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -220,23 +235,11 @@ func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposal_max_pre_account_contain.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.apply_min_waiting_time.AsSlice()))
+	totalSize += uint32(len(s.profit.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.apply_max_waiting_time.AsSlice()))
+	totalSize += uint32(len(s.reserved_account_filter.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.account_max_length.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.account_expiration_grace_period.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.price_configs.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.char_sets.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.min_ttl.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.closing_limit_of_primary_market_auction.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.closing_limit_of_secondary_market_auction.AsSlice()))
+	totalSize += uint32(len(s.secondary_market.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.type_id_table.AsSlice()))
 
@@ -246,27 +249,63 @@ func (s *ConfigCellDataBuilder) Build() ConfigCellData {
 		b.Write(packNumber(Number(offsets[i])))
 	}
 
-	b.Write(s.reserved_account_filter.AsSlice())
+	b.Write(s.apply_min_waiting_time.AsSlice())
+	b.Write(s.apply_max_waiting_time.AsSlice())
+	b.Write(s.account_max_length.AsSlice())
+	b.Write(s.account_expiration_grace_period.AsSlice())
+	b.Write(s.char_sets.AsSlice())
+	b.Write(s.min_ttl.AsSlice())
+	b.Write(s.price_configs.AsSlice())
+	b.Write(s.primary_market.AsSlice())
 	b.Write(s.proposal_min_confirm_require.AsSlice())
 	b.Write(s.proposal_min_extend_interval.AsSlice())
 	b.Write(s.proposal_min_recycle_interval.AsSlice())
 	b.Write(s.proposal_max_account_affect.AsSlice())
 	b.Write(s.proposal_max_pre_account_contain.AsSlice())
-	b.Write(s.apply_min_waiting_time.AsSlice())
-	b.Write(s.apply_max_waiting_time.AsSlice())
-	b.Write(s.account_max_length.AsSlice())
-	b.Write(s.account_expiration_grace_period.AsSlice())
-	b.Write(s.price_configs.AsSlice())
-	b.Write(s.char_sets.AsSlice())
-	b.Write(s.min_ttl.AsSlice())
-	b.Write(s.closing_limit_of_primary_market_auction.AsSlice())
-	b.Write(s.closing_limit_of_secondary_market_auction.AsSlice())
+	b.Write(s.profit.AsSlice())
+	b.Write(s.reserved_account_filter.AsSlice())
+	b.Write(s.secondary_market.AsSlice())
 	b.Write(s.type_id_table.AsSlice())
 	return ConfigCellData{inner: b.Bytes()}
 }
 
-func (s *ConfigCellDataBuilder) ReservedAccountFilter(v Bytes) *ConfigCellDataBuilder {
-	s.reserved_account_filter = v
+func (s *ConfigCellDataBuilder) ApplyMinWaitingTime(v Uint32) *ConfigCellDataBuilder {
+	s.apply_min_waiting_time = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) ApplyMaxWaitingTime(v Uint32) *ConfigCellDataBuilder {
+	s.apply_max_waiting_time = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) AccountMaxLength(v Uint32) *ConfigCellDataBuilder {
+	s.account_max_length = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) AccountExpirationGracePeriod(v Uint32) *ConfigCellDataBuilder {
+	s.account_expiration_grace_period = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) CharSets(v CharSetList) *ConfigCellDataBuilder {
+	s.char_sets = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) MinTtl(v Uint32) *ConfigCellDataBuilder {
+	s.min_ttl = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) PriceConfigs(v PriceConfigList) *ConfigCellDataBuilder {
+	s.price_configs = v
+	return s
+}
+
+func (s *ConfigCellDataBuilder) PrimaryMarket(v MarketConfig) *ConfigCellDataBuilder {
+	s.primary_market = v
 	return s
 }
 
@@ -295,48 +334,18 @@ func (s *ConfigCellDataBuilder) ProposalMaxPreAccountContain(v Uint32) *ConfigCe
 	return s
 }
 
-func (s *ConfigCellDataBuilder) ApplyMinWaitingTime(v Uint32) *ConfigCellDataBuilder {
-	s.apply_min_waiting_time = v
+func (s *ConfigCellDataBuilder) Profit(v ProfitConfig) *ConfigCellDataBuilder {
+	s.profit = v
 	return s
 }
 
-func (s *ConfigCellDataBuilder) ApplyMaxWaitingTime(v Uint32) *ConfigCellDataBuilder {
-	s.apply_max_waiting_time = v
+func (s *ConfigCellDataBuilder) ReservedAccountFilter(v Bytes) *ConfigCellDataBuilder {
+	s.reserved_account_filter = v
 	return s
 }
 
-func (s *ConfigCellDataBuilder) AccountMaxLength(v Uint32) *ConfigCellDataBuilder {
-	s.account_max_length = v
-	return s
-}
-
-func (s *ConfigCellDataBuilder) AccountExpirationGracePeriod(v Uint32) *ConfigCellDataBuilder {
-	s.account_expiration_grace_period = v
-	return s
-}
-
-func (s *ConfigCellDataBuilder) PriceConfigs(v PriceConfigList) *ConfigCellDataBuilder {
-	s.price_configs = v
-	return s
-}
-
-func (s *ConfigCellDataBuilder) CharSets(v CharSetList) *ConfigCellDataBuilder {
-	s.char_sets = v
-	return s
-}
-
-func (s *ConfigCellDataBuilder) MinTtl(v Uint32) *ConfigCellDataBuilder {
-	s.min_ttl = v
-	return s
-}
-
-func (s *ConfigCellDataBuilder) ClosingLimitOfPrimaryMarketAuction(v Uint32) *ConfigCellDataBuilder {
-	s.closing_limit_of_primary_market_auction = v
-	return s
-}
-
-func (s *ConfigCellDataBuilder) ClosingLimitOfSecondaryMarketAuction(v Uint32) *ConfigCellDataBuilder {
-	s.closing_limit_of_secondary_market_auction = v
+func (s *ConfigCellDataBuilder) SecondaryMarket(v MarketConfig) *ConfigCellDataBuilder {
+	s.secondary_market = v
 	return s
 }
 
@@ -346,7 +355,7 @@ func (s *ConfigCellDataBuilder) TypeIdTable(v TypeIdTable) *ConfigCellDataBuilde
 }
 
 func NewConfigCellDataBuilder() *ConfigCellDataBuilder {
-	return &ConfigCellDataBuilder{reserved_account_filter: BytesDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), account_expiration_grace_period: Uint32Default(), price_configs: PriceConfigListDefault(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), closing_limit_of_primary_market_auction: Uint32Default(), closing_limit_of_secondary_market_auction: Uint32Default(), type_id_table: TypeIdTableDefault()}
+	return &ConfigCellDataBuilder{apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), account_expiration_grace_period: Uint32Default(), char_sets: CharSetListDefault(), min_ttl: Uint32Default(), price_configs: PriceConfigListDefault(), primary_market: MarketConfigDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), profit: ProfitConfigDefault(), reserved_account_filter: BytesDefault(), secondary_market: MarketConfigDefault(), type_id_table: TypeIdTableDefault()}
 }
 
 type ConfigCellData struct {
@@ -361,7 +370,7 @@ func (s *ConfigCellData) AsSlice() []byte {
 }
 
 func ConfigCellDataDefault() ConfigCellData {
-	return *ConfigCellDataFromSliceUnchecked([]byte{191, 1, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 73, 0, 0, 0, 74, 0, 0, 0, 75, 0, 0, 0, 79, 0, 0, 0, 83, 0, 0, 0, 87, 0, 0, 0, 91, 0, 0, 0, 95, 0, 0, 0, 99, 0, 0, 0, 103, 0, 0, 0, 107, 0, 0, 0, 111, 0, 0, 0, 115, 0, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellDataFromSliceUnchecked([]byte{31, 2, 0, 0, 72, 0, 0, 0, 76, 0, 0, 0, 80, 0, 0, 0, 84, 0, 0, 0, 88, 0, 0, 0, 92, 0, 0, 0, 96, 0, 0, 0, 100, 0, 0, 0, 136, 0, 0, 0, 137, 0, 0, 0, 138, 0, 0, 0, 139, 0, 0, 0, 143, 0, 0, 0, 147, 0, 0, 0, 175, 0, 0, 0, 179, 0, 0, 0, 215, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 36, 0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 16, 0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 1, 0, 0, 40, 0, 0, 0, 72, 0, 0, 0, 104, 0, 0, 0, 136, 0, 0, 0, 168, 0, 0, 0, 200, 0, 0, 0, 232, 0, 0, 0, 8, 1, 0, 0, 40, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, error) {
@@ -377,7 +386,7 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 16 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 17 == 0 {
 		return &ConfigCellData{inner: slice}, nil
 	}
 
@@ -393,9 +402,9 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 16 {
+	if fieldCount < 17 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 16 {
+	} else if !compatible && fieldCount > 17 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -420,27 +429,27 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 
 	var err error
 
-	_, err = BytesFromSlice(slice[offsets[0]:offsets[1]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[0]:offsets[1]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint8FromSlice(slice[offsets[1]:offsets[2]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[1]:offsets[2]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint8FromSlice(slice[offsets[2]:offsets[3]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[2]:offsets[3]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint8FromSlice(slice[offsets[3]:offsets[4]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[4]:offsets[5]], compatible)
+	_, err = CharSetListFromSlice(slice[offsets[4]:offsets[5]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -450,32 +459,32 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[6]:offsets[7]], compatible)
+	_, err = PriceConfigListFromSlice(slice[offsets[6]:offsets[7]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[7]:offsets[8]], compatible)
+	_, err = MarketConfigFromSlice(slice[offsets[7]:offsets[8]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[8]:offsets[9]], compatible)
+	_, err = Uint8FromSlice(slice[offsets[8]:offsets[9]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[9]:offsets[10]], compatible)
+	_, err = Uint8FromSlice(slice[offsets[9]:offsets[10]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = PriceConfigListFromSlice(slice[offsets[10]:offsets[11]], compatible)
+	_, err = Uint8FromSlice(slice[offsets[10]:offsets[11]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = CharSetListFromSlice(slice[offsets[11]:offsets[12]], compatible)
+	_, err = Uint32FromSlice(slice[offsets[11]:offsets[12]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -485,17 +494,22 @@ func ConfigCellDataFromSlice(slice []byte, compatible bool) (*ConfigCellData, er
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[13]:offsets[14]], compatible)
+	_, err = ProfitConfigFromSlice(slice[offsets[13]:offsets[14]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[14]:offsets[15]], compatible)
+	_, err = BytesFromSlice(slice[offsets[14]:offsets[15]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = TypeIdTableFromSlice(slice[offsets[15]:offsets[16]], compatible)
+	_, err = MarketConfigFromSlice(slice[offsets[15]:offsets[16]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = TypeIdTableFromSlice(slice[offsets[16]:offsets[17]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -521,108 +535,114 @@ func (s *ConfigCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ConfigCellData) CountExtraFields() uint {
-	return s.FieldCount() - 16
+	return s.FieldCount() - 17
 }
 
 func (s *ConfigCellData) HasExtraFields() bool {
-	return 16 != s.FieldCount()
+	return 17 != s.FieldCount()
 }
 
-func (s *ConfigCellData) ReservedAccountFilter() *Bytes {
+func (s *ConfigCellData) ApplyMinWaitingTime() *Uint32 {
 	start := unpackNumber(s.inner[4:])
 	end := unpackNumber(s.inner[8:])
-	return BytesFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ProposalMinConfirmRequire() *Uint8 {
-	start := unpackNumber(s.inner[8:])
-	end := unpackNumber(s.inner[12:])
-	return Uint8FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ProposalMinExtendInterval() *Uint8 {
-	start := unpackNumber(s.inner[12:])
-	end := unpackNumber(s.inner[16:])
-	return Uint8FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ProposalMinRecycleInterval() *Uint8 {
-	start := unpackNumber(s.inner[16:])
-	end := unpackNumber(s.inner[20:])
-	return Uint8FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ProposalMaxAccountAffect() *Uint32 {
-	start := unpackNumber(s.inner[20:])
-	end := unpackNumber(s.inner[24:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ProposalMaxPreAccountContain() *Uint32 {
+func (s *ConfigCellData) ApplyMaxWaitingTime() *Uint32 {
+	start := unpackNumber(s.inner[8:])
+	end := unpackNumber(s.inner[12:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) AccountMaxLength() *Uint32 {
+	start := unpackNumber(s.inner[12:])
+	end := unpackNumber(s.inner[16:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) AccountExpirationGracePeriod() *Uint32 {
+	start := unpackNumber(s.inner[16:])
+	end := unpackNumber(s.inner[20:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) CharSets() *CharSetList {
+	start := unpackNumber(s.inner[20:])
+	end := unpackNumber(s.inner[24:])
+	return CharSetListFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) MinTtl() *Uint32 {
 	start := unpackNumber(s.inner[24:])
 	end := unpackNumber(s.inner[28:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ApplyMinWaitingTime() *Uint32 {
+func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
 	start := unpackNumber(s.inner[28:])
 	end := unpackNumber(s.inner[32:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) ApplyMaxWaitingTime() *Uint32 {
-	start := unpackNumber(s.inner[32:])
-	end := unpackNumber(s.inner[36:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) AccountMaxLength() *Uint32 {
-	start := unpackNumber(s.inner[36:])
-	end := unpackNumber(s.inner[40:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) AccountExpirationGracePeriod() *Uint32 {
-	start := unpackNumber(s.inner[40:])
-	end := unpackNumber(s.inner[44:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellData) PriceConfigs() *PriceConfigList {
-	start := unpackNumber(s.inner[44:])
-	end := unpackNumber(s.inner[48:])
 	return PriceConfigListFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) CharSets() *CharSetList {
-	start := unpackNumber(s.inner[48:])
-	end := unpackNumber(s.inner[52:])
-	return CharSetListFromSliceUnchecked(s.inner[start:end])
+func (s *ConfigCellData) PrimaryMarket() *MarketConfig {
+	start := unpackNumber(s.inner[32:])
+	end := unpackNumber(s.inner[36:])
+	return MarketConfigFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) MinTtl() *Uint32 {
+func (s *ConfigCellData) ProposalMinConfirmRequire() *Uint8 {
+	start := unpackNumber(s.inner[36:])
+	end := unpackNumber(s.inner[40:])
+	return Uint8FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) ProposalMinExtendInterval() *Uint8 {
+	start := unpackNumber(s.inner[40:])
+	end := unpackNumber(s.inner[44:])
+	return Uint8FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) ProposalMinRecycleInterval() *Uint8 {
+	start := unpackNumber(s.inner[44:])
+	end := unpackNumber(s.inner[48:])
+	return Uint8FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) ProposalMaxAccountAffect() *Uint32 {
+	start := unpackNumber(s.inner[48:])
+	end := unpackNumber(s.inner[52:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) ProposalMaxPreAccountContain() *Uint32 {
 	start := unpackNumber(s.inner[52:])
 	end := unpackNumber(s.inner[56:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ClosingLimitOfPrimaryMarketAuction() *Uint32 {
+func (s *ConfigCellData) Profit() *ProfitConfig {
 	start := unpackNumber(s.inner[56:])
 	end := unpackNumber(s.inner[60:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
+	return ProfitConfigFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellData) ClosingLimitOfSecondaryMarketAuction() *Uint32 {
+func (s *ConfigCellData) ReservedAccountFilter() *Bytes {
 	start := unpackNumber(s.inner[60:])
 	end := unpackNumber(s.inner[64:])
-	return Uint32FromSliceUnchecked(s.inner[start:end])
+	return BytesFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ConfigCellData) SecondaryMarket() *MarketConfig {
+	start := unpackNumber(s.inner[64:])
+	end := unpackNumber(s.inner[68:])
+	return MarketConfigFromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *ConfigCellData) TypeIdTable() *TypeIdTable {
 	var ret *TypeIdTable
-	start := unpackNumber(s.inner[64:])
+	start := unpackNumber(s.inner[68:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[68:])
+		end := unpackNumber(s.inner[72:])
 		ret = TypeIdTableFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = TypeIdTableFromSliceUnchecked(s.inner[start:])
@@ -631,7 +651,7 @@ func (s *ConfigCellData) TypeIdTable() *TypeIdTable {
 }
 
 func (s *ConfigCellData) AsBuilder() ConfigCellDataBuilder {
-	ret := NewConfigCellDataBuilder().ReservedAccountFilter(*s.ReservedAccountFilter()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).AccountExpirationGracePeriod(*s.AccountExpirationGracePeriod()).PriceConfigs(*s.PriceConfigs()).CharSets(*s.CharSets()).MinTtl(*s.MinTtl()).ClosingLimitOfPrimaryMarketAuction(*s.ClosingLimitOfPrimaryMarketAuction()).ClosingLimitOfSecondaryMarketAuction(*s.ClosingLimitOfSecondaryMarketAuction()).TypeIdTable(*s.TypeIdTable())
+	ret := NewConfigCellDataBuilder().ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).AccountExpirationGracePeriod(*s.AccountExpirationGracePeriod()).CharSets(*s.CharSets()).MinTtl(*s.MinTtl()).PriceConfigs(*s.PriceConfigs()).PrimaryMarket(*s.PrimaryMarket()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).Profit(*s.Profit()).ReservedAccountFilter(*s.ReservedAccountFilter()).SecondaryMarket(*s.SecondaryMarket()).TypeIdTable(*s.TypeIdTable())
 	return *ret
 }
 
@@ -1568,6 +1588,412 @@ func (s *Chars) AsBuilder() CharsBuilder {
 		t.Push(*s.Get(i))
 	}
 	return *t
+}
+
+type MarketConfigBuilder struct {
+	max_selling_time       Uint32
+	max_auction_time       Uint32
+	max_auction_waiting    Uint32
+	min_auction_raise_rate Uint32
+}
+
+func (s *MarketConfigBuilder) Build() MarketConfig {
+	b := new(bytes.Buffer)
+
+	totalSize := HeaderSizeUint * (4 + 1)
+	offsets := make([]uint32, 0, 4)
+
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.max_selling_time.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.max_auction_time.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.max_auction_waiting.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.min_auction_raise_rate.AsSlice()))
+
+	b.Write(packNumber(Number(totalSize)))
+
+	for i := 0; i < len(offsets); i++ {
+		b.Write(packNumber(Number(offsets[i])))
+	}
+
+	b.Write(s.max_selling_time.AsSlice())
+	b.Write(s.max_auction_time.AsSlice())
+	b.Write(s.max_auction_waiting.AsSlice())
+	b.Write(s.min_auction_raise_rate.AsSlice())
+	return MarketConfig{inner: b.Bytes()}
+}
+
+func (s *MarketConfigBuilder) MaxSellingTime(v Uint32) *MarketConfigBuilder {
+	s.max_selling_time = v
+	return s
+}
+
+func (s *MarketConfigBuilder) MaxAuctionTime(v Uint32) *MarketConfigBuilder {
+	s.max_auction_time = v
+	return s
+}
+
+func (s *MarketConfigBuilder) MaxAuctionWaiting(v Uint32) *MarketConfigBuilder {
+	s.max_auction_waiting = v
+	return s
+}
+
+func (s *MarketConfigBuilder) MinAuctionRaiseRate(v Uint32) *MarketConfigBuilder {
+	s.min_auction_raise_rate = v
+	return s
+}
+
+func NewMarketConfigBuilder() *MarketConfigBuilder {
+	return &MarketConfigBuilder{max_selling_time: Uint32Default(), max_auction_time: Uint32Default(), max_auction_waiting: Uint32Default(), min_auction_raise_rate: Uint32Default()}
+}
+
+type MarketConfig struct {
+	inner []byte
+}
+
+func MarketConfigFromSliceUnchecked(slice []byte) *MarketConfig {
+	return &MarketConfig{inner: slice}
+}
+func (s *MarketConfig) AsSlice() []byte {
+	return s.inner
+}
+
+func MarketConfigDefault() MarketConfig {
+	return *MarketConfigFromSliceUnchecked([]byte{36, 0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+}
+
+func MarketConfigFromSlice(slice []byte, compatible bool) (*MarketConfig, error) {
+	sliceLen := len(slice)
+	if uint32(sliceLen) < HeaderSizeUint {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "MarketConfig", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	totalSize := unpackNumber(slice)
+	if Number(sliceLen) != totalSize {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "MarketConfig", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	if uint32(sliceLen) == HeaderSizeUint && 4 == 0 {
+		return &MarketConfig{inner: slice}, nil
+	}
+
+	if uint32(sliceLen) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "MarketConfig", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
+	if offsetFirst%4 != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"OffsetsNotMatch", "MarketConfig", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	fieldCount := offsetFirst/4 - 1
+	if fieldCount < 4 {
+		return nil, errors.New("FieldCountNotMatch")
+	} else if !compatible && fieldCount > 4 {
+		return nil, errors.New("FieldCountNotMatch")
+	}
+
+	headerSize := HeaderSizeUint * (uint32(fieldCount) + 1)
+	if uint32(sliceLen) < headerSize {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "MarketConfig", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(headerSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsets := make([]uint32, fieldCount)
+
+	for i := 0; i < int(fieldCount); i++ {
+		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][int(HeaderSizeUint)*i:]))
+	}
+	offsets = append(offsets, uint32(totalSize))
+
+	for i := 0; i < len(offsets); i++ {
+		if i&1 != 0 && offsets[i-1] > offsets[i] {
+			return nil, errors.New("OffsetsNotMatch")
+		}
+	}
+
+	var err error
+
+	_, err = Uint32FromSlice(slice[offsets[0]:offsets[1]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint32FromSlice(slice[offsets[1]:offsets[2]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint32FromSlice(slice[offsets[2]:offsets[3]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint32FromSlice(slice[offsets[3]:offsets[4]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	return &MarketConfig{inner: slice}, nil
+}
+
+func (s *MarketConfig) TotalSize() uint {
+	return uint(unpackNumber(s.inner))
+}
+func (s *MarketConfig) FieldCount() uint {
+	var number uint = 0
+	if uint32(s.TotalSize()) == HeaderSizeUint {
+		return number
+	}
+	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
+	return number
+}
+func (s *MarketConfig) Len() uint {
+	return s.FieldCount()
+}
+func (s *MarketConfig) IsEmpty() bool {
+	return s.Len() == 0
+}
+func (s *MarketConfig) CountExtraFields() uint {
+	return s.FieldCount() - 4
+}
+
+func (s *MarketConfig) HasExtraFields() bool {
+	return 4 != s.FieldCount()
+}
+
+func (s *MarketConfig) MaxSellingTime() *Uint32 {
+	start := unpackNumber(s.inner[4:])
+	end := unpackNumber(s.inner[8:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *MarketConfig) MaxAuctionTime() *Uint32 {
+	start := unpackNumber(s.inner[8:])
+	end := unpackNumber(s.inner[12:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *MarketConfig) MaxAuctionWaiting() *Uint32 {
+	start := unpackNumber(s.inner[12:])
+	end := unpackNumber(s.inner[16:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *MarketConfig) MinAuctionRaiseRate() *Uint32 {
+	var ret *Uint32
+	start := unpackNumber(s.inner[16:])
+	if s.HasExtraFields() {
+		end := unpackNumber(s.inner[20:])
+		ret = Uint32FromSliceUnchecked(s.inner[start:end])
+	} else {
+		ret = Uint32FromSliceUnchecked(s.inner[start:])
+	}
+	return ret
+}
+
+func (s *MarketConfig) AsBuilder() MarketConfigBuilder {
+	ret := NewMarketConfigBuilder().MaxSellingTime(*s.MaxSellingTime()).MaxAuctionTime(*s.MaxAuctionTime()).MaxAuctionWaiting(*s.MaxAuctionWaiting()).MinAuctionRaiseRate(*s.MinAuctionRaiseRate())
+	return *ret
+}
+
+type ProfitConfigBuilder struct {
+	profit_rate_of_inviter Uint32
+	profit_rate_of_channel Uint32
+	profit_rate_of_das     Uint32
+}
+
+func (s *ProfitConfigBuilder) Build() ProfitConfig {
+	b := new(bytes.Buffer)
+
+	totalSize := HeaderSizeUint * (3 + 1)
+	offsets := make([]uint32, 0, 3)
+
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.profit_rate_of_inviter.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.profit_rate_of_channel.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.profit_rate_of_das.AsSlice()))
+
+	b.Write(packNumber(Number(totalSize)))
+
+	for i := 0; i < len(offsets); i++ {
+		b.Write(packNumber(Number(offsets[i])))
+	}
+
+	b.Write(s.profit_rate_of_inviter.AsSlice())
+	b.Write(s.profit_rate_of_channel.AsSlice())
+	b.Write(s.profit_rate_of_das.AsSlice())
+	return ProfitConfig{inner: b.Bytes()}
+}
+
+func (s *ProfitConfigBuilder) ProfitRateOfInviter(v Uint32) *ProfitConfigBuilder {
+	s.profit_rate_of_inviter = v
+	return s
+}
+
+func (s *ProfitConfigBuilder) ProfitRateOfChannel(v Uint32) *ProfitConfigBuilder {
+	s.profit_rate_of_channel = v
+	return s
+}
+
+func (s *ProfitConfigBuilder) ProfitRateOfDas(v Uint32) *ProfitConfigBuilder {
+	s.profit_rate_of_das = v
+	return s
+}
+
+func NewProfitConfigBuilder() *ProfitConfigBuilder {
+	return &ProfitConfigBuilder{profit_rate_of_inviter: Uint32Default(), profit_rate_of_channel: Uint32Default(), profit_rate_of_das: Uint32Default()}
+}
+
+type ProfitConfig struct {
+	inner []byte
+}
+
+func ProfitConfigFromSliceUnchecked(slice []byte) *ProfitConfig {
+	return &ProfitConfig{inner: slice}
+}
+func (s *ProfitConfig) AsSlice() []byte {
+	return s.inner
+}
+
+func ProfitConfigDefault() ProfitConfig {
+	return *ProfitConfigFromSliceUnchecked([]byte{28, 0, 0, 0, 16, 0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+}
+
+func ProfitConfigFromSlice(slice []byte, compatible bool) (*ProfitConfig, error) {
+	sliceLen := len(slice)
+	if uint32(sliceLen) < HeaderSizeUint {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "ProfitConfig", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	totalSize := unpackNumber(slice)
+	if Number(sliceLen) != totalSize {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "ProfitConfig", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	if uint32(sliceLen) == HeaderSizeUint && 3 == 0 {
+		return &ProfitConfig{inner: slice}, nil
+	}
+
+	if uint32(sliceLen) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "ProfitConfig", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
+	if offsetFirst%4 != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
+		errMsg := strings.Join([]string{"OffsetsNotMatch", "ProfitConfig", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	fieldCount := offsetFirst/4 - 1
+	if fieldCount < 3 {
+		return nil, errors.New("FieldCountNotMatch")
+	} else if !compatible && fieldCount > 3 {
+		return nil, errors.New("FieldCountNotMatch")
+	}
+
+	headerSize := HeaderSizeUint * (uint32(fieldCount) + 1)
+	if uint32(sliceLen) < headerSize {
+		errMsg := strings.Join([]string{"HeaderIsBroken", "ProfitConfig", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(headerSize))}, " ")
+		return nil, errors.New(errMsg)
+	}
+
+	offsets := make([]uint32, fieldCount)
+
+	for i := 0; i < int(fieldCount); i++ {
+		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][int(HeaderSizeUint)*i:]))
+	}
+	offsets = append(offsets, uint32(totalSize))
+
+	for i := 0; i < len(offsets); i++ {
+		if i&1 != 0 && offsets[i-1] > offsets[i] {
+			return nil, errors.New("OffsetsNotMatch")
+		}
+	}
+
+	var err error
+
+	_, err = Uint32FromSlice(slice[offsets[0]:offsets[1]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint32FromSlice(slice[offsets[1]:offsets[2]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint32FromSlice(slice[offsets[2]:offsets[3]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ProfitConfig{inner: slice}, nil
+}
+
+func (s *ProfitConfig) TotalSize() uint {
+	return uint(unpackNumber(s.inner))
+}
+func (s *ProfitConfig) FieldCount() uint {
+	var number uint = 0
+	if uint32(s.TotalSize()) == HeaderSizeUint {
+		return number
+	}
+	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
+	return number
+}
+func (s *ProfitConfig) Len() uint {
+	return s.FieldCount()
+}
+func (s *ProfitConfig) IsEmpty() bool {
+	return s.Len() == 0
+}
+func (s *ProfitConfig) CountExtraFields() uint {
+	return s.FieldCount() - 3
+}
+
+func (s *ProfitConfig) HasExtraFields() bool {
+	return 3 != s.FieldCount()
+}
+
+func (s *ProfitConfig) ProfitRateOfInviter() *Uint32 {
+	start := unpackNumber(s.inner[4:])
+	end := unpackNumber(s.inner[8:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ProfitConfig) ProfitRateOfChannel() *Uint32 {
+	start := unpackNumber(s.inner[8:])
+	end := unpackNumber(s.inner[12:])
+	return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ProfitConfig) ProfitRateOfDas() *Uint32 {
+	var ret *Uint32
+	start := unpackNumber(s.inner[12:])
+	if s.HasExtraFields() {
+		end := unpackNumber(s.inner[16:])
+		ret = Uint32FromSliceUnchecked(s.inner[start:end])
+	} else {
+		ret = Uint32FromSliceUnchecked(s.inner[start:])
+	}
+	return ret
+}
+
+func (s *ProfitConfig) AsBuilder() ProfitConfigBuilder {
+	ret := NewProfitConfigBuilder().ProfitRateOfInviter(*s.ProfitRateOfInviter()).ProfitRateOfChannel(*s.ProfitRateOfChannel()).ProfitRateOfDas(*s.ProfitRateOfDas())
+	return *ret
 }
 
 type TypeIdTableBuilder struct {
