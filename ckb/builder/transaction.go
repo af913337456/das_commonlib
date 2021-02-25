@@ -8,6 +8,7 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/address"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
+	"github.com/nervosnetwork/ckb-sdk-go/indexer"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
 )
@@ -153,13 +154,13 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 }
 
 // 自动计算需要的 input
-func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCellList *utils.LiveCellCollectResult, lockType celltype.LockScriptType) error {
-	if needCap := builder.NeedCapacityValue(); liveCellList.Capacity < needCap {
-		return fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", liveCellList.Capacity, needCap)
+func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, totalCap uint64, lockType celltype.LockScriptType) error {
+	if needCap := builder.NeedCapacityValue(); totalCap < needCap {
+		return fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", totalCap, needCap)
 	} else {
 		// 添加 input，只取需要的那么多个
 		capCounter := uint64(0)
-		for _, cell := range liveCellList.LiveCells {
+		for _, cell := range liveCells {
 			if capCounter < needCap {
 				thisCellCap := cell.Output.Capacity
 				input := celltype.TypeInputCell{
