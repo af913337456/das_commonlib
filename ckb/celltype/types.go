@@ -52,21 +52,21 @@ type DASWitnessDataObj struct {
 - [8:] 第 8 字节开始往后的都是 molecule 编码的特殊数据结构，其整体结构如下；
 */
 func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
-	if size := len(rawData); size <= MoleculeBytesHeaderSize+8 { // header'size + min(data)'size
+	if size := len(rawData); size <= 8 { // header'size + min(data)'size
 		return nil, fmt.Errorf("invalid rawData size: %d", size)
 	}
-	tag := string(rawData[MoleculeBytesHeaderSize:7])
+	tag := string(rawData[:3])
 	if tag != witnessDas {
 		return nil, fmt.Errorf("invalid tag: %s", tag)
 	}
-	tableType, err := MoleculeU32ToGo(rawData[7:11])
+	tableType, err := MoleculeU32ToGo(rawData[3:7])
 	if err != nil {
 		return nil, fmt.Errorf("invalid tableType err: %s", err.Error())
 	}
 	return &DASWitnessDataObj{
 		Tag:       tag,
 		TableType: TableType(tableType),
-		TableBys:  rawData[11:],
+		TableBys:  rawData[7:],
 	}, nil
 }
 func NewDasWitnessData(tableType TableType, tableBys []byte) *DASWitnessDataObj {

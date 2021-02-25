@@ -64,11 +64,12 @@ github.com/minio/blake2b-simd
 github.com/nervosnetwork/ckb-sdk-go/address
 github.com/nervosnetwork/ckb-sdk-go/crypto
 github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b
+github.com/nervosnetwork/ckb-sdk-go/indexer
 github.com/nervosnetwork/ckb-sdk-go/types
 github.com/nervosnetwork/ckb-sdk-go/utils
 github.com/nervosnetwork/ckb-sdk-go/rpc
 github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1
-github.com/nervosnetwork/ckb-sdk-go/indexer
+github.com/nervosnetwork/ckb-sdk-go/collector
 github.com/nervosnetwork/ckb-sdk-go/crypto/bech32
 github.com/nervosnetwork/ckb-sdk-go/transaction
 # github.com/pierrec/lz4 v2.5.2+incompatible

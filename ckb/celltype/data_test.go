@@ -104,7 +104,7 @@ func Test_Blake2b_256(t *testing.T) {
 }
 
 func Test_ParseActionCell(t *testing.T) {
-	hexStr := "1e000000646173001a0000000c0000001600000006000000636f6e66696700000000"
+	hexStr := "646173000000001a0000000c0000001600000006000000636f6e66696700000000"
 	bys, err := hex.DecodeString(hexStr)
 	if err != nil {
 		t.Fatal(err)
