@@ -189,16 +189,16 @@ func (builder *TransactionBuilder) AddOutput(cell *types.CellOutput, data []byte
 	return builder
 }
 
-func (builder *TransactionBuilder) AddDasSpecOutput(cell celltype.ICellType) *TransactionBuilder {
+func (builder *TransactionBuilder) AddDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback) *TransactionBuilder {
 	builder.AddCellDep(cell.LockDepCell())
 	builder.AddCellDep(cell.TypeDepCell())
 	dataBys, _ := cell.Data()
 	witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
-	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys)
+	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback)
 	return builder
 }
 
-func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script, data, witnessData []byte) *TransactionBuilder {
+func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script, data, witnessData []byte, callback celltype.AddDasOutputCallback) *TransactionBuilder {
 	output := &types.CellOutput{
 		Lock: lockScript,
 		Type: typeScript,
@@ -207,6 +207,9 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 		data = []byte{}
 	}
 	output.Capacity = output.OccupiedCapacity(data) * celltype.OneCkb
+	if callback != nil {
+		callback(output.Capacity)
+	}
 	builder.AddOutput(output, data)
 	if witnessData != nil {
 		builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)

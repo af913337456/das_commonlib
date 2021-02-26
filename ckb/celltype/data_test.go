@@ -112,7 +112,8 @@ func Test_ParseActionCell(t *testing.T) {
 	if witness, err := NewDasWitnessDataFromSlice(bys); err != nil {
 		t.Fatal(err)
 	} else {
-		t.Log(witness.Tag, witness.TableType)
+		actionData, _ := ActionDataFromSlice(witness.TableBys, false)
+		t.Log(witness.Tag, witness.TableType, string(actionData.Action().RawData()))
 	}
 }
 

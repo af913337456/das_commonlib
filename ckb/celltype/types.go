@@ -32,6 +32,8 @@ type InputWithWitness struct {
 	GetWitnessData CellDepWithWitnessFunc `json:"-"`
 }
 
+type AddDasOutputCallback func(cellCap uint64)
+
 type CellDepWithWitnessFunc func(inputIndex uint32) ([]byte, error)
 
 type CellDepWithWitness struct {
