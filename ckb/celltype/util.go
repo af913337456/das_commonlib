@@ -210,6 +210,11 @@ func CalAccountSpend(account string) uint64 {
 	return uint64(len([]byte(account))) * OneCkb
 }
 
+func CalPreAccountCellCap(price, quote uint64, account string) uint64 {
+	// PreAccountCell.capacity >= c + AccountCell 基础成本 + RefCell 基础成本 + Account 字节长度
+	return uint64(price/quote) + AccountCellBaseCap + RefCellBaseCap + uint64(len([]byte(account)))*OneCkb
+}
+
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)
