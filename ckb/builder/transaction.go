@@ -189,20 +189,29 @@ func (builder *TransactionBuilder) AddOutput(cell *types.CellOutput, data []byte
 	return builder
 }
 
-func (builder *TransactionBuilder) AddDasSpecOutputWithCallback(cell celltype.ICellType, callback celltype.AddDasOutputCallback) *TransactionBuilder {
-	builder.AddCellDep(cell.LockDepCell())
-	builder.AddCellDep(cell.TypeDepCell())
-	dataBys, _ := cell.Data()
-	witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
-	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback)
-	return builder
-}
-
 func (builder *TransactionBuilder) AddDasSpecOutput(cell celltype.ICellType) *TransactionBuilder {
 	return builder.AddDasSpecOutputWithCallback(cell, nil)
 }
 
-func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script, data, witnessData []byte, callback celltype.AddDasOutputCallback) *TransactionBuilder {
+func (builder *TransactionBuilder) AddDasSpecOutputWithIncrementCellCap(cell celltype.ICellType, cellCap uint64) *TransactionBuilder {
+	return builder.addDasSpecOutput(cell, nil, cellCap)
+}
+
+func (builder *TransactionBuilder) AddDasSpecOutputWithCallback(cell celltype.ICellType, callback celltype.AddDasOutputCallback) *TransactionBuilder {
+	return builder.addDasSpecOutput(cell, callback, 0)
+}
+
+func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback, cellCap uint64) *TransactionBuilder {
+	builder.AddCellDep(cell.LockDepCell())
+	builder.AddCellDep(cell.TypeDepCell())
+	dataBys, _ := cell.Data()
+	witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
+	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback, cellCap)
+	return builder
+}
+
+func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script,
+	data, witnessData []byte, callback celltype.AddDasOutputCallback, incrementCellCap uint64) *TransactionBuilder {
 	output := &types.CellOutput{
 		Lock: lockScript,
 		Type: typeScript,
@@ -210,7 +219,7 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 	if data == nil {
 		data = []byte{}
 	}
-	output.Capacity = output.OccupiedCapacity(data) * celltype.OneCkb
+	output.Capacity = output.OccupiedCapacity(data)*celltype.OneCkb + incrementCellCap
 	if callback != nil {
 		callback(output.Capacity)
 	}
