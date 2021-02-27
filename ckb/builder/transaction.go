@@ -267,9 +267,6 @@ func (builder *TransactionBuilder) Log() string {
 }
 
 func (builder *TransactionBuilder) TxHash() (string, error) {
-	if needCap := builder.NeedCapacityValue(); builder.totalInputCap-needCap < 0 {
-		return "", fmt.Errorf("TxHash:not enough capacity, input: %d, want: %d", builder.totalInputCap, needCap)
-	}
 	hash, err := builder.tx.ComputeHash()
 	if err != nil {
 		return "", err
@@ -299,6 +296,9 @@ func (builder *TransactionBuilder) addInputsForTransaction(inputs []*types.CellI
 }
 
 func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransactionRet, error) {
+	if needCap := builder.NeedCapacityValue(); builder.totalInputCap-needCap < 0 {
+		return nil, fmt.Errorf("TxHash:not enough capacity, input: %d, want: %d", builder.totalInputCap, needCap)
+	}
 	size := len(builder.inputList)
 	recordMap := map[celltype.LockScriptType][]*types.CellInput{}
 	for i := 0; i < size; i++ {
