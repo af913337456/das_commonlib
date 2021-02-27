@@ -193,7 +193,7 @@ func MoleculeU32ToGoPercentage(bys []byte) (float64, error) {
 	if e != nil {
 		return 0, e
 	}
-	a := new(big.Rat).SetInt64(int64(v))
+	a := new(big.Rat).SetFloat64(float64(v))
 	b := new(big.Rat).SetInt64(10000)
 	r, _ := new(big.Rat).Quo(a, b).Float64()
 	return r, nil
