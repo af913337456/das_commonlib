@@ -15,15 +15,16 @@ import (
  * Description:
  */
 
-func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
+func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
 	c := collector.NewLiveCellCollector(
-		client, key, indexer.SearchOrderAsc, 10000, "")
+		client, key, indexer.SearchOrderAsc, 100, "")
 	iterator, err := c.Iterator()
 	if err != nil {
 		return nil, 0, fmt.Errorf("LoadLiveCells Collect failed: %s", err.Error())
 	}
 	liveCells := []indexer.LiveCell{}
 	totalCap := uint64(0)
+NextBatch:
 	for iterator.HasNext() {
 		liveCell, err := iterator.CurrentItem()
 		if err != nil {
@@ -37,6 +38,10 @@ func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, filter func(cell *
 		if err = iterator.Next(); err != nil {
 			return nil, 0, fmt.Errorf("LoadLiveCells, read iterator next err: %s", err.Error())
 		}
+	}
+	if totalCap < capLimit {
+		iterator.Next()
+		goto NextBatch
 	}
 	return liveCells, totalCap, nil
 }
