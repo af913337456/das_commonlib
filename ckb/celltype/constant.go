@@ -18,6 +18,7 @@ const DasAccountSuffix = ".bit"
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
 const RefCellCap = 114 * OneCkb
+const AccountCellBaseCap = 162 * OneCkb
 
 var EmptyAccountId = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
