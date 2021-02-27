@@ -13,6 +13,11 @@ import (
  * Description:
  */
 
+func Test_Rat(t *testing.T) {
+	v := GoUint32ToMoleculeU32(3000)
+	fmt.Println(MoleculeU32ToGoPercentage(v.RawData()))
+}
+
 type setIndex func()
 
 func index(f setIndex) {

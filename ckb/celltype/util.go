@@ -188,6 +188,17 @@ func MoleculeU64ToGo(bys []byte) (uint64, error) {
 	return t, nil
 }
 
+func MoleculeU32ToGoPercentage(bys []byte) (float64, error) {
+	v, e := MoleculeU32ToGo(bys)
+	if e != nil {
+		return 0, e
+	}
+	a := new(big.Rat).SetInt64(int64(v))
+	b := new(big.Rat).SetInt64(10000)
+	r, _ := new(big.Rat).Quo(a, b).Float64()
+	return r, nil
+}
+
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)
