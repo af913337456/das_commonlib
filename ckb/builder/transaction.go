@@ -189,13 +189,17 @@ func (builder *TransactionBuilder) AddOutput(cell *types.CellOutput, data []byte
 	return builder
 }
 
-func (builder *TransactionBuilder) AddDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback) *TransactionBuilder {
+func (builder *TransactionBuilder) AddDasSpecOutputWithCallback(cell celltype.ICellType, callback celltype.AddDasOutputCallback) *TransactionBuilder {
 	builder.AddCellDep(cell.LockDepCell())
 	builder.AddCellDep(cell.TypeDepCell())
 	dataBys, _ := cell.Data()
 	witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
 	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback)
 	return builder
+}
+
+func (builder *TransactionBuilder) AddDasSpecOutput(cell celltype.ICellType) *TransactionBuilder {
+	return builder.AddDasSpecOutputWithCallback(cell, nil)
 }
 
 func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script, data, witnessData []byte, callback celltype.AddDasOutputCallback) *TransactionBuilder {
