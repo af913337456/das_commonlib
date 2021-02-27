@@ -206,6 +206,10 @@ func CalDasAwardCap(cap uint64, rate float64) (uint64, error) {
 	return uint64(r), nil
 }
 
+func CalAccountSpend(account string) uint64 {
+	return uint64(len([]byte(account))) * OneCkb
+}
+
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)
