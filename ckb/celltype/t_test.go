@@ -16,6 +16,8 @@ import (
 func Test_Rat(t *testing.T) {
 	v := GoUint32ToMoleculeU32(3000)
 	fmt.Println(MoleculeU32ToGoPercentage(v.RawData()))
+
+	fmt.Println(CalDasAwardCap(100*OneCkb, 0.3))
 }
 
 type setIndex func()
