@@ -41,6 +41,13 @@ func (a AccountCellStatus) Str() string {
 	return "unknown"
 }
 
+const (
+	CfgCellType_ConfigCellMain        = 0
+	CfgCellType_ConfigCellRegister    = 1
+	CfgCellType_ConfigCellBloomFilter = 2
+	CfgCellType_ConfigCellMarket      = 3
+)
+
 type LockScriptType uint
 
 const (
