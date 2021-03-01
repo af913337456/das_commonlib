@@ -173,6 +173,21 @@ func ExpiredAtFromOutputData(data []byte) (int64, error) {
 	return common.BytesToInt64(data[80:88]), nil
 }
 
+func IsAccountExpired(accountCellData []byte, cmpTimeSec int64) (bool, error) {
+	if size := len(accountCellData); size < 88 {
+		return false, fmt.Errorf("invalid data, len not enough: %d", size)
+	}
+	return cmpTimeSec <= common.BytesToInt64(accountCellData[80:88]), nil
+}
+
+func IsAccountFrozen(accountCellData []byte, cmpTimeSec, frozenRangeSec int64) (bool, error) {
+	if size := len(accountCellData); size < 88 {
+		return false, fmt.Errorf("invalid data, len not enough: %d", size)
+	}
+	expired := common.BytesToInt64(accountCellData[80:88])
+	return expired >= cmpTimeSec && expired < cmpTimeSec+frozenRangeSec, nil
+}
+
 func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 	if accountId == nil || len(accountId) != 20 {
 		accountId = EmptyAccountId
