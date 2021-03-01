@@ -215,6 +215,10 @@ func CalPreAccountCellCap(years uint, price, quote uint64, account string) uint6
 	return uint64(price/quote)*uint64(years) + AccountCellBaseCap + RefCellBaseCap + uint64(len([]byte(account)))*OneCkb
 }
 
+func CalBuyAccountYearSec(years uint) int64 {
+	return OneYearSec * int64(years)
+}
+
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)

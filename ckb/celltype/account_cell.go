@@ -195,7 +195,7 @@ func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 	if nextAccountId == nil || len(nextAccountId) != 20 {
 		nextAccountId = EmptyAccountId
 	}
-	holder, _ := blake2b.Blake256([]byte(""))
+	holder := EmptyDataHash
 	return append(append(holder, accountId...), nextAccountId...)
 }
 
