@@ -9,7 +9,7 @@ package common
  */
 
 type ReqResp struct {
-	ErrNo  int         `json:"errno"`
+	ErrNo  DAS_CODE    `json:"errno"`
 	ErrMsg string      `json:"errmsg"`
 	Data   interface{} `json:"data"`
 }
