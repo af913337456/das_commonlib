@@ -1,5 +1,7 @@
 package common
 
+import "github.com/DA-Services/das_commonlib/common/dascode"
+
 /**
  * Copyright (C), 2019-2020
  * FileName: types.
@@ -9,7 +11,7 @@ package common
  */
 
 type ReqResp struct {
-	ErrNo  DAS_CODE    `json:"errno"`
-	ErrMsg string      `json:"errmsg"`
-	Data   interface{} `json:"data"`
+	ErrNo  dascode.DAS_CODE `json:"errno"`
+	ErrMsg string           `json:"errmsg"`
+	Data   interface{}      `json:"data"`
 }
