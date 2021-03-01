@@ -177,7 +177,7 @@ func init() {
 	SystemCodeScriptMap[SystemScript_RefCell] = &DasRefCellScript
 }
 
-func ParseDasCellsScript(data *ConfigCellData) map[types.Hash]string {
+func ParseDasCellsScript(data *ConfigCellMain) map[types.Hash]string {
 	applyRegisterCodeHash := types.BytesToHash(data.TypeIdTable().ApplyRegisterCell().RawData())
 	preAccountCellCodeHash := types.BytesToHash(data.TypeIdTable().PreAccountCell().RawData())
 	biddingCellCodeHash := types.BytesToHash(data.TypeIdTable().BiddingCell().RawData())
