@@ -20,6 +20,7 @@ const (
 	Err_AccountAlreadyRegister DAS_CODE = 20004
 	Err_AccountRecordsInvalid  DAS_CODE = 20005
 	Err_AccountFormatInvalid   DAS_CODE = 20006
-	Err_PubkeyHexFormatInvalid DAS_CODE = 20007
-	Err_BaseParamInvalid       DAS_CODE = 20008
+	Err_AccountNotExist        DAS_CODE = 20007
+	Err_PubkeyHexFormatInvalid DAS_CODE = 20008
+	Err_BaseParamInvalid       DAS_CODE = 20009
 )
