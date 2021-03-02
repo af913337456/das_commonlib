@@ -3,8 +3,8 @@ package wallet
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/ethereum/go-ethereum/crypto"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
-	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
@@ -41,13 +41,13 @@ func InitCkbWallet(privateKeyHex string, systemScript *utils.SystemScripts) (*Ck
 }
 
 func VerifySign(msg []byte, sign []byte, ckbPubkeyHex string) (bool, error) {
-	pubKey, err := ethSecp256k1.RecoverPubkey(msg, sign)
+	recoveredPub, err := crypto.Ecrecover(msg, sign)
 	if err != nil {
 		return false, err
 	}
-	bys, err := blake2b.Blake160(pubKey)
+	pubKey, err := crypto.UnmarshalPubkey(recoveredPub)
 	if err != nil {
 		return false, err
 	}
-	return hex.EncodeToString(bys) == ckbPubkeyHex, nil
+	return hex.EncodeToString(ethSecp256k1.CompressPubkey(pubKey.X, pubKey.Y)) == ckbPubkeyHex, nil
 }
