@@ -87,11 +87,15 @@ const (
 	TableType_CONFIG_CELL  TableType = 1
 	TableType_ACCOUNT_CELL TableType = 2
 	// TableType_REGISTER_CELL TableType = 3
-	TableType_ON_SALE_CELL        TableType = 3
-	TableType_BIDDING_CELL        TableType = 4
-	TableType_PROPOSE_CELL        TableType = 5
-	TableType_PRE_ACCOUNT_CELL    TableType = 6
-	TableTyte_APPLY_REGISTER_CELL TableType = 7 // todo change it
+	TableType_ON_SALE_CELL     TableType = 3
+	TableType_BIDDING_CELL     TableType = 4
+	TableType_PROPOSE_CELL     TableType = 5
+	TableType_PRE_ACCOUNT_CELL TableType = 6
+
+	TableTyte_CONFIG_CELL_MAIN         TableType = 7
+	TableTyte_CONFIG_CELL_REGISTER     TableType = 8
+	TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 9
+	TableTyte_CONFIG_CELL_MARKET       TableType = 10
 )
 
 const (
