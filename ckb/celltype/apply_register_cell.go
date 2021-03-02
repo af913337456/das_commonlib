@@ -83,7 +83,7 @@ func (c *ApplyRegisterCell) TypeScript() *types.Script {
 }
 
 func (c *ApplyRegisterCell) TableType() TableType {
-	return TableTyte_APPLY_REGISTER_CELL
+	return 0
 }
 
 func (c *ApplyRegisterCell) Data() ([]byte, error) {

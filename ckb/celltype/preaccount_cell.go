@@ -84,7 +84,7 @@ func (c *PreAccountCell) TypeScript() *types.Script {
 }
 
 func (c *PreAccountCell) TableType() TableType {
-	return TableTyte_APPLY_REGISTER_CELL
+	return TableType_PRE_ACCOUNT_CELL
 }
 
 /**
