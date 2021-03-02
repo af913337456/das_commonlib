@@ -52,13 +52,11 @@ type:
   type: type
   args: []
 data:
-  // 20 20 32, account = 72...
-  hash(data: AccountCellData) // 32
-  id // 自己的 ID，生成算法为 hash(account)，然后取前 20 bytes
+  hash(data: AccountCellData)
+  id // 自己的 ID，生成算法为 hash(account)，然后取前 10 bytes
   next // 下一个 AccountCell 的 ID
-  registered_at // 小端编码的 u64 时间戳
   expired_at // 小端编码的 u64 时间戳
-  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息。直接 bytes
+  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息，不含 .bit
 
 witness:
   table Data {
@@ -144,59 +142,73 @@ func (c *AccountCell) TypeScript() *types.Script {
 }
 
 /**
-  hash(data: AccountCellData) // 32
-  id // 自己的 ID，生成算法为 hash(account)，然后取前 20 bytes
-  next // 下一个 AccountCell 的 ID 20
-  registered_at // 小端编码的 u64 时间戳 8
-  expired_at // 小端编码的 u64 时间戳 8
-  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息。直接 bytes
+  hash(data: AccountCellData)
+  id // 自己的 ID，生成算法为 hash(account)，然后取前 10 bytes
+  next // 下一个 AccountCell 的 ID
+  expired_at // 小端编码的 u64 时间戳
+  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息，不含 .bit
+
 */
 
 func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
-	if size := len(data); size < 52 {
-		return nil, fmt.Errorf("AccountIdFromOutputData invalid data, len not enough: %d", size)
+	if size := len(data); size < HashBytesLen+dasAccountIdLen {
+		return EmptyAccountId, fmt.Errorf("AccountIdFromOutputData invalid data, len not enough: %d", size)
 	}
-	return data[32:52], nil
+	return DasAccountIdFromBytes(data[HashBytesLen : HashBytesLen+dasAccountIdLen]), nil
 }
 
-func RegisterAtFromOutputData(data []byte) (int64, error) {
-	if size := len(data); size < 80 {
-		return 0, fmt.Errorf("RegisterAtFromOutputData invalid data, len not enough: %d", size)
+func NextAccountIdFromOutputData(data []byte) (DasAccountId, error) {
+	minLen := dasAccountIdLen + HashBytesLen
+	if size := len(data); size < minLen {
+		return EmptyAccountId, fmt.Errorf("invalid data, len not enough: %d", size)
 	}
-	return common.BytesToInt64(data[72:80]), nil
+	return DasAccountIdFromBytes(data[HashBytesLen:minLen]), nil
 }
 
 func ExpiredAtFromOutputData(data []byte) (int64, error) {
-	if size := len(data); size < 88 {
+	endLen := HashBytesLen + dasAccountIdLen*2 + 8
+	if size := len(data); size < endLen {
 		return 0, fmt.Errorf("ExpiredAtFromOutputData invalid data, len not enough: %d", size)
 	}
-	return common.BytesToInt64(data[80:88]), nil
+	return common.BytesToInt64(data[endLen-8 : endLen]), nil
 }
 
 func IsAccountExpired(accountCellData []byte, cmpTimeSec int64) (bool, error) {
-	if size := len(accountCellData); size < 88 {
-		return false, fmt.Errorf("invalid data, len not enough: %d", size)
+	expired, err := ExpiredAtFromOutputData(accountCellData)
+	if err != nil {
+		return false, err
 	}
-	return cmpTimeSec <= common.BytesToInt64(accountCellData[80:88]), nil
+	return cmpTimeSec <= expired, nil
 }
 
 func IsAccountFrozen(accountCellData []byte, cmpTimeSec, frozenRangeSec int64) (bool, error) {
-	if size := len(accountCellData); size < 88 {
-		return false, fmt.Errorf("invalid data, len not enough: %d", size)
+	expired, err := ExpiredAtFromOutputData(accountCellData)
+	if err != nil {
+		return false, err
 	}
-	expired := common.BytesToInt64(accountCellData[80:88])
 	return expired >= cmpTimeSec && expired < cmpTimeSec+frozenRangeSec, nil
 }
 
+func SetAccountCellNextAccountId(data []byte, accountId DasAccountId) []byte {
+	minLen := HashBytesLen
+	accountIdEndLen := HashBytesLen + dasAccountIdLen
+	if size := len(data); size < minLen {
+		data = append(data, EmptyDataHash[:]...)
+		data = append(data, EmptyAccountId.Bytes()...)
+	} else if size < accountIdEndLen {
+		data = append(data, EmptyAccountId.Bytes()...)
+	}
+	dataLen := len(data)
+	temp1 := make([]byte, 0, HashBytesLen)
+	temp2 := make([]byte, 0, dataLen-minLen)
+	prefix := append(temp1, data[:HashBytesLen]...)
+	suffix := append(temp2, data[accountIdEndLen:]...)
+	return append(append(prefix, accountId.Bytes()...), suffix...)
+}
+
 func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
-	if accountId == nil || len(accountId) != 20 {
-		accountId = EmptyAccountId
-	}
-	if nextAccountId == nil || len(nextAccountId) != 20 {
-		nextAccountId = EmptyAccountId
-	}
 	holder := EmptyDataHash
-	return append(append(holder, accountId...), nextAccountId...)
+	return append(append(holder, accountId.Bytes()...), nextAccountId.Bytes()...)
 }
 
 func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
@@ -210,11 +222,10 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 		nextBytes, _ := blake2b.Blake160(newData.NextAccountId)
 		dataBytes = append(dataBytes, nextBytes...) // next
 	} else {
-		dataBytes = append(dataBytes, EmptyAccountId...)
+		dataBytes = append(dataBytes, EmptyAccountId.Bytes()...)
 	}
-	dataBytes = append(dataBytes, GoUint64ToBytes(newData.RegisteredAt)...) // registered_at
-	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)    // expired_at
-	dataBytes = append(dataBytes, accountBytes...)                          // account
+	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...) // expired_at
+	dataBytes = append(dataBytes, accountBytes...)                       // account
 	return dataBytes, nil
 }
 
@@ -232,17 +243,12 @@ func AccountCellCap(account string) (uint64, error) {
 		},
 	}
 	dataBytes := []byte{}
-	dataHash, _ := blake2b.Blake256([]byte("0"))
-	idBytes, _ := blake2b.Blake160([]byte("0"))
-	nextBytes, _ := blake2b.Blake160([]byte("0"))
-	registerAtBytes := GoUint64ToBytes(0)
 	expiredAtBytes := GoUint64ToBytes(0)
 	accountBytes := []byte(account)
 
-	dataBytes = append(dataBytes, dataHash...)
-	dataBytes = append(dataBytes, idBytes...)
-	dataBytes = append(dataBytes, nextBytes...)
-	dataBytes = append(dataBytes, registerAtBytes...)
+	dataBytes = append(dataBytes, EmptyDataHash...)
+	dataBytes = append(dataBytes, EmptyAccountId.Bytes()...)
+	dataBytes = append(dataBytes, EmptyAccountId.Bytes()...)
 	dataBytes = append(dataBytes, expiredAtBytes...)
 	dataBytes = append(dataBytes, accountBytes...)
 

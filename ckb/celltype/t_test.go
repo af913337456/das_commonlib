@@ -18,6 +18,12 @@ func Test_Rat(t *testing.T) {
 	fmt.Println(MoleculeU32ToGoPercentage(v.RawData()))
 
 	fmt.Println(CalDasAwardCap(100*OneCkb, 0.3))
+
+	fmt.Println(EmptyAccountId.Bytes())
+
+	bys := []byte{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 4, 3, 2, 1, 3, 3, 4, 4}
+	a := SetAccountCellNextAccountId(bys, EmptyAccountId)
+	fmt.Println(a)
 }
 
 type setIndex func()

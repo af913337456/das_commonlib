@@ -69,7 +69,7 @@ func (c *Refcell) TypeScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.CellCodeInfo.Out.CodeHash,
 		HashType: c.p.CellCodeInfo.Out.CodeHashType,
-		Args:     c.p.AccountId,
+		Args:     c.p.AccountId.Bytes(),
 	}
 }
 
