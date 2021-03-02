@@ -30,6 +30,10 @@ func (d DasAccount) ValidErr() error {
 	return nil
 }
 
+func (d DasAccount) Str() string {
+	return string(d)
+}
+
 func (d DasAccount) AccountId() DasAccountId {
 	bys, _ := blake2b.Blake160([]byte(d))
 	id := &DasAccountId{}
