@@ -2,9 +2,11 @@ package celltype
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
+	"strings"
 )
 
 /**
@@ -21,8 +23,15 @@ func DasAccountFromStr(account string) DasAccount {
 	return DasAccount(account)
 }
 
-func (a DasAccount) AccountId() DasAccountId {
-	bys, _ := blake2b.Blake160([]byte(a))
+func (d DasAccount) ValidErr() error {
+	if d == "" || !strings.HasSuffix(string(d), DasAccountSuffix) || strings.Contains(string(d), " ") {
+		return fmt.Errorf("invalid account:[%s], demo: hello_world.bit", d)
+	}
+	return nil
+}
+
+func (d DasAccount) AccountId() DasAccountId {
+	bys, _ := blake2b.Blake160([]byte(d))
 	id := &DasAccountId{}
 	id.SetBytes(bys)
 	return *id
