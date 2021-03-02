@@ -1,6 +1,7 @@
 package celltype
 
 import (
+	"bytes"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
@@ -46,6 +47,10 @@ func (d *DasAccountId) SetBytes(b []byte) {
 		b = b[len(b)-dasAccountIdLen:]
 	}
 	copy(d[dasAccountIdLen-len(b):], b)
+}
+
+func (d DasAccountId) Compare(b DasAccountId) int {
+	return bytes.Compare(d.Bytes(), b.Bytes())
 }
 
 func DasAccountIdFromBytes(accountRawBytes []byte) DasAccountId {
