@@ -288,10 +288,10 @@ func (a *AccountCellDataPreObj_Old_New) ToAccountCell(outputIndex uint32) *Accou
 }
 
 type AccountCellFullData struct {
-	NextAccountId DasAccountId    `json:"next_account_id"`
-	RegisteredAt  uint64          `json:"registered_at"`
-	ExpiredAt     uint64          `json:"expired_at"`
-	AccountInfo   AccountCellData `json:"-"`
+	NextAccountId DasAccountId `json:"next_account_id"`
+	// RegisteredAt  uint64          `json:"registered_at"`
+	ExpiredAt   uint64          `json:"expired_at"`
+	AccountInfo AccountCellData `json:"-"`
 }
 
 type AccountCellDatas struct {
