@@ -133,6 +133,7 @@ type DASCellBaseInfo struct {
 }
 
 type WalletCellParam struct {
+	AccountId              DasAccountId    `json:"-"`
 	CellCodeInfo           DASCellBaseInfo `json:"cell_code_info"`
 	AnyoneCanPayScriptInfo DASCellBaseInfo `json:"anyone_can_pay_script_info"`
 }

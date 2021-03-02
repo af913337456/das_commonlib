@@ -12,8 +12,9 @@ import (
  * Description:
  */
 
-var TestNetWalletCellCell = func() *WalletCellParam {
+var TestNetWalletCellCell = func(accountId DasAccountId) *WalletCellParam {
 	return &WalletCellParam{
+		AccountId:    accountId,
 		CellCodeInfo: DasWalletCellScript,
 		AnyoneCanPayScriptInfo: DASCellBaseInfo{
 			Dep: DASCellBaseInfoDep{
@@ -71,7 +72,7 @@ func (c *WalletCell) TypeScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.CellCodeInfo.Out.CodeHash,
 		HashType: c.p.CellCodeInfo.Out.CodeHashType,
-		Args:     c.p.CellCodeInfo.Out.Args,
+		Args:     c.p.AccountId.Bytes(),
 	}
 }
 
