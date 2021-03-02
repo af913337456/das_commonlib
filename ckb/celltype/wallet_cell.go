@@ -12,7 +12,7 @@ import (
  * Description:
  */
 
-var TestNetWalletCellCell = func(accountId DasAccountId) *WalletCellParam {
+var TestNetWalletCell = func(accountId DasAccountId) *WalletCellParam {
 	return &WalletCellParam{
 		AccountId:    accountId,
 		CellCodeInfo: DasWalletCellScript,
