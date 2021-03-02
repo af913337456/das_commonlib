@@ -317,7 +317,7 @@ type ParseDasWitnessBysDataObj struct {
 type ProposeWitnessSliceDataObject struct {
 	AccountId DasAccountId      `json:"account_id"`
 	ItemType  AccountCellStatus `json:"item_type"`
-	Next      DasAccountId      `json:"next"`
+	Next      *DasAccountId     `json:"next"`
 }
 
 func (p ProposeWitnessSliceDataObject) MarshalJSON() ([]byte, error) {
@@ -329,7 +329,7 @@ func (p ProposeWitnessSliceDataObject) MarshalJSON() ([]byte, error) {
 
 type ProposeWitnessSliceDataObjectList []ProposeWitnessSliceDataObject
 
-func (p *ProposeWitnessSliceDataObjectList) Add(accountId, nextId DasAccountId, status AccountCellStatus) {
+func (p *ProposeWitnessSliceDataObjectList) Add(accountId DasAccountId, nextId *DasAccountId, status AccountCellStatus) {
 	*p = append(*p, ProposeWitnessSliceDataObject{AccountId: accountId, Next: nextId, ItemType: status})
 }
 
@@ -352,7 +352,7 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 			list = append(list, ProposeWitnessSliceDataObject{
 				AccountId: DasAccountIdFromBytes(propose.AccountId().RawData()),
 				ItemType:  AccountCellStatus(itemTypeUint8),
-				Next:      DasAccountIdFromBytes(propose.Next().RawData()),
+				Next:      DasAccountIdFromBytes(propose.Next().RawData()).Point(),
 			})
 		}
 		retList = append(retList, list)
@@ -368,7 +368,10 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 		proposeItemList := make([]ProposalItem, 0, len(slice))
 		for _, item := range slice {
 			accountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.AccountId.Bytes())).Build()
-			nextAccountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.Next.Bytes())).Build()
+			var nextAccountId AccountId
+			if item.Next != nil {
+				nextAccountId = NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.Next.Bytes())).Build()
+			}
 			proposeItem := NewProposalItemBuilder().
 				AccountId(accountId).
 				Next(nextAccountId).

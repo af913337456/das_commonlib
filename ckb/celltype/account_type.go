@@ -49,6 +49,10 @@ func (d *DasAccountId) SetBytes(b []byte) {
 	copy(d[dasAccountIdLen-len(b):], b)
 }
 
+func (d DasAccountId) Point() *DasAccountId {
+	return &d
+}
+
 func (d DasAccountId) Compare(b DasAccountId) int {
 	return bytes.Compare(d.Bytes(), b.Bytes())
 }
