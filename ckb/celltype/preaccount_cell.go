@@ -91,19 +91,16 @@ func (c *PreAccountCell) TableType() TableType {
 lock: <always_success>
 type: <pre_account_script>
 data:
-  id // account ID，生成算法为 hash(account)，然后取前 20 bytes
   hash(data: PreAccountCellData)
+  id // account ID，生成算法为 hash(account)，然后取前 10 bytes
 */
 func (c *PreAccountCell) Data() ([]byte, error) {
-	accountId, err := blake2b.Blake160(c.p.PreAccountCellDatas.NewAccountCellData.Account().AsSlice())
+	dataHash, err := blake2b.Blake256(c.p.PreAccountCellDatas.NewAccountCellData.AsSlice())
 	if err != nil {
 		return nil, err
 	}
-	dataHash, err := blake2b.Blake160(c.p.PreAccountCellDatas.NewAccountCellData.AsSlice())
-	if err != nil {
-		return nil, err
-	}
-	return append(dataHash, accountId...), nil
+	accountId := DasAccountIdFromBytes(c.p.PreAccountCellDatas.NewAccountCellData.Account().AsSlice())
+	return append(dataHash, accountId.Bytes()...), nil
 }
 
 func (c *PreAccountCell) TableData() []byte {

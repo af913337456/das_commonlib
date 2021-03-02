@@ -217,10 +217,10 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	accountBytes := newData.AccountInfo.Account().AsSlice()
 	accountIdBytes, _ := blake2b.Blake160(accountBytes)
-	dataBytes = append(dataBytes, accountIdBytes...)                     // id
-	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)      // next
-	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...) // expired_at
-	dataBytes = append(dataBytes, accountBytes...)                       // account
+	dataBytes = append(dataBytes, DasAccountIdFromBytes(accountIdBytes).Bytes()...) // id
+	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)                 // next
+	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)            // expired_at
+	dataBytes = append(dataBytes, accountBytes...)                                  // account
 	return dataBytes, nil
 }
 
