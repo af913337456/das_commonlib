@@ -54,9 +54,8 @@ func (d DasAccountId) Compare(b DasAccountId) int {
 }
 
 func DasAccountIdFromBytes(accountRawBytes []byte) DasAccountId {
-	bys, _ := blake2b.Blake160(accountRawBytes)
 	id := &DasAccountId{}
-	id.SetBytes(bys)
+	id.SetBytes(accountRawBytes)
 	return *id
 }
 

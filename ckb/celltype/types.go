@@ -3,7 +3,6 @@ package celltype
 import (
 	"bytes"
 	"encoding/binary"
-	"encoding/hex"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -316,21 +315,21 @@ type ParseDasWitnessBysDataObj struct {
 }
 
 type ProposeWitnessSliceDataObject struct {
-	AccountId []byte            `json:"account_id"`
+	AccountId DasAccountId      `json:"account_id"`
 	ItemType  AccountCellStatus `json:"item_type"`
-	Next      []byte            `json:"next"`
+	Next      DasAccountId      `json:"next"`
 }
 
 func (p ProposeWitnessSliceDataObject) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf(
 		`{"account_id":"%s","item_type":"%s","next":"%s"}`,
-		hex.EncodeToString(p.AccountId),
-		p.ItemType.Str(), hex.EncodeToString(p.Next))), nil
+		p.AccountId.HexStr(),
+		p.ItemType.Str(), p.Next.HexStr())), nil
 }
 
 type ProposeWitnessSliceDataObjectList []ProposeWitnessSliceDataObject
 
-func (p *ProposeWitnessSliceDataObjectList) Add(accountId, nextId []byte, status AccountCellStatus) {
+func (p *ProposeWitnessSliceDataObjectList) Add(accountId, nextId DasAccountId, status AccountCellStatus) {
 	*p = append(*p, ProposeWitnessSliceDataObject{AccountId: accountId, Next: nextId, ItemType: status})
 }
 
@@ -351,9 +350,9 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 				return nil, err
 			}
 			list = append(list, ProposeWitnessSliceDataObject{
-				AccountId: propose.AccountId().AsSlice(),
+				AccountId: DasAccountIdFromBytes(propose.AccountId().RawData()),
 				ItemType:  AccountCellStatus(itemTypeUint8),
-				Next:      propose.Next().AsSlice(),
+				Next:      DasAccountIdFromBytes(propose.Next().RawData()),
 			})
 		}
 		retList = append(retList, list)
@@ -368,8 +367,8 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 	for _, slice := range p {
 		proposeItemList := make([]ProposalItem, 0, len(slice))
 		for _, item := range slice {
-			accountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.AccountId)).Build()
-			nextAccountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.Next)).Build()
+			accountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.AccountId.Bytes())).Build()
+			nextAccountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(item.Next.Bytes())).Build()
 			proposeItem := NewProposalItemBuilder().
 				AccountId(accountId).
 				Next(nextAccountId).
