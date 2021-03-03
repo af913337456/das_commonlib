@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
 	"github.com/nervosnetwork/ckb-sdk-go/collector"
@@ -49,18 +50,18 @@ NextBatch:
 	return liveCells, totalCap, nil
 }
 
-func GetScriptTypeFromLockScript(ckbSysScript utils.SystemScripts, lockScript *types.Script) celltype.LockScriptType {
+func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *types.Script) (celltype.LockScriptType, error) {
 	lockCodeHash := lockScript.CodeHash
 	switch lockCodeHash {
 	case ckbSysScript.SecpSingleSigCell.CellHash:
-		return celltype.ScriptType_User
+		return celltype.ScriptType_User, nil
 	case celltype.DasAnyOneCanSendCellInfo.CodeHash:
-		return celltype.ScriptType_Any
+		return celltype.ScriptType_Any, nil
 	case celltype.DasETHLockCellInfo.CodeHash:
-		return celltype.ScriptType_ETH
+		return celltype.ScriptType_ETH, nil
 	case celltype.DasBTCLockCellInfo.CodeHash:
-		return celltype.ScriptType_BTC
+		return celltype.ScriptType_BTC, nil
 	default:
-		return -1
+		return -1, errors.New("invalid lockScript")
 	}
 }
