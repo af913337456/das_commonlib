@@ -19,6 +19,7 @@ const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
 const RefCellBaseCap = 114 * OneCkb
 const AccountCellBaseCap = 162 * OneCkb
+const WalletCellBaseCap = 94 * OneCkb
 const OneYearSec = int64(3600 * 24 * 365)
 const HashBytesLen = 32
 

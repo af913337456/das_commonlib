@@ -46,12 +46,12 @@ func Test_VerifySign(t *testing.T) {
 		panic(err)
 	}
 	fmt.Println(hex.EncodeToString(key.LockScript.Args))
-	// c75fd5f8add2a04db9ffcaf88b437d76f1812797
 	rawMsgHexBys := csprngEntropy(32)
 	signMsg, err := key.Secp256k1Key.Sign(rawMsgHexBys)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(len(key.Secp256k1Key.PubKey()))
 	fmt.Println("sign hex:", hex.EncodeToString(signMsg))
 	pass, err := VerifySign(rawMsgHexBys, signMsg, hex.EncodeToString(key.Secp256k1Key.PubKey()))
 	if err != nil {
