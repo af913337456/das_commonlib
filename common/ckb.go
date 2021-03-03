@@ -2,9 +2,12 @@ package common
 
 import (
 	"fmt"
+	"github.com/DA-Services/das_commonlib/ckb/celltype"
 	"github.com/nervosnetwork/ckb-sdk-go/collector"
 	"github.com/nervosnetwork/ckb-sdk-go/indexer"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
+	"github.com/nervosnetwork/ckb-sdk-go/types"
+	"github.com/nervosnetwork/ckb-sdk-go/utils"
 )
 
 /**
@@ -44,4 +47,20 @@ NextBatch:
 		goto NextBatch
 	}
 	return liveCells, totalCap, nil
+}
+
+func GetScriptTypeFromLockScript(ckbSysScript utils.SystemScripts, lockScript *types.Script) celltype.LockScriptType {
+	lockCodeHash := lockScript.CodeHash
+	switch lockCodeHash {
+	case ckbSysScript.SecpSingleSigCell.CellHash:
+		return celltype.ScriptType_User
+	case celltype.DasAnyOneCanSendCellInfo.CodeHash:
+		return celltype.ScriptType_Any
+	case celltype.DasETHLockCellInfo.CodeHash:
+		return celltype.ScriptType_ETH
+	case celltype.DasBTCLockCellInfo.CodeHash:
+		return celltype.ScriptType_BTC
+	default:
+		return -1
+	}
 }

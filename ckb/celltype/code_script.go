@@ -15,6 +15,16 @@ import (
  */
 
 var (
+	DasETHLockCellInfo = DASCellBaseInfoOut{
+		CodeHash:     types.HexToHash(""),
+		CodeHashType: types.HashTypeType,
+		Args:         nil,
+	}
+	DasBTCLockCellInfo = DASCellBaseInfoOut{
+		CodeHash:     types.HexToHash(""),
+		CodeHashType: types.HashTypeType,
+		Args:         nil,
+	}
 	DasAnyOneCanSendCellInfo = DASCellBaseInfoOut{
 		CodeHash:     types.HexToHash(""),
 		CodeHashType: types.HashTypeType,
