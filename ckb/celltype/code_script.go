@@ -1,6 +1,7 @@
 package celltype
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -184,6 +185,17 @@ func IsSystemCodeScriptReady() (bool, string) {
 		}
 	}
 	return true, ""
+}
+
+func SystemCodeScriptBytes() ([]byte, error) {
+	return json.Marshal(SystemCodeScriptMap)
+}
+
+func SystemCodeScriptFromBytes(bys []byte) error {
+	if err := json.Unmarshal(bys, &SystemCodeScriptMap); err != nil {
+		return err
+	}
+	return nil
 }
 
 func ParseDasCellsScript(data *ConfigCellMain) map[types.Hash]string {
