@@ -50,6 +50,14 @@ const (
 	CfgCellType_ConfigCellMarket      = 3
 )
 
+type PayType uint
+
+const (
+	PayType_CKB PayType = 0
+	PayType_ETH PayType = 1
+	PayType_BTC PayType = 2
+)
+
 type LockScriptType uint
 
 const (
