@@ -55,6 +55,8 @@ type LockScriptType uint
 const (
 	ScriptType_User LockScriptType = 0
 	ScriptType_Any  LockScriptType = 1
+	ScriptType_ETH  LockScriptType = 2
+	ScriptType_BTC  LockScriptType = 3
 )
 
 type DasAccountSearchStatus int

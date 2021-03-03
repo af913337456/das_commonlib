@@ -319,12 +319,13 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 		recordMap[builder.inputList[i].LockType] = list // same lockType is one group
 	}
 	retList := make([]celltype.BuildTransactionRet, 0, len(recordMap))
-	for _, item := range recordMap {
+	for lockType, item := range recordMap {
 		group, wArgs, err := builder.addInputsForTransaction(item)
 		if err != nil {
 			return nil, fmt.Errorf("BuildTransaction addInputsForTransaction err: %s", err.Error())
 		}
 		retList = append(retList, celltype.BuildTransactionRet{
+			LockType:   lockType,
 			Group:      group,
 			WitnessArg: wArgs,
 		})

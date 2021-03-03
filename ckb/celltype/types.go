@@ -22,6 +22,7 @@ type TypeInputCell struct {
 }
 
 type BuildTransactionRet struct {
+	LockType   LockScriptType     `json:"lock_type"`
 	Group      []int              `json:"group"`
 	WitnessArg *types.WitnessArgs `json:"witness_arg"`
 }
