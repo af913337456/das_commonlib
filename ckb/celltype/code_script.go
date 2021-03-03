@@ -177,6 +177,15 @@ func init() {
 	SystemCodeScriptMap[SystemScript_RefCell] = &DasRefCellScript
 }
 
+func IsSystemCodeScriptReady() (bool, string) {
+	for cellName, item := range SystemCodeScriptMap {
+		if item.Out.CodeHash.Hex() == "0x" {
+			return false, cellName
+		}
+	}
+	return true, ""
+}
+
 func ParseDasCellsScript(data *ConfigCellMain) map[types.Hash]string {
 	applyRegisterCodeHash := types.BytesToHash(data.TypeIdTable().ApplyRegisterCell().RawData())
 	preAccountCellCodeHash := types.BytesToHash(data.TypeIdTable().PreAccountCell().RawData())
