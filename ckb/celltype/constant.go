@@ -22,6 +22,7 @@ const AccountCellBaseCap = 162 * OneCkb
 const WalletCellBaseCap = 94 * OneCkb
 const OneYearSec = int64(3600 * 24 * 365)
 const HashBytesLen = 32
+const ETHScriptLockWitnessBytesLen = 65
 
 var EmptyDataHash = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 var EmptyAccountId = DasAccountId{}
