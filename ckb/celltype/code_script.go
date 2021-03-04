@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
+	"github.com/nervosnetwork/ckb-sdk-go/utils"
 )
 
 /**
@@ -16,7 +17,7 @@ import (
 
 var (
 	DasETHLockCellInfo = DASCellBaseInfoOut{
-		CodeHash:     types.HexToHash(""),
+		CodeHash:     types.HexToHash(PwLockTestNetCodeHash), // default
 		CodeHashType: types.HashTypeType,
 		Args:         nil,
 	}
@@ -26,7 +27,7 @@ var (
 		Args:         nil,
 	}
 	DasAnyOneCanSendCellInfo = DASCellBaseInfoOut{
-		CodeHash:     types.HexToHash(""),
+		CodeHash:     types.HexToHash(utils.AnyoneCanPayCodeHashOnAggron), // default
 		CodeHashType: types.HashTypeType,
 		Args:         nil,
 	}

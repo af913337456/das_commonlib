@@ -24,6 +24,11 @@ const OneYearSec = int64(3600 * 24 * 365)
 const HashBytesLen = 32
 const ETHScriptLockWitnessBytesLen = 65
 
+const (
+	PwLockMainNetCodeHash = "0xbf43c3602455798c1a61a596e0d95278864c552fafe231c063b3fabf97a8febc"
+	PwLockTestNetCodeHash = "0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63"
+)
+
 type PwCoreLockScriptType uint8
 
 const (
