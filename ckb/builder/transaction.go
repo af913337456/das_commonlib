@@ -403,6 +403,10 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 	if err != nil {
 		return err
 	}
+	return SignTransactionMessage(tx, group, witnessArgs, message, key)
+}
+
+func SignTransactionMessage(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) error {
 	signed, err := key.Sign(message)
 	if err != nil {
 		return err
