@@ -50,12 +50,12 @@ const (
 	CfgCellType_ConfigCellMarket      = 3
 )
 
-type PayType uint
+type ChainType uint
 
 const (
-	PayType_CKB PayType = 0
-	PayType_ETH PayType = 1
-	PayType_BTC PayType = 2
+	ChainType_CKB ChainType = 0
+	ChainType_ETH ChainType = 1
+	ChainType_BTC ChainType = 2
 )
 
 type LockScriptType int
