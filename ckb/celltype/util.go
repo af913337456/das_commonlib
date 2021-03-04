@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
+	"github.com/nervosnetwork/ckb-sdk-go/utils"
 	"math"
 	"math/big"
 )
@@ -412,5 +413,21 @@ func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int6
 		disRat := new(big.Rat).SetInt64(int64(dis))
 		div, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
 		return uint64(registerAt) + uint64(math.Floor(div*oneYearDays*oneDaySec)), nil
+	}
+}
+
+func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *types.Script) (LockScriptType, error) {
+	lockCodeHash := lockScript.CodeHash
+	switch lockCodeHash {
+	case ckbSysScript.SecpSingleSigCell.CellHash:
+		return ScriptType_User, nil
+	case DasAnyOneCanSendCellInfo.CodeHash:
+		return ScriptType_Any, nil
+	case DasETHLockCellInfo.CodeHash:
+		return ScriptType_ETH, nil
+	case DasBTCLockCellInfo.CodeHash:
+		return ScriptType_BTC, nil
+	default:
+		return -1, errors.New("invalid lockScript")
 	}
 }
