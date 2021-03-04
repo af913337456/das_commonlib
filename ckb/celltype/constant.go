@@ -58,7 +58,7 @@ const (
 	PayType_BTC PayType = 2
 )
 
-type LockScriptType uint
+type LockScriptType int
 
 const (
 	ScriptType_User LockScriptType = 0
