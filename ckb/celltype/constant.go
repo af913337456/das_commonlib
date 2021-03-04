@@ -24,6 +24,14 @@ const OneYearSec = int64(3600 * 24 * 365)
 const HashBytesLen = 32
 const ETHScriptLockWitnessBytesLen = 65
 
+type PwCoreLockScriptType uint8
+
+const (
+	PwCoreLockScriptType_ETH  PwCoreLockScriptType = 1
+	PwCoreLockScriptType_EOS  PwCoreLockScriptType = 2
+	PwCoreLockScriptType_TRON PwCoreLockScriptType = 3
+)
+
 var EmptyDataHash = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 var EmptyAccountId = DasAccountId{}
 

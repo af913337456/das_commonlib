@@ -431,3 +431,13 @@ func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *
 		return -1, errors.New("invalid lockScript")
 	}
 }
+
+func IsValidETHLockScriptSignature(signBytes []byte) error {
+	if len(signBytes) != ETHScriptLockWitnessBytesLen {
+		return fmt.Errorf("invalid signed bys, signed bytes len: %d", ETHScriptLockWitnessBytesLen)
+	}
+	if signBytes[0] != byte(PwCoreLockScriptType_ETH) {
+		return fmt.Errorf("invalid signed bys, first byte must 1, %d", signBytes[0])
+	}
+	return nil
+}
