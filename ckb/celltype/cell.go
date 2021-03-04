@@ -3748,6 +3748,7 @@ func (s *AccountId) AsBuilder() AccountIdBuilder {
 type RecordBuilder struct {
 	record_type  Bytes
 	record_label Bytes
+	record_key   Bytes
 	record_value Bytes
 	record_ttl   Uint32
 }
@@ -3755,13 +3756,15 @@ type RecordBuilder struct {
 func (s *RecordBuilder) Build() Record {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (4 + 1)
-	offsets := make([]uint32, 0, 4)
+	totalSize := HeaderSizeUint * (5 + 1)
+	offsets := make([]uint32, 0, 5)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.record_type.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.record_label.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.record_key.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.record_value.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -3775,6 +3778,7 @@ func (s *RecordBuilder) Build() Record {
 
 	b.Write(s.record_type.AsSlice())
 	b.Write(s.record_label.AsSlice())
+	b.Write(s.record_key.AsSlice())
 	b.Write(s.record_value.AsSlice())
 	b.Write(s.record_ttl.AsSlice())
 	return Record{inner: b.Bytes()}
@@ -3790,6 +3794,11 @@ func (s *RecordBuilder) RecordLabel(v Bytes) *RecordBuilder {
 	return s
 }
 
+func (s *RecordBuilder) RecordKey(v Bytes) *RecordBuilder {
+	s.record_key = v
+	return s
+}
+
 func (s *RecordBuilder) RecordValue(v Bytes) *RecordBuilder {
 	s.record_value = v
 	return s
@@ -3801,7 +3810,7 @@ func (s *RecordBuilder) RecordTtl(v Uint32) *RecordBuilder {
 }
 
 func NewRecordBuilder() *RecordBuilder {
-	return &RecordBuilder{record_type: BytesDefault(), record_label: BytesDefault(), record_value: BytesDefault(), record_ttl: Uint32Default()}
+	return &RecordBuilder{record_type: BytesDefault(), record_label: BytesDefault(), record_key: BytesDefault(), record_value: BytesDefault(), record_ttl: Uint32Default()}
 }
 
 type Record struct {
@@ -3816,7 +3825,7 @@ func (s *Record) AsSlice() []byte {
 }
 
 func RecordDefault() Record {
-	return *RecordFromSliceUnchecked([]byte{36, 0, 0, 0, 20, 0, 0, 0, 24, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *RecordFromSliceUnchecked([]byte{44, 0, 0, 0, 24, 0, 0, 0, 28, 0, 0, 0, 32, 0, 0, 0, 36, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func RecordFromSlice(slice []byte, compatible bool) (*Record, error) {
@@ -3832,7 +3841,7 @@ func RecordFromSlice(slice []byte, compatible bool) (*Record, error) {
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 4 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 5 == 0 {
 		return &Record{inner: slice}, nil
 	}
 
@@ -3848,9 +3857,9 @@ func RecordFromSlice(slice []byte, compatible bool) (*Record, error) {
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 4 {
+	if fieldCount < 5 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 4 {
+	} else if !compatible && fieldCount > 5 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -3890,7 +3899,12 @@ func RecordFromSlice(slice []byte, compatible bool) (*Record, error) {
 		return nil, err
 	}
 
-	_, err = Uint32FromSlice(slice[offsets[3]:offsets[4]], compatible)
+	_, err = BytesFromSlice(slice[offsets[3]:offsets[4]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = Uint32FromSlice(slice[offsets[4]:offsets[5]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -3916,11 +3930,11 @@ func (s *Record) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *Record) CountExtraFields() uint {
-	return s.FieldCount() - 4
+	return s.FieldCount() - 5
 }
 
 func (s *Record) HasExtraFields() bool {
-	return 4 != s.FieldCount()
+	return 5 != s.FieldCount()
 }
 
 func (s *Record) RecordType() *Bytes {
@@ -3935,17 +3949,23 @@ func (s *Record) RecordLabel() *Bytes {
 	return BytesFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *Record) RecordValue() *Bytes {
+func (s *Record) RecordKey() *Bytes {
 	start := unpackNumber(s.inner[12:])
 	end := unpackNumber(s.inner[16:])
 	return BytesFromSliceUnchecked(s.inner[start:end])
 }
 
+func (s *Record) RecordValue() *Bytes {
+	start := unpackNumber(s.inner[16:])
+	end := unpackNumber(s.inner[20:])
+	return BytesFromSliceUnchecked(s.inner[start:end])
+}
+
 func (s *Record) RecordTtl() *Uint32 {
 	var ret *Uint32
-	start := unpackNumber(s.inner[16:])
+	start := unpackNumber(s.inner[20:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[20:])
+		end := unpackNumber(s.inner[24:])
 		ret = Uint32FromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = Uint32FromSliceUnchecked(s.inner[start:])
@@ -3954,7 +3974,7 @@ func (s *Record) RecordTtl() *Uint32 {
 }
 
 func (s *Record) AsBuilder() RecordBuilder {
-	ret := NewRecordBuilder().RecordType(*s.RecordType()).RecordLabel(*s.RecordLabel()).RecordValue(*s.RecordValue()).RecordTtl(*s.RecordTtl())
+	ret := NewRecordBuilder().RecordType(*s.RecordType()).RecordLabel(*s.RecordLabel()).RecordKey(*s.RecordKey()).RecordValue(*s.RecordValue()).RecordTtl(*s.RecordTtl())
 	return *ret
 }
 
