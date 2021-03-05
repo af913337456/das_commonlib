@@ -2,6 +2,7 @@ package celltype
 
 import (
 	"encoding/hex"
+	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -87,7 +88,11 @@ func (c *ApplyRegisterCell) TableType() TableType {
 }
 
 func (c *ApplyRegisterCell) Data() ([]byte, error) {
-	return ApplyRegisterDataId(c.p.PubkeyHash, c.p.Account)
+	idHash, err := ApplyRegisterDataId(c.p.PubkeyHash, c.p.Account)
+	if err != nil {
+		return nil, fmt.Errorf("ApplyRegisterDataId err: %s", err.Error())
+	}
+	return append(idHash, GoUint64ToBytes(c.p.Timestamp)...), nil
 }
 
 func (c *ApplyRegisterCell) TableData() []byte {
