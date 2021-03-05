@@ -689,12 +689,12 @@ func (s *TypeIdTable) AsBuilder() TypeIdTableBuilder {
 }
 
 type ConfigCellRegisterBuilder struct {
-	apply_min_waiting_time           Uint32
-	apply_max_waiting_time           Uint32
+	apply_min_waiting_block_number   Uint32
+	apply_max_waiting_block_number   Uint32
 	account_max_length               Uint32
 	char_sets                        CharSetList
 	price_configs                    PriceConfigList
-	proposal_min_confirm_require     Uint8
+	proposal_min_confirm_interval    Uint8
 	proposal_min_extend_interval     Uint8
 	proposal_min_recycle_interval    Uint8
 	proposal_max_account_affect      Uint32
@@ -709,9 +709,9 @@ func (s *ConfigCellRegisterBuilder) Build() ConfigCellRegister {
 	offsets := make([]uint32, 0, 11)
 
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.apply_min_waiting_time.AsSlice()))
+	totalSize += uint32(len(s.apply_min_waiting_block_number.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.apply_max_waiting_time.AsSlice()))
+	totalSize += uint32(len(s.apply_max_waiting_block_number.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.account_max_length.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -719,7 +719,7 @@ func (s *ConfigCellRegisterBuilder) Build() ConfigCellRegister {
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.price_configs.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.proposal_min_confirm_require.AsSlice()))
+	totalSize += uint32(len(s.proposal_min_confirm_interval.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposal_min_extend_interval.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -737,12 +737,12 @@ func (s *ConfigCellRegisterBuilder) Build() ConfigCellRegister {
 		b.Write(packNumber(Number(offsets[i])))
 	}
 
-	b.Write(s.apply_min_waiting_time.AsSlice())
-	b.Write(s.apply_max_waiting_time.AsSlice())
+	b.Write(s.apply_min_waiting_block_number.AsSlice())
+	b.Write(s.apply_max_waiting_block_number.AsSlice())
 	b.Write(s.account_max_length.AsSlice())
 	b.Write(s.char_sets.AsSlice())
 	b.Write(s.price_configs.AsSlice())
-	b.Write(s.proposal_min_confirm_require.AsSlice())
+	b.Write(s.proposal_min_confirm_interval.AsSlice())
 	b.Write(s.proposal_min_extend_interval.AsSlice())
 	b.Write(s.proposal_min_recycle_interval.AsSlice())
 	b.Write(s.proposal_max_account_affect.AsSlice())
@@ -751,13 +751,13 @@ func (s *ConfigCellRegisterBuilder) Build() ConfigCellRegister {
 	return ConfigCellRegister{inner: b.Bytes()}
 }
 
-func (s *ConfigCellRegisterBuilder) ApplyMinWaitingTime(v Uint32) *ConfigCellRegisterBuilder {
-	s.apply_min_waiting_time = v
+func (s *ConfigCellRegisterBuilder) ApplyMinWaitingBlockNumber(v Uint32) *ConfigCellRegisterBuilder {
+	s.apply_min_waiting_block_number = v
 	return s
 }
 
-func (s *ConfigCellRegisterBuilder) ApplyMaxWaitingTime(v Uint32) *ConfigCellRegisterBuilder {
-	s.apply_max_waiting_time = v
+func (s *ConfigCellRegisterBuilder) ApplyMaxWaitingBlockNumber(v Uint32) *ConfigCellRegisterBuilder {
+	s.apply_max_waiting_block_number = v
 	return s
 }
 
@@ -776,8 +776,8 @@ func (s *ConfigCellRegisterBuilder) PriceConfigs(v PriceConfigList) *ConfigCellR
 	return s
 }
 
-func (s *ConfigCellRegisterBuilder) ProposalMinConfirmRequire(v Uint8) *ConfigCellRegisterBuilder {
-	s.proposal_min_confirm_require = v
+func (s *ConfigCellRegisterBuilder) ProposalMinConfirmInterval(v Uint8) *ConfigCellRegisterBuilder {
+	s.proposal_min_confirm_interval = v
 	return s
 }
 
@@ -807,7 +807,7 @@ func (s *ConfigCellRegisterBuilder) Profit(v ProfitConfig) *ConfigCellRegisterBu
 }
 
 func NewConfigCellRegisterBuilder() *ConfigCellRegisterBuilder {
-	return &ConfigCellRegisterBuilder{apply_min_waiting_time: Uint32Default(), apply_max_waiting_time: Uint32Default(), account_max_length: Uint32Default(), char_sets: CharSetListDefault(), price_configs: PriceConfigListDefault(), proposal_min_confirm_require: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), profit: ProfitConfigDefault()}
+	return &ConfigCellRegisterBuilder{apply_min_waiting_block_number: Uint32Default(), apply_max_waiting_block_number: Uint32Default(), account_max_length: Uint32Default(), char_sets: CharSetListDefault(), price_configs: PriceConfigListDefault(), proposal_min_confirm_interval: Uint8Default(), proposal_min_extend_interval: Uint8Default(), proposal_min_recycle_interval: Uint8Default(), proposal_max_account_affect: Uint32Default(), proposal_max_pre_account_contain: Uint32Default(), profit: ProfitConfigDefault()}
 }
 
 type ConfigCellRegister struct {
@@ -964,13 +964,13 @@ func (s *ConfigCellRegister) HasExtraFields() bool {
 	return 11 != s.FieldCount()
 }
 
-func (s *ConfigCellRegister) ApplyMinWaitingTime() *Uint32 {
+func (s *ConfigCellRegister) ApplyMinWaitingBlockNumber() *Uint32 {
 	start := unpackNumber(s.inner[4:])
 	end := unpackNumber(s.inner[8:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellRegister) ApplyMaxWaitingTime() *Uint32 {
+func (s *ConfigCellRegister) ApplyMaxWaitingBlockNumber() *Uint32 {
 	start := unpackNumber(s.inner[8:])
 	end := unpackNumber(s.inner[12:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
@@ -994,7 +994,7 @@ func (s *ConfigCellRegister) PriceConfigs() *PriceConfigList {
 	return PriceConfigListFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellRegister) ProposalMinConfirmRequire() *Uint8 {
+func (s *ConfigCellRegister) ProposalMinConfirmInterval() *Uint8 {
 	start := unpackNumber(s.inner[24:])
 	end := unpackNumber(s.inner[28:])
 	return Uint8FromSliceUnchecked(s.inner[start:end])
@@ -1037,7 +1037,7 @@ func (s *ConfigCellRegister) Profit() *ProfitConfig {
 }
 
 func (s *ConfigCellRegister) AsBuilder() ConfigCellRegisterBuilder {
-	ret := NewConfigCellRegisterBuilder().ApplyMinWaitingTime(*s.ApplyMinWaitingTime()).ApplyMaxWaitingTime(*s.ApplyMaxWaitingTime()).AccountMaxLength(*s.AccountMaxLength()).CharSets(*s.CharSets()).PriceConfigs(*s.PriceConfigs()).ProposalMinConfirmRequire(*s.ProposalMinConfirmRequire()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).Profit(*s.Profit())
+	ret := NewConfigCellRegisterBuilder().ApplyMinWaitingBlockNumber(*s.ApplyMinWaitingBlockNumber()).ApplyMaxWaitingBlockNumber(*s.ApplyMaxWaitingBlockNumber()).AccountMaxLength(*s.AccountMaxLength()).CharSets(*s.CharSets()).PriceConfigs(*s.PriceConfigs()).ProposalMinConfirmInterval(*s.ProposalMinConfirmInterval()).ProposalMinExtendInterval(*s.ProposalMinExtendInterval()).ProposalMinRecycleInterval(*s.ProposalMinRecycleInterval()).ProposalMaxAccountAffect(*s.ProposalMaxAccountAffect()).ProposalMaxPreAccountContain(*s.ProposalMaxPreAccountContain()).Profit(*s.Profit())
 	return *ret
 }
 
