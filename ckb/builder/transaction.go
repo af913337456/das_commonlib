@@ -274,11 +274,6 @@ func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signC
 	return builder
 }
 
-// func (builder *TransactionBuilder) AddWitnessArgs(witnessData []byte) *TransactionBuilder {
-// 	builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)
-// 	return builder
-// }
-
 func (builder *TransactionBuilder) Log() string {
 	depCellCou := len(builder.tx.CellDeps)
 	inputCount := len(builder.inputList)
@@ -320,9 +315,6 @@ func (builder *TransactionBuilder) addInputsForTransaction(inputs []*types.CellI
 }
 
 func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransactionRet, error) {
-	if needCap := builder.NeedCapacityValue(); builder.totalInputCap-needCap < 0 {
-		return nil, fmt.Errorf("TxHash:not enough capacity, input: %d, want: %d", builder.totalInputCap, needCap)
-	}
 	size := len(builder.inputList)
 	recordMap := map[celltype.LockScriptType][]*types.CellInput{}
 	for i := 0; i < size; i++ {
