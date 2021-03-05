@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"github.com/nervosnetwork/ckb-sdk-go/crypto/bech32"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
 	"io"
@@ -19,11 +20,63 @@ import (
  */
 
 func Test_InitWallet(t *testing.T) {
-	key, err := InitCkbWallet("", nil)
+	systemScript := &utils.SystemScripts{
+		SecpSingleSigCell: &utils.SystemScriptCell{
+			CellHash: types.HexToHash("3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356"),
+			OutPoint: nil,
+			HashType: "",
+			DepType:  "",
+		},
+		SecpMultiSigCell: nil,
+		DaoCell:          nil,
+		ACPCell:          nil,
+		SUDTCell:         nil,
+		ChequeCell:       nil,
+	}
+	key, err := InitCkbWallet("1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168", systemScript)
 	if err != nil {
 		panic(err)
 	}
-	t.Log(key.Secp256k1Key.PubKey())
+	lockScript, err := key.Secp256k1Key.Script(systemScript)
+	if err != nil {
+		panic(err)
+	}
+	bys, err := lockScript.Serialize()
+	if err != nil {
+		panic(err)
+	}
+	address, err := bech32.Encode("ckb", bys)
+	if err != nil {
+		panic(err)
+	}
+	t.Log(address)
+}
+
+func Test_GetAddress(t *testing.T) {
+	bs, err := hex.DecodeString("b39bbc0b3673c7d36450bc14cfcdad2d559c6c64")
+	if err != nil {
+		panic(err)
+	}
+	typebin, _ := hex.DecodeString("01")
+	flag, _ := hex.DecodeString("00")
+
+	payload := append(typebin, flag...)
+	payload = append(payload, bs...)
+
+	converted, err := bech32.ConvertBits(payload, 8, 5, true)
+	if err != nil {
+		panic(err)
+	}
+	address, err := bech32.Encode("ckb", converted)
+
+	if err != nil {
+		panic(err)
+	}
+	t.Log(address)
+}
+
+func Test_AddrToArgs(t *testing.T) {
+	t.Log(GetLockScriptArgsFromShortAddress("ckb1qyqt8xaupvm8837nv3gtc9x0ekkj64vud3jqfwyw5v"))
 }
 
 func Test_VerifySign(t *testing.T) {

@@ -2,9 +2,11 @@ package wallet
 
 import (
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/crypto"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
+	"github.com/nervosnetwork/ckb-sdk-go/crypto/bech32"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
@@ -38,6 +40,26 @@ func InitCkbWallet(privateKeyHex string, systemScript *utils.SystemScripts) (*Ck
 		LockScript:    lockScript,
 		SystemScripts: systemScript,
 	}, nil
+}
+
+func GetShortAddressFromLockScriptArgs(args string) {
+
+}
+
+func GetLockScriptArgsFromShortAddress(address string) (string, error) {
+	_, bys, err := bech32.Decode(address)
+	if err != nil {
+		return "", fmt.Errorf("bech32.Decode err: %s", err.Error())
+	}
+	converted, err := bech32.ConvertBits(bys, 5, 8, false)
+	if err != nil {
+		return "", fmt.Errorf("bech32.ConvertBits err: %s", err.Error())
+	}
+	ret := hex.EncodeToString(converted)[4:]
+	if len(ret) != 20 {
+		return "", errors.New("invalid args len")
+	}
+	return ret, nil
 }
 
 func VerifySign(msg []byte, sign []byte, ckbPubkeyHex string) (bool, error) {

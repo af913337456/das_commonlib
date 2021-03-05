@@ -163,6 +163,18 @@ var (
 	// 		Args:         nil,
 	// 	},
 	// }
+	DasHeightCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(""),
+			CodeHashType: types.HashTypeType,
+			Args:         nil,
+		},
+	}
 	DasTimeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash(""),
