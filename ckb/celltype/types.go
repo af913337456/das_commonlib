@@ -143,7 +143,7 @@ type ApplyRegisterCellParam struct {
 	Version              uint32          `json:"version"`
 	PubkeyHash           string          `json:"pubkey_hash"`
 	Account              string          `json:"account"`
-	Timestamp            uint64          `json:"timestamp"`
+	Height               uint64          `json:"height"`
 	CellCodeInfo         DASCellBaseInfo `json:"cell_code_info"`
 	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`
 }

@@ -15,13 +15,13 @@ import (
  * Description:
  */
 
-var TestNetApplyRegisterCell = func(pubkey []byte, account string, timestamp uint64, senderLockScript *types.Script) *ApplyRegisterCellParam {
+var TestNetApplyRegisterCell = func(pubkey []byte, account string, height uint64, senderLockScript *types.Script) *ApplyRegisterCellParam {
 	pubkeyHash, _ := blake2b.Blake160(pubkey)
 	return &ApplyRegisterCellParam{
 		Version:      1,
 		PubkeyHash:   hex.EncodeToString(pubkeyHash),
 		Account:      account,
-		Timestamp:    timestamp,
+		Height:       height,
 		CellCodeInfo: DasApplyRegisterCellScript,
 		SenderLockScriptInfo: DASCellBaseInfo{
 			Dep: DASCellBaseInfoDep{
@@ -92,7 +92,7 @@ func (c *ApplyRegisterCell) Data() ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("ApplyRegisterDataId err: %s", err.Error())
 	}
-	return append(idHash, GoUint64ToBytes(c.p.Timestamp)...), nil
+	return append(idHash, GoUint64ToBytes(c.p.Height)...), nil
 }
 
 func (c *ApplyRegisterCell) TableData() []byte {
