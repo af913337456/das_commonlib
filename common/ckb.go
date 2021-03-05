@@ -35,12 +35,17 @@ NextBatch:
 		}
 		totalCap = totalCap + liveCell.Output.Capacity
 		liveCells = append(liveCells, *liveCell)
+		if totalCap >= capLimit { // enough
+			break
+		}
 		if err = iterator.Next(); err != nil {
 			return nil, 0, fmt.Errorf("LoadLiveCells, read iterator next err: %s", err.Error())
 		}
 	}
 	if totalCap < capLimit {
-		iterator.Next()
+		if err = iterator.Next(); err != nil {
+			return nil, 0, fmt.Errorf("LoadLiveCells, read iterator next err: %s", err.Error())
+		}
 		goto NextBatch
 	}
 	return liveCells, totalCap, nil
