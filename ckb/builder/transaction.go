@@ -154,30 +154,30 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 }
 
 // 自动计算需要的 input
-func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, totalCap uint64, lockType celltype.LockScriptType) error {
-	if needCap := builder.NeedCapacityValue(); totalCap < needCap {
-		return fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", totalCap, needCap)
-	} else {
-		// 添加 input，只取需要的那么多个
-		capCounter := uint64(0)
-		for _, cell := range liveCells {
-			if capCounter < needCap {
-				thisCellCap := cell.Output.Capacity
-				input := celltype.TypeInputCell{
-					Input: types.CellInput{
-						Since: 0,
-						PreviousOutput: &types.OutPoint{
-							TxHash: cell.OutPoint.TxHash,
-							Index:  cell.OutPoint.Index,
-						},
+func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) error {
+	needCap := builder.NeedCapacityValue()
+	// 添加 input，只取需要的那么多个
+	capCounter := uint64(0)
+	for _, cell := range liveCells {
+		if capCounter < needCap {
+			thisCellCap := cell.Output.Capacity
+			input := celltype.TypeInputCell{
+				Input: types.CellInput{
+					Since: 0,
+					PreviousOutput: &types.OutPoint{
+						TxHash: cell.OutPoint.TxHash,
+						Index:  cell.OutPoint.Index,
 					},
-					LockType: lockType,
-					CellCap:  thisCellCap,
-				}
-				builder.AddInput(input)
-				capCounter = capCounter + thisCellCap
+				},
+				LockType: lockType,
+				CellCap:  thisCellCap,
 			}
+			builder.AddInput(input)
+			capCounter = capCounter + thisCellCap
 		}
+	}
+	if capCounter < needCap {
+		return fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", capCounter, needCap)
 	}
 	return nil
 }
@@ -210,6 +210,18 @@ func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, cal
 	return builder
 }
 
+func normalChargeOutputCellCap() uint64 {
+	output := &types.CellOutput{
+		Lock: &types.Script{
+			CodeHash: types.HexToHash("0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e"),
+			HashType: types.HashTypeType,
+			Args:     []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
+		},
+		Type: nil,
+	}
+	return output.OccupiedCapacity(nil) * celltype.OneCkb
+}
+
 func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script,
 	data, witnessData []byte, callback celltype.AddDasOutputCallback, incrementCellCap uint64) *TransactionBuilder {
 	output := &types.CellOutput{
@@ -230,7 +242,6 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 	return builder
 }
 
-// 强制每笔交易都要有找零
 func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 	if min := celltype.CkbTxMinOutputCKBValue + builder.fee; builder.totalOutputCap >= min {
 		return builder.totalOutputCap + builder.fee - builder.totalInputCap
@@ -245,12 +256,16 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 
 // 在加完 input 和 output 后调用
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
+	chargeCap := builder.totalInputCap - builder.totalOutputCap - builder.fee
+	if chargeCap <= 0 {
+		return builder
+	}
 	builder.AddCellDep(&types.CellDep{
 		OutPoint: signCell.OutPoint,
 		DepType:  types.DepTypeDepGroup,
 	})
 	builder.tx.Outputs = append(builder.tx.Outputs, &types.CellOutput{
-		Capacity: builder.totalInputCap - builder.NeedCapacityValue(),
+		Capacity: chargeCap,
 		Lock:     receiver,
 		Type:     nil,
 	})
