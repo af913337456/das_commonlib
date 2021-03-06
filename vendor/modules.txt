@@ -4,6 +4,8 @@ github.com/Shopify/sarama
 github.com/StackExchange/wmi
 # github.com/aristanetworks/goarista v0.0.0-20170210015632-ea17b1a17847
 github.com/aristanetworks/goarista/monotime
+# github.com/btcsuite/btcd v0.0.0-20171128150713-2e60448ffcc6
+github.com/btcsuite/btcd/btcec
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/deckarep/golang-set v0.0.0-20180603214616-504e848d77ea
@@ -18,21 +20,30 @@ github.com/eapache/queue
 github.com/elastic/gosigar
 github.com/elastic/gosigar/sys/windows
 # github.com/ethereum/go-ethereum v1.9.14
-github.com/ethereum/go-ethereum/rlp
-github.com/ethereum/go-ethereum/rpc
 github.com/ethereum/go-ethereum/common
 github.com/ethereum/go-ethereum/common/hexutil
 github.com/ethereum/go-ethereum/common/math
+github.com/ethereum/go-ethereum/common/mclock
+github.com/ethereum/go-ethereum/crypto
 github.com/ethereum/go-ethereum/crypto/secp256k1
 github.com/ethereum/go-ethereum/log
 github.com/ethereum/go-ethereum/metrics
 github.com/ethereum/go-ethereum/p2p/netutil
-github.com/ethereum/go-ethereum/common/mclock
+github.com/ethereum/go-ethereum/rlp
+github.com/ethereum/go-ethereum/rpc
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
 # github.com/go-ole/go-ole v1.2.1
 github.com/go-ole/go-ole
 github.com/go-ole/go-ole/oleutil
+# github.com/go-redis/redis v6.15.9+incompatible
+github.com/go-redis/redis
+github.com/go-redis/redis/internal
+github.com/go-redis/redis/internal/consistenthash
+github.com/go-redis/redis/internal/hashtag
+github.com/go-redis/redis/internal/pool
+github.com/go-redis/redis/internal/proto
+github.com/go-redis/redis/internal/util
 # github.com/go-sql-driver/mysql v1.5.0
 github.com/go-sql-driver/mysql
 # github.com/go-stack/stack v1.8.0
@@ -53,25 +64,25 @@ github.com/jinzhu/gorm
 # github.com/jinzhu/inflection v1.0.0
 github.com/jinzhu/inflection
 # github.com/klauspost/compress v1.11.0
-github.com/klauspost/compress/zstd
+github.com/klauspost/compress/fse
 github.com/klauspost/compress/huff0
 github.com/klauspost/compress/snappy
+github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
-github.com/klauspost/compress/fse
 # github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
 github.com/minio/blake2b-simd
 # github.com/nervosnetwork/ckb-sdk-go v0.2.1-0.20210225011905-363af48e75f1
 github.com/nervosnetwork/ckb-sdk-go/address
+github.com/nervosnetwork/ckb-sdk-go/collector
 github.com/nervosnetwork/ckb-sdk-go/crypto
+github.com/nervosnetwork/ckb-sdk-go/crypto/bech32
 github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b
+github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1
 github.com/nervosnetwork/ckb-sdk-go/indexer
+github.com/nervosnetwork/ckb-sdk-go/rpc
+github.com/nervosnetwork/ckb-sdk-go/transaction
 github.com/nervosnetwork/ckb-sdk-go/types
 github.com/nervosnetwork/ckb-sdk-go/utils
-github.com/nervosnetwork/ckb-sdk-go/rpc
-github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1
-github.com/nervosnetwork/ckb-sdk-go/collector
-github.com/nervosnetwork/ckb-sdk-go/crypto/bech32
-github.com/nervosnetwork/ckb-sdk-go/transaction
 # github.com/pierrec/lz4 v2.5.2+incompatible
 github.com/pierrec/lz4
 github.com/pierrec/lz4/internal/xxh32
@@ -86,16 +97,16 @@ github.com/rs/xhandler
 # github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c
 github.com/tecbot/gorocksdb
 # golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
-golang.org/x/crypto/sha3
 golang.org/x/crypto/md4
 golang.org/x/crypto/pbkdf2
+golang.org/x/crypto/sha3
 # golang.org/x/net v0.0.0-20200904194848-62affa334b73
 golang.org/x/net/context
-golang.org/x/net/proxy
 golang.org/x/net/internal/socks
+golang.org/x/net/proxy
 # golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
-golang.org/x/sys/unix
 golang.org/x/sys/cpu
+golang.org/x/sys/unix
 golang.org/x/sys/windows
 # gopkg.in/jcmturner/aescts.v1 v1.0.1
 gopkg.in/jcmturner/aescts.v1
@@ -106,32 +117,32 @@ gopkg.in/jcmturner/gokrb5.v7/asn1tools
 gopkg.in/jcmturner/gokrb5.v7/client
 gopkg.in/jcmturner/gokrb5.v7/config
 gopkg.in/jcmturner/gokrb5.v7/credentials
-gopkg.in/jcmturner/gokrb5.v7/gssapi
-gopkg.in/jcmturner/gokrb5.v7/iana/chksumtype
-gopkg.in/jcmturner/gokrb5.v7/iana/keyusage
-gopkg.in/jcmturner/gokrb5.v7/keytab
-gopkg.in/jcmturner/gokrb5.v7/messages
-gopkg.in/jcmturner/gokrb5.v7/types
 gopkg.in/jcmturner/gokrb5.v7/crypto
-gopkg.in/jcmturner/gokrb5.v7/crypto/etype
-gopkg.in/jcmturner/gokrb5.v7/iana/errorcode
-gopkg.in/jcmturner/gokrb5.v7/iana/flags
-gopkg.in/jcmturner/gokrb5.v7/iana/nametype
-gopkg.in/jcmturner/gokrb5.v7/iana/patype
-gopkg.in/jcmturner/gokrb5.v7/kadmin
-gopkg.in/jcmturner/gokrb5.v7/krberror
-gopkg.in/jcmturner/gokrb5.v7/iana/etypeID
-gopkg.in/jcmturner/gokrb5.v7/iana
-gopkg.in/jcmturner/gokrb5.v7/iana/adtype
-gopkg.in/jcmturner/gokrb5.v7/iana/asnAppTag
-gopkg.in/jcmturner/gokrb5.v7/iana/msgtype
-gopkg.in/jcmturner/gokrb5.v7/pac
-gopkg.in/jcmturner/gokrb5.v7/iana/addrtype
 gopkg.in/jcmturner/gokrb5.v7/crypto/common
+gopkg.in/jcmturner/gokrb5.v7/crypto/etype
 gopkg.in/jcmturner/gokrb5.v7/crypto/rfc3961
 gopkg.in/jcmturner/gokrb5.v7/crypto/rfc3962
 gopkg.in/jcmturner/gokrb5.v7/crypto/rfc4757
 gopkg.in/jcmturner/gokrb5.v7/crypto/rfc8009
+gopkg.in/jcmturner/gokrb5.v7/gssapi
+gopkg.in/jcmturner/gokrb5.v7/iana
+gopkg.in/jcmturner/gokrb5.v7/iana/addrtype
+gopkg.in/jcmturner/gokrb5.v7/iana/adtype
+gopkg.in/jcmturner/gokrb5.v7/iana/asnAppTag
+gopkg.in/jcmturner/gokrb5.v7/iana/chksumtype
+gopkg.in/jcmturner/gokrb5.v7/iana/errorcode
+gopkg.in/jcmturner/gokrb5.v7/iana/etypeID
+gopkg.in/jcmturner/gokrb5.v7/iana/flags
+gopkg.in/jcmturner/gokrb5.v7/iana/keyusage
+gopkg.in/jcmturner/gokrb5.v7/iana/msgtype
+gopkg.in/jcmturner/gokrb5.v7/iana/nametype
+gopkg.in/jcmturner/gokrb5.v7/iana/patype
+gopkg.in/jcmturner/gokrb5.v7/kadmin
+gopkg.in/jcmturner/gokrb5.v7/keytab
+gopkg.in/jcmturner/gokrb5.v7/krberror
+gopkg.in/jcmturner/gokrb5.v7/messages
+gopkg.in/jcmturner/gokrb5.v7/pac
+gopkg.in/jcmturner/gokrb5.v7/types
 # gopkg.in/jcmturner/rpc.v1 v1.1.0
 gopkg.in/jcmturner/rpc.v1/mstypes
 gopkg.in/jcmturner/rpc.v1/ndr
