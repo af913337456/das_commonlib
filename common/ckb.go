@@ -15,9 +15,9 @@ import (
  * Description:
  */
 
-func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, lasted bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
+func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, lastst bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
 	order := indexer.SearchOrderAsc
-	if lasted {
+	if lastst {
 		order = indexer.SearchOrderDesc
 	}
 	c := collector.NewLiveCellCollector(
