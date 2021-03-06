@@ -15,9 +15,13 @@ import (
  * Description:
  */
 
-func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
+func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, lasted bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
+	order := indexer.SearchOrderAsc
+	if lasted {
+		order = indexer.SearchOrderDesc
+	}
 	c := collector.NewLiveCellCollector(
-		client, key, indexer.SearchOrderAsc, 100, "")
+		client, key, order, 100, "")
 	iterator, err := c.Iterator()
 	if err != nil {
 		return nil, 0, fmt.Errorf("LoadLiveCells Collect failed: %s", err.Error())
