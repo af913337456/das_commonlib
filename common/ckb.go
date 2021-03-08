@@ -53,8 +53,9 @@ NextBatch:
 	if totalCap < capLimit {
 		if err = iterator.Next(); err != nil {
 			return nil, 0, fmt.Errorf("LoadLiveCells, read iterator next err: %s", err.Error())
+		} else if iterator.HasNext() {
+			goto NextBatch
 		}
-		goto NextBatch
 	}
 	return liveCells, totalCap, nil
 }
