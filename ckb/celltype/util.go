@@ -132,7 +132,7 @@ func MoleculeScriptToGo(s Script) (*types.Script, error) {
 func AccountCharsToAccount(accountChars AccountChars) DasAccount {
 	index := uint(0)
 	accountRawBytes := []byte{}
-	for char := accountChars.Get(index); !char.IsEmpty(); index++ {
+	for char := accountChars.Get(index); char != nil && len(char.inner) > 0 && !char.IsEmpty(); index++ {
 		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
 	}
 	return DasAccount(accountRawBytes)
@@ -157,7 +157,7 @@ func AccountCharsToAccountId(accountChars AccountChars) DasAccountId {
 	*/
 	index := uint(0)
 	accountRawBytes := []byte{}
-	for char := accountChars.Get(index); !char.IsEmpty(); index++ {
+	for char := accountChars.Get(index); char != nil && len(char.inner) > 0 && !char.IsEmpty(); index++ {
 		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
 	}
 	return DasAccountIdFromBytes(accountRawBytes)
@@ -449,7 +449,7 @@ func CalTypeIdFromScript(script *types.Script) types.Hash {
 	return types.BytesToHash(bysRet)
 }
 
-type SkipHandle func(er error)
+type SkipHandle func(err error)
 type ValidHandle func(outIndex uint32, rawWitnessData []byte, witnessParseObj *ParseDasWitnessBysDataObj) (bool, error)
 
 func GetTargetCellFromWitness(tx *types.Transaction, handle ValidHandle, skipHandle SkipHandle) error {
