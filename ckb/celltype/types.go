@@ -119,13 +119,17 @@ func DASCellBaseInfoOutFromScript(script *types.Script) DASCellBaseInfoOut {
 	}
 }
 
-func (c DASCellBaseInfoOut) SameScript(script *types.Script) bool {
+func (c DASCellBaseInfoOut) Script() *types.Script {
 	current := &types.Script{
 		CodeHash: c.CodeHash,
 		HashType: c.CodeHashType,
 		Args:     c.Args,
 	}
-	return current.Equals(script)
+	return current
+}
+
+func (c DASCellBaseInfoOut) SameScript(script *types.Script) bool {
+	return c.Script().Equals(script)
 }
 
 type DASCellBaseInfo struct {
