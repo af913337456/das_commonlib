@@ -225,7 +225,7 @@ func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) *DASCe
 }
 
 func emptyHexToArgsBytes() []byte {
-	return []byte("0x")
+	return []byte{}
 }
 
 func hexToArgsBytes(hexStr string) []byte {

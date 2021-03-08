@@ -19,6 +19,8 @@ import (
 
 func Test_EchoTypeId(t *testing.T) {
 	t.Log(hexToArgsBytes("0x"))
+	bys, _ := json.Marshal(DasTimeCellScript.Out.Script())
+	t.Log(string(bys))
 	// t.Log(DasAccountCellScript.Out)
 	// account_cell : 0x274775e475c1252b5333c20e1512b7b1296c4c5b52a25aa2ebd6e41f5894c41f
 	// // 0x9878b226df9465c215fd3c94dc9f9bf6648d5bea48a24579cf83274fe13801d2
