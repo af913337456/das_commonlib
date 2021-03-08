@@ -59,8 +59,9 @@ func HexToHash(s string) DasAccountId {
 }
 
 func (d *DasAccountId) SetBytes(b []byte) {
-	if len(b) > len(d) {
-		b = b[len(b)-dasAccountIdLen:]
+	bLen := len(b)
+	if bLen > len(d) {
+		b = b[bLen-dasAccountIdLen:]
 	}
 	copy(d[dasAccountIdLen-len(b):], b)
 }

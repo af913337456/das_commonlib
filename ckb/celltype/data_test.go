@@ -17,6 +17,11 @@ import (
  * Description:
  */
 
+func Test_DasAccountIdFromBytes(t *testing.T) {
+	id := DasAccountIdFromBytes([]byte{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1})
+	fmt.Println(id.HexStr())
+}
+
 func Test_EchoTypeId(t *testing.T) {
 	t.Log(hexToArgsBytes("0x"))
 	bys, _ := json.Marshal(DasTimeCellScript.Out.Script())
