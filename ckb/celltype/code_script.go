@@ -227,14 +227,14 @@ func hexToArgsBytes(hexStr string) []byte {
 	return bys
 }
 
-// func IsSystemCodeScriptReady() (bool, string) {
-// 	for cellName, item := range SystemCodeScriptMap {
-// 		if item.Out.CodeHash.Hex() == "0x" {
-// 			return false, cellName
-// 		}
-// 	}
-// 	return true, ""
-// }
+func IsSystemCodeScriptReady() bool {
+	for _, item := range SystemCodeScriptMap {
+		if item.Out.CodeHash.Hex() == "0x" {
+			return false
+		}
+	}
+	return true
+}
 
 // func SystemCodeScriptBytes() ([]byte, error) {
 // 	return json.Marshal(SystemCodeScriptMap)
