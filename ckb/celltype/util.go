@@ -443,8 +443,8 @@ func IsValidETHLockScriptSignature(signBytes []byte) error {
 	return nil
 }
 
-func CalTypeIdFromScript(script *types.Script) string {
+func CalTypeIdFromScript(script *types.Script) types.Hash {
 	bys, _ := script.Serialize()
 	bysRet, _ := blake2b.Blake256(bys)
-	return hex.EncodeToString(bysRet)
+	return types.BytesToHash(bysRet)
 }

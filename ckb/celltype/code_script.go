@@ -200,18 +200,23 @@ var (
 			Args:         nil,
 		},
 	}
-	SystemCodeScriptMap = map[string]*DASCellBaseInfo{}
+	SystemCodeScriptMap = map[types.Hash]*DASCellBaseInfo{}
 )
 
 func init() {
-	SystemCodeScriptMap[SystemScript_ApplyRegisterCell] = &DasApplyRegisterCellScript
-	SystemCodeScriptMap[SystemScript_PreAccoutnCell] = &DasPreAccountCellScript
-	SystemCodeScriptMap[SystemScript_BiddingCell] = &DasBiddingCellScript
-	SystemCodeScriptMap[SystemScript_AccoutnCell] = &DasAccountCellScript
-	SystemCodeScriptMap[SystemScript_OnSaleCell] = &DasOnSaleCellScript
-	SystemCodeScriptMap[SystemScript_ProposeCell] = &DasProposeCellScript
-	SystemCodeScriptMap[SystemScript_WalletCell] = &DasWalletCellScript
-	SystemCodeScriptMap[SystemScript_RefCell] = &DasRefCellScript
+	SystemCodeScriptMap[DasApplyRegisterCellScript.Out.CodeHash] = &DasApplyRegisterCellScript
+	SystemCodeScriptMap[DasPreAccountCellScript.Out.CodeHash] = &DasPreAccountCellScript
+	SystemCodeScriptMap[DasBiddingCellScript.Out.CodeHash] = &DasBiddingCellScript
+	SystemCodeScriptMap[DasAccountCellScript.Out.CodeHash] = &DasAccountCellScript
+	SystemCodeScriptMap[DasOnSaleCellScript.Out.CodeHash] = &DasOnSaleCellScript
+	SystemCodeScriptMap[DasProposeCellScript.Out.CodeHash] = &DasProposeCellScript
+	SystemCodeScriptMap[DasWalletCellScript.Out.CodeHash] = &DasWalletCellScript
+	SystemCodeScriptMap[DasRefCellScript.Out.CodeHash] = &DasRefCellScript
+}
+
+func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) {
+	SystemCodeScriptMap[typeId].Dep.TxHash = point.TxHash
+	SystemCodeScriptMap[typeId].Dep.TxIndex = point.Index
 }
 
 func hexToArgsBytes(hexStr string) []byte {
@@ -222,14 +227,14 @@ func hexToArgsBytes(hexStr string) []byte {
 	return bys
 }
 
-func IsSystemCodeScriptReady() (bool, string) {
-	for cellName, item := range SystemCodeScriptMap {
-		if item.Out.CodeHash.Hex() == "0x" {
-			return false, cellName
-		}
-	}
-	return true, ""
-}
+// func IsSystemCodeScriptReady() (bool, string) {
+// 	for cellName, item := range SystemCodeScriptMap {
+// 		if item.Out.CodeHash.Hex() == "0x" {
+// 			return false, cellName
+// 		}
+// 	}
+// 	return true, ""
+// }
 
 // func SystemCodeScriptBytes() ([]byte, error) {
 // 	return json.Marshal(SystemCodeScriptMap)
