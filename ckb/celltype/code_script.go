@@ -214,9 +214,10 @@ func init() {
 	SystemCodeScriptMap[DasRefCellScript.Out.CodeHash] = &DasRefCellScript
 }
 
-func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) {
+func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) DASCellBaseInfo {
 	SystemCodeScriptMap[typeId].Dep.TxHash = point.TxHash
 	SystemCodeScriptMap[typeId].Dep.TxIndex = point.Index
+	return *SystemCodeScriptMap[typeId]
 }
 
 func hexToArgsBytes(hexStr string) []byte {
