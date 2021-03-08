@@ -2,6 +2,7 @@ package celltype
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
 	"strings"
@@ -164,18 +165,18 @@ var (
 	// 		Args:         nil,
 	// 	},
 	// }
-	// DasConfigCellScript = DASCellBaseInfo{
-	// 	Dep: DASCellBaseInfoDep{
-	// 		TxHash:  types.HexToHash(""),
-	// 		TxIndex: 0,
-	// 		DepType: "",
-	// 	},
-	// 	Out: DASCellBaseInfoOut{
-	// 		CodeHash:     types.HexToHash(""),
-	// 		CodeHashType: "",
-	// 		Args:         nil,
-	// 	},
-	// }
+	DasConfigCellScript = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(""),
+			TxIndex: 0,
+			DepType: "",
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash("0x489ff2195ed41aac9a9265c653d8ca57c825b22db765b9e08d537572ff2cbc1b"),
+			CodeHashType: types.HashTypeType,
+			Args:         nil,
+		},
+	}
 	DasHeightCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0x711bb5cec27b3a5c00da3a6dc0772be8651f7f92fd9bf09d77578b29227c1748"),
@@ -240,16 +241,17 @@ func IsSystemCodeScriptReady() bool {
 	return true
 }
 
-// func SystemCodeScriptBytes() ([]byte, error) {
-// 	return json.Marshal(SystemCodeScriptMap)
-// }
-//
-// func SystemCodeScriptFromBytes(bys []byte) error {
-// 	if err := json.Unmarshal(bys, &SystemCodeScriptMap); err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func SystemCodeScriptBytes() ([]byte, error) {
+	return json.Marshal(SystemCodeScriptMap)
+}
+
+func SystemCodeScriptFromBytes(bys []byte) error {
+	if err := json.Unmarshal(bys, &SystemCodeScriptMap); err != nil {
+		return err
+	}
+	return nil
+}
+
 //
 // func ParseDasCellsScript(data *ConfigCellMain) map[types.Hash]string {
 // 	applyRegisterCodeHash := types.BytesToHash(data.TypeIdTable().ApplyRegisterCell().RawData())
