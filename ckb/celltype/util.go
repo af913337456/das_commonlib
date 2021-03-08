@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
@@ -440,4 +441,10 @@ func IsValidETHLockScriptSignature(signBytes []byte) error {
 		return fmt.Errorf("invalid signed bys, first byte must 1, %d", signBytes[0])
 	}
 	return nil
+}
+
+func CalTypeIdFromScript(script *types.Script) string {
+	bys, _ := script.Serialize()
+	bysRet, _ := blake2b.Blake256(bys)
+	return hex.EncodeToString(bysRet)
 }
