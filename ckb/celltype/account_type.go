@@ -35,6 +35,9 @@ func (d DasAccount) Str() string {
 }
 
 func (d DasAccount) AccountId() DasAccountId {
+	if len(d) == 0 {
+		return EmptyAccountId
+	}
 	bys, _ := blake2b.Blake160([]byte(d))
 	id := &DasAccountId{}
 	id.SetBytes(bys)

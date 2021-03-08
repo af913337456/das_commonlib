@@ -184,7 +184,7 @@ var (
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0x9e609ff599d702c3574c2f4e9ef5a1a995d87612a1fa600bc55f11c199746894"),
+			CodeHash:     types.HexToHash("0x5f6a4cc2cd6369dbcf38ddfbc4323cf4695c2e8c20aed572b5db6adc2faf9d50"),
 			CodeHashType: types.HashTypeType,
 			Args:         hexToArgsBytes("0xe1a958a4c112af95a1220c6fee5f969972a3d8ce13fb7b3211f71abb5db1824102000000"),
 		},
@@ -196,7 +196,7 @@ var (
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0x234ad0fdf1cd271d421eb0f4b18b6b62f540bf8f0e858e234aa8656888dab8d1"),
+			CodeHash:     types.HexToHash("0xe4fd6f46ab1fd3d5b377df9e2d4ea77e3b52f53ac3319595bb38d097ea051cfd"),
 			CodeHashType: types.HashTypeType,
 			Args:         hexToArgsBytes("0xd0c1c7156f2e310a12822e2cc336398ec4ef194abc1f96023b743f3249f09e2102000000"),
 		},
