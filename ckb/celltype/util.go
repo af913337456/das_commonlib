@@ -448,3 +448,28 @@ func CalTypeIdFromScript(script *types.Script) types.Hash {
 	bysRet, _ := blake2b.Blake256(bys)
 	return types.BytesToHash(bysRet)
 }
+
+type SkipHandle func(er error)
+type ValidHandle func(outIndex uint32, rawWitnessData []byte, witnessParseObj *ParseDasWitnessBysDataObj) (bool, error)
+
+func GetTargetCellFromWitness(tx *types.Transaction, handle ValidHandle, skipHandle SkipHandle) error {
+	inputSize := len(tx.Inputs)
+	witnessSize := len(tx.Witnesses)
+	for i := inputSize + 1; i < witnessSize; i++ { // (inputSize + 1) skip action cell
+		cellData := tx.Witnesses[i]
+		if das, err := ParseTxWitnessToDasWitnessObj(cellData); err != nil {
+			skipHandle(fmt.Errorf("getTargetCellFromWitness ParseTxWitnessToDasWitnessObj err: %s, skip this one", err.Error()))
+		} else {
+			outIndex, err := MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
+			if err != nil {
+				return fmt.Errorf("getTargetCellFromWitness get outIndex failed: %s", err.Error())
+			}
+			if stop, resp := handle(outIndex, cellData, das); resp != nil {
+				return resp
+			} else if stop {
+				break
+			}
+		}
+	}
+	return nil
+}

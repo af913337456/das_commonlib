@@ -14,6 +14,7 @@ require (
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/jinzhu/gorm v1.9.16
 	github.com/nervosnetwork/ckb-sdk-go v0.2.1-0.20210225011905-363af48e75f1
+	github.com/pkg/errors v0.8.1
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c
 )
