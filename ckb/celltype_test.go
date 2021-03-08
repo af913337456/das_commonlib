@@ -1,4 +1,5 @@
 package ckb
+
 //
 // import (
 // 	"github.com/DA-Services/das_commonlib/ckb/celltype"
@@ -19,7 +20,7 @@ package ckb
 // 	// StateCellDataFromSlice()
 // 	/**
 // 	"testnet": {
-// 	      "codeHash": "0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356",
+// 	      "CodeHash": "0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356",
 // 	      "hashType": "type",
 // 	      "txHash": "0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6",
 // 	      "index": "0x0",

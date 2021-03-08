@@ -294,16 +294,16 @@ func buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 	return &d
 }
 
-func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, inputList []*types.CellInput, codeHash types.Hash) (*types.Script, error) {
+func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, inputList []*types.CellInput, CodeHash types.Hash) (*types.Script, error) {
 	for _, item := range inputList {
 		tx, err := rpcClient.GetTransaction(ctx, item.PreviousOutput.TxHash)
 		if err != nil {
 			return nil, fmt.Errorf("FindSenderLockScriptByInputList err: %s", err.Error())
 		}
 		for _, output := range tx.Transaction.Outputs {
-			if output.Type == nil && output.Lock.CodeHash == codeHash && output.Lock.HashType == types.HashTypeType {
+			if output.Type == nil && output.Lock.CodeHash == CodeHash && output.Lock.HashType == types.HashTypeType {
 				return &types.Script{
-					CodeHash: codeHash,
+					CodeHash: CodeHash,
 					HashType: types.HashTypeType,
 					Args:     output.Lock.Args,
 				}, nil
@@ -421,7 +421,7 @@ func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *
 	switch lockCodeHash {
 	case ckbSysScript.SecpSingleSigCell.CellHash:
 		return ScriptType_User, nil
-	case DasAnyOneCanSendCellInfo.CodeHash:
+	case DasAnyOneCanSendCellInfo.Out.CodeHash:
 		return ScriptType_Any, nil
 	case DasETHLockCellInfo.CodeHash:
 		return ScriptType_ETH, nil

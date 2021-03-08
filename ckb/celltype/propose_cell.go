@@ -87,17 +87,10 @@ table ProposalCellData {
 
 var TestNetProposeCell = func(depIndex, oldIndex, newIndex uint32, dep, old, new *ProposalCellData) *ProposeCellParam {
 	acp := &ProposeCellParam{
-		Version:      1,
-		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
-		CellCodeInfo: DasProposeCellScript,
-		AlwaysSpendableScriptInfo: DASCellBaseInfo{
-			Dep: DASCellBaseInfoDep{
-				TxHash:  types.HexToHash("0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6"),
-				TxIndex: 0,
-				DepType: types.DepTypeDepGroup,
-			},
-			Out: DasAnyOneCanSendCellInfo,
-		},
+		Version:                   1,
+		Data:                      *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
+		CellCodeInfo:              DasProposeCellScript,
+		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
 	}
 	return acp
 }
@@ -120,10 +113,10 @@ func (c *ProposeCell) LockDepCell() *types.CellDep {
 	}
 }
 func (c *ProposeCell) TypeDepCell() *types.CellDep {
-	return &types.CellDep{ // state_cell
+	return &types.CellDep{
 		OutPoint: &types.OutPoint{
 			TxHash: c.p.CellCodeInfo.Dep.TxHash,
-			Index:  c.p.CellCodeInfo.Dep.TxIndex, // state_script_tx_index
+			Index:  c.p.CellCodeInfo.Dep.TxIndex,
 		},
 		DepType: c.p.CellCodeInfo.Dep.DepType,
 	}
@@ -139,7 +132,7 @@ func (c *ProposeCell) TypeScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.CellCodeInfo.Out.CodeHash,
 		HashType: c.p.CellCodeInfo.Out.CodeHashType,
-		Args:     c.p.CellCodeInfo.Out.Args,
+		Args:     nil,
 	}
 }
 

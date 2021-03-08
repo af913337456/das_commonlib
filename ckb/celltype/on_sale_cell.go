@@ -20,16 +20,9 @@ var TestNetOnSaleCell = func(newIndex uint32, price uint64, accountId DasAccount
 		Price:   price,
 		Data: *buildDasCommonMoleculeDataObj(
 			0, 0, newIndex, nil, nil, &onSaleMoleData),
-		AccountId:    accountId,
-		CellCodeInfo: DasOnSaleCellScript,
-		AlwaysSpendableScriptInfo: DASCellBaseInfo{
-			Dep: DASCellBaseInfoDep{
-				TxHash:  types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
-				TxIndex: 0,
-				DepType: types.DepTypeDepGroup,
-			},
-			Out: DasAnyOneCanSendCellInfo,
-		},
+		AccountId:                 accountId,
+		CellCodeInfo:              DasOnSaleCellScript,
+		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
 	}
 }
 

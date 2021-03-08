@@ -33,14 +33,7 @@ var TestNetAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old *Acc
 			OldAccountCellData: old,
 			NewAccountCellData: new,
 		},
-		AlwaysSpendableScriptInfo: DASCellBaseInfo{
-			Dep: DASCellBaseInfoDep{
-				TxHash:  types.HexToHash("0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6"),
-				TxIndex: 0,
-				DepType: types.DepTypeDepGroup,
-			},
-			Out: DasAnyOneCanSendCellInfo,
-		},
+		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
 	}
 	return acp
 }
@@ -137,7 +130,7 @@ func (c *AccountCell) TypeScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.CellCodeInfo.Out.CodeHash,
 		HashType: c.p.CellCodeInfo.Out.CodeHashType,
-		Args:     c.p.CellCodeInfo.Out.Args,
+		Args:     nil,
 	}
 }
 
@@ -227,9 +220,9 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 func AccountCellCap(account string) (uint64, error) {
 	output := types.CellOutput{
 		Lock: &types.Script{
-			CodeHash: DasAnyOneCanSendCellInfo.CodeHash,
-			HashType: DasAnyOneCanSendCellInfo.CodeHashType,
-			Args:     DasAnyOneCanSendCellInfo.Args,
+			CodeHash: DasAnyOneCanSendCellInfo.Out.CodeHash,
+			HashType: DasAnyOneCanSendCellInfo.Out.CodeHashType,
+			Args:     DasAnyOneCanSendCellInfo.Out.Args,
 		},
 		Type: &types.Script{
 			CodeHash: DasAccountCellScript.Out.CodeHash,

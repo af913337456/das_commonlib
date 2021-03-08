@@ -23,14 +23,7 @@ var TestNetPreAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old, 
 			OldAccountCellData: old,
 			NewAccountCellData: new,
 		},
-		AlwaysSpendableScriptInfo: DASCellBaseInfo{
-			Dep: DASCellBaseInfoDep{
-				TxHash:  types.HexToHash("0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6"),
-				TxIndex: 0,
-				DepType: types.DepTypeDepGroup,
-			},
-			Out: DasAnyOneCanSendCellInfo,
-		},
+		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
 	}
 }
 
