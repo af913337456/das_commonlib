@@ -131,6 +131,10 @@ func (c DASCellBaseInfoOut) Script() *types.Script {
 	return current
 }
 
+func (c DASCellBaseInfoOut) SameCodeHash(script *types.Script) bool {
+	return c.CodeHash == script.CodeHash
+}
+
 func (c DASCellBaseInfoOut) SameScript(script *types.Script) bool {
 	return c.Script().Equals(script)
 }
