@@ -24,7 +24,7 @@ func NewDefaultKafkaMessageQueueConsumer(brokers []string, groupName string, ctx
 	config := sarama.NewConfig()
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRange
 	config.Consumer.Offsets.Initial = sarama.OffsetOldest
-	config.Consumer.Offsets.AutoCommit.Enable = false
+	config.Consumer.Offsets.AutoCommit.Enable = true
 	config.Consumer.Fetch.Default = 1024
 	config.Consumer.Fetch.Max = 1024 * 2
 	client, err := sarama.NewConsumerGroup(brokers, groupName, config)
@@ -57,7 +57,7 @@ func (c *KafkaMessageQueueConsumer) Close() error {
 }
 
 type HandCommitConsumer struct {
-	HandleMsg func(msg *sarama.ConsumerMessage) bool // true,  msg means commit
+	HandleMsg func(msg *sarama.ConsumerMessage) bool // true,  msg means consume
 }
 
 func (consumer *HandCommitConsumer) Setup(sarama.ConsumerGroupSession) error {
