@@ -227,7 +227,19 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 	if err != nil {
 		return nil, fmt.Errorf("fail to parse dasWitness data: %s", err.Error())
 	}
+	if dasWitnessObj.TableType == TableType_ACTION {
+		ret.WitnessObj = DasActionWitness
+		return ret, nil
+	}
 	ret.WitnessObj = dasWitnessObj
+	if dasWitnessObj.TableType.IsConfigType() {
+		newDataEntity := NewDataEntityBuilder().Entity(GoBytesToMoleculeBytes(dasWitnessObj.TableBys)).Build()
+		newOpt := NewDataEntityOptBuilder().Set(newDataEntity).Build()
+		data := NewDataBuilder().Dep(DataEntityOptDefault()).Old(DataEntityOptDefault()).New(newOpt).Build()
+		ret.MoleculeNewDataEntity = &newDataEntity
+		ret.MoleculeData = &data
+		return ret, nil
+	}
 	data, err := DataFromSlice(dasWitnessObj.TableBys, false)
 	if err != nil {
 		return nil, fmt.Errorf("fail to parse data: %s", err.Error())

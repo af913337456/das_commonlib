@@ -45,6 +45,10 @@ type AccountCharType uint32
 type AccountCellStatus uint8
 type DataEntityChangeType uint
 
+func (t TableType) IsConfigType() bool {
+	return t == TableTyte_CONFIG_CELL_MAIN || t == TableTyte_CONFIG_CELL_MARKET || t == TableTyte_CONFIG_CELL_BLOOM_FILTER
+}
+
 func (a AccountCellStatus) Str() string {
 	switch a {
 	case AccountWitnessStatus_Exist:

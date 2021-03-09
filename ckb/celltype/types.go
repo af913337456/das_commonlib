@@ -71,6 +71,9 @@ func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
 		TableBys:  rawData[7:],
 	}, nil
 }
+
+var DasActionWitness = NewDasWitnessData(TableType_ACTION, []byte{})
+
 func NewDasWitnessData(tableType TableType, tableBys []byte) *DASWitnessDataObj {
 	return &DASWitnessDataObj{
 		Tag:       witnessDas,
