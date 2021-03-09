@@ -2556,21 +2556,24 @@ func (s *MarketConfig) AsBuilder() MarketConfigBuilder {
 }
 
 type ProposalCellDataBuilder struct {
-	proposer_lock   Script
-	proposer_wallet Bytes
-	slices          SliceList
+	proposer_lock     Script
+	proposer_wallet   Bytes
+	created_at_height Uint64
+	slices            SliceList
 }
 
 func (s *ProposalCellDataBuilder) Build() ProposalCellData {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (3 + 1)
-	offsets := make([]uint32, 0, 3)
+	totalSize := HeaderSizeUint * (4 + 1)
+	offsets := make([]uint32, 0, 4)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposer_lock.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.proposer_wallet.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.created_at_height.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.slices.AsSlice()))
 
@@ -2582,6 +2585,7 @@ func (s *ProposalCellDataBuilder) Build() ProposalCellData {
 
 	b.Write(s.proposer_lock.AsSlice())
 	b.Write(s.proposer_wallet.AsSlice())
+	b.Write(s.created_at_height.AsSlice())
 	b.Write(s.slices.AsSlice())
 	return ProposalCellData{inner: b.Bytes()}
 }
@@ -2596,13 +2600,18 @@ func (s *ProposalCellDataBuilder) ProposerWallet(v Bytes) *ProposalCellDataBuild
 	return s
 }
 
+func (s *ProposalCellDataBuilder) CreatedAtHeight(v Uint64) *ProposalCellDataBuilder {
+	s.created_at_height = v
+	return s
+}
+
 func (s *ProposalCellDataBuilder) Slices(v SliceList) *ProposalCellDataBuilder {
 	s.slices = v
 	return s
 }
 
 func NewProposalCellDataBuilder() *ProposalCellDataBuilder {
-	return &ProposalCellDataBuilder{proposer_lock: ScriptDefault(), proposer_wallet: BytesDefault(), slices: SliceListDefault()}
+	return &ProposalCellDataBuilder{proposer_lock: ScriptDefault(), proposer_wallet: BytesDefault(), created_at_height: Uint64Default(), slices: SliceListDefault()}
 }
 
 type ProposalCellData struct {
@@ -2617,7 +2626,7 @@ func (s *ProposalCellData) AsSlice() []byte {
 }
 
 func ProposalCellDataDefault() ProposalCellData {
-	return *ProposalCellDataFromSliceUnchecked([]byte{77, 0, 0, 0, 16, 0, 0, 0, 69, 0, 0, 0, 73, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
+	return *ProposalCellDataFromSliceUnchecked([]byte{89, 0, 0, 0, 20, 0, 0, 0, 73, 0, 0, 0, 77, 0, 0, 0, 85, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0})
 }
 
 func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData, error) {
@@ -2633,7 +2642,7 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 3 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 4 == 0 {
 		return &ProposalCellData{inner: slice}, nil
 	}
 
@@ -2649,9 +2658,9 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 	}
 
 	fieldCount := offsetFirst/4 - 1
-	if fieldCount < 3 {
+	if fieldCount < 4 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 3 {
+	} else if !compatible && fieldCount > 4 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -2686,7 +2695,12 @@ func ProposalCellDataFromSlice(slice []byte, compatible bool) (*ProposalCellData
 		return nil, err
 	}
 
-	_, err = SliceListFromSlice(slice[offsets[2]:offsets[3]], compatible)
+	_, err = Uint64FromSlice(slice[offsets[2]:offsets[3]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = SliceListFromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -2712,11 +2726,11 @@ func (s *ProposalCellData) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ProposalCellData) CountExtraFields() uint {
-	return s.FieldCount() - 3
+	return s.FieldCount() - 4
 }
 
 func (s *ProposalCellData) HasExtraFields() bool {
-	return 3 != s.FieldCount()
+	return 4 != s.FieldCount()
 }
 
 func (s *ProposalCellData) ProposerLock() *Script {
@@ -2731,11 +2745,17 @@ func (s *ProposalCellData) ProposerWallet() *Bytes {
 	return BytesFromSliceUnchecked(s.inner[start:end])
 }
 
+func (s *ProposalCellData) CreatedAtHeight() *Uint64 {
+	start := unpackNumber(s.inner[12:])
+	end := unpackNumber(s.inner[16:])
+	return Uint64FromSliceUnchecked(s.inner[start:end])
+}
+
 func (s *ProposalCellData) Slices() *SliceList {
 	var ret *SliceList
-	start := unpackNumber(s.inner[12:])
+	start := unpackNumber(s.inner[16:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[16:])
+		end := unpackNumber(s.inner[20:])
 		ret = SliceListFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = SliceListFromSliceUnchecked(s.inner[start:])
@@ -2744,7 +2764,7 @@ func (s *ProposalCellData) Slices() *SliceList {
 }
 
 func (s *ProposalCellData) AsBuilder() ProposalCellDataBuilder {
-	ret := NewProposalCellDataBuilder().ProposerLock(*s.ProposerLock()).ProposerWallet(*s.ProposerWallet()).Slices(*s.Slices())
+	ret := NewProposalCellDataBuilder().ProposerLock(*s.ProposerLock()).ProposerWallet(*s.ProposerWallet()).CreatedAtHeight(*s.CreatedAtHeight()).Slices(*s.Slices())
 	return *ret
 }
 

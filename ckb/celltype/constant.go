@@ -46,7 +46,7 @@ type AccountCellStatus uint8
 type DataEntityChangeType uint
 
 func (t TableType) IsConfigType() bool {
-	return t == TableTyte_CONFIG_CELL_MAIN || t == TableTyte_CONFIG_CELL_MARKET || t == TableTyte_CONFIG_CELL_BLOOM_FILTER
+	return t == TableTyte_CONFIG_CELL_MAIN || t == TableTyte_CONFIG_CELL_REGISTER || t == TableTyte_CONFIG_CELL_MARKET || t == TableTyte_CONFIG_CELL_BLOOM_FILTER
 }
 
 func (a AccountCellStatus) Str() string {
