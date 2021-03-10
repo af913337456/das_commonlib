@@ -19,6 +19,27 @@ import (
  * Description:
  */
 
+func Test_InitWallet2(t *testing.T) {
+	systemScript := &utils.SystemScripts{
+		SecpSingleSigCell: &utils.SystemScriptCell{
+			CellHash: types.HexToHash("0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"),
+			OutPoint: nil,
+			HashType: "",
+			DepType:  "",
+		},
+		SecpMultiSigCell: nil,
+		DaoCell:          nil,
+		ACPCell:          nil,
+		SUDTCell:         nil,
+		ChequeCell:       nil,
+	}
+	key, err := InitCkbWallet("1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168", systemScript)
+	if err != nil {
+		panic(err)
+	}
+	t.Log(hex.EncodeToString(key.LockScript.Args))
+}
+
 func Test_InitWallet(t *testing.T) {
 	systemScript := &utils.SystemScripts{
 		SecpSingleSigCell: &utils.SystemScriptCell{

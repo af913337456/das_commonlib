@@ -41,13 +41,14 @@ type TransactionBuilder struct {
 	fee            uint64
 	inputList      []celltype.TypeInputCell
 	tx             *types.Transaction
+	actionWitness  []byte
 }
 
 func NewTransactionBuilder0(action string, fromScript *types.Script, fee uint64) *TransactionBuilder {
 	builder := NewTransactionBuilder2(fromScript, fee)
 	actionData := celltype.NewActionDataBuilder().Action(celltype.GoStrToMoleculeBytes(action)).Build()
 	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
-	builder.tx.Witnesses = append(builder.tx.Witnesses, witnessBys)
+	builder.actionWitness = witnessBys
 	return builder
 }
 
@@ -336,6 +337,9 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 			Group:      group,
 			WitnessArg: wArgs,
 		})
+	}
+	if builder.actionWitness != nil && len(builder.actionWitness) > 0 {
+		builder.tx.Witnesses = append(builder.tx.Witnesses, builder.actionWitness)
 	}
 	return retList, nil
 }
