@@ -88,8 +88,7 @@ func (d *DASWitnessDataObj) ToWitness() []byte {
 	bytebuf := bytes.NewBuffer([]byte{})
 	_ = binary.Write(bytebuf, binary.LittleEndian, d.TableType)
 	temp := append([]byte(d.Tag), bytebuf.Bytes()...)
-	moBytes := GoBytesToMoleculeBytes(append(temp, d.TableBys...))
-	return moBytes.AsSlice()
+	return append(temp, d.TableBys...)
 }
 
 type DASCellBaseInfoDep struct {

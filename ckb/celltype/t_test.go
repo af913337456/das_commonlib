@@ -1,6 +1,7 @@
 package celltype
 
 import (
+	"encoding/hex"
 	"fmt"
 	"testing"
 )
@@ -46,11 +47,12 @@ func Test_AccountCellDataPreObj_Old_New(t *testing.T) {
 
 func Test_NewDasWitnessData(t *testing.T) {
 	obj := NewDasWitnessData(1, []byte("china"))
-	t.Log(obj.ToWitness())
+	t.Log(hex.EncodeToString(obj.ToWitness()))
 	das, err := NewDasWitnessDataFromSlice(obj.ToWitness())
 	if err != nil {
 		panic(err.Error())
 	} else {
+		t.Log(hex.EncodeToString(das.ToWitness()))
 		t.Log(das.Tag, das.TableType)
 	}
 }
