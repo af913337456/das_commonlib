@@ -100,6 +100,31 @@ func Test_AccountCharLen(t *testing.T) {
 	*/
 }
 
+func Test_PriceConfigs(t *testing.T) {
+	getItem := func() *PriceConfig {
+		p1 := NewPriceConfigBuilder().Length(GoUint8ToMoleculeU8(1)).Build()
+		p2 := NewPriceConfigBuilder().Length(GoUint8ToMoleculeU8(2)).Build()
+		p3 := NewPriceConfigBuilder().Length(GoUint8ToMoleculeU8(3)).Build()
+		list := NewPriceConfigListBuilder().Push(p1).Push(p2).Push(p3).Build()
+		fmt.Println(list.ItemCount())
+		priceIndex := uint(0)
+		accountBytesLen := uint8(len([]rune("123"))) // 字符长度
+		for ; priceIndex < list.ItemCount(); priceIndex++ {
+			item := list.Get(priceIndex)
+			accountLen, err := MoleculeU8ToGo(item.Length().AsSlice())
+			if err != nil {
+				panic(err)
+			} else if accountLen == accountBytesLen {
+				return item
+			}
+			fmt.Println(accountLen, accountBytesLen, priceIndex)
+		}
+		return nil
+	}
+	i := getItem()
+	fmt.Println(i.Length().RawData())
+}
+
 func Test_U64Bytes(t *testing.T) {
 	d, _ := blake2b.Blake256([]byte("0"))
 	t.Log(len(d))

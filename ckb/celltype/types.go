@@ -353,11 +353,15 @@ func ProposeWitnessSliceDataObjectListFromBytes(bys []byte) ([]ProposeWitnessSli
 	}
 	retList := []ProposeWitnessSliceDataObjectList{}
 	sliceList := proposeCellData.Slices()
+	sliceListSize := sliceList.ItemCount()
 	index := uint(0)
-	for sl := sliceList.Get(index); sl != nil && len(sl.inner) > 0 && !sl.IsEmpty(); index++ {
+	for ; index < sliceListSize; index++ {
+		sl := sliceList.Get(index)
+		slSize := sl.ItemCount()
 		proposeItemIndex := uint(0)
 		list := []ProposeWitnessSliceDataObject{}
-		for propose := sl.Get(proposeItemIndex); propose != nil && len(propose.inner) > 0 && !propose.IsEmpty(); proposeItemIndex++ {
+		for ; proposeItemIndex < slSize; proposeItemIndex++ {
+			propose := sl.Get(proposeItemIndex)
 			itemTypeUint8, err := MoleculeU8ToGo(propose.ItemType().inner)
 			if err != nil {
 				return nil, err
