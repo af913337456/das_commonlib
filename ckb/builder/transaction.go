@@ -35,20 +35,20 @@ var (
 )
 
 type TransactionBuilder struct {
-	fromAddress    *types.Script
-	totalInputCap  uint64
-	totalOutputCap uint64
-	fee            uint64
-	inputList      []celltype.TypeInputCell
-	tx             *types.Transaction
-	actionWitness  []byte
+	fromAddress       *types.Script
+	totalInputCap     uint64
+	totalOutputCap    uint64
+	fee               uint64
+	inputList         []celltype.TypeInputCell
+	tx                *types.Transaction
+	customWitnessList [][]byte
 }
 
 func NewTransactionBuilder0(action string, fromScript *types.Script, fee uint64) *TransactionBuilder {
 	builder := NewTransactionBuilder2(fromScript, fee)
 	actionData := celltype.NewActionDataBuilder().Action(celltype.GoStrToMoleculeBytes(action)).Build()
 	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
-	builder.actionWitness = witnessBys
+	builder.customWitnessList = append(builder.customWitnessList, witnessBys)
 	return builder
 }
 
@@ -89,7 +89,7 @@ func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWi
 		if err != nil {
 			return nil, fmt.Errorf("AddWitnessCellDep %s", err.Error())
 		}
-		builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)
+		builder.customWitnessList = append(builder.customWitnessList, witnessData)
 	}
 	return builder, nil
 }
@@ -145,7 +145,7 @@ func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.InputWith
 		if err != nil {
 			return nil, fmt.Errorf("AddWitnessInput err: %s", err.Error())
 		}
-		builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)
+		builder.customWitnessList = append(builder.customWitnessList, witnessData)
 	}
 	return builder, nil
 }
@@ -238,7 +238,7 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 	}
 	builder.AddOutput(output, data)
 	if witnessData != nil {
-		builder.tx.Witnesses = append(builder.tx.Witnesses, witnessData)
+		builder.customWitnessList = append(builder.customWitnessList, witnessData)
 	}
 	return builder
 }
@@ -338,8 +338,10 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 			WitnessArg: wArgs,
 		})
 	}
-	if builder.actionWitness != nil && len(builder.actionWitness) > 0 {
-		builder.tx.Witnesses = append(builder.tx.Witnesses, builder.actionWitness)
+	if builder.customWitnessList != nil && len(builder.customWitnessList) > 0 {
+		for _, witness := range builder.customWitnessList {
+			builder.tx.Witnesses = append(builder.tx.Witnesses, witness)
+		}
 	}
 	return retList, nil
 }
