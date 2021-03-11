@@ -59,7 +59,7 @@ var (
 	}
 	DasWalletCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x74e593c845fe944e3768237f710d932675383d6a890a93ac56acb462cbc69b16"),
+			TxHash:  types.HexToHash("0x71d4d91e3a416fbab4c7d53e4db3b46cc473b265d85d3c317c6f335532e5285c"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -71,7 +71,7 @@ var (
 	}
 	DasApplyRegisterCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xa9048cd20d31240c93a98fea5d59c8eb70a6999df27acb85db08a6f4972029f1"),
+			TxHash:  types.HexToHash("0xc9b182b156be56b4420f6e78621604fa0dc71e85418171402cddc8cdc5fec932"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -83,7 +83,7 @@ var (
 	}
 	DasRefCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xeaef914821d9d45c1ed167d810fe4a760b4c3c0257f5b677e8417ffe46373d61"),
+			TxHash:  types.HexToHash("0x628da7b8d6d2c6736c63efa4b517f5f2ada6a8c58d49b3244b89c01f1b7e8277"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -95,7 +95,7 @@ var (
 	}
 	DasPreAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xbeff4a722b2e724654be6429daf0091486bf647354703221e148725e48360b22"),
+			TxHash:  types.HexToHash("0x42642847df624fe7147428f996cc8d579a8652582847fd875be6c2b84056dece"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -107,7 +107,7 @@ var (
 	}
 	DasProposeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xd426b655bd5424e801b1533bc0bd5c913508ad1572610fc83a3a3a3459b108c4"),
+			TxHash:  types.HexToHash("0x3141859166855bed53973e5fec772b41e2dba4c88cf79fa33cc2f98da05f97fa"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -119,7 +119,7 @@ var (
 	}
 	DasAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x2b50cbaca32a2dc753909964e69e95ed672d75aa4909929a177b8072c89b09f9"),
+			TxHash:  types.HexToHash("0xf81ad628f4ce019643ad2f8dbcac010bd8aebe802213814254f1a79301d956c4"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
