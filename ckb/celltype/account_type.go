@@ -23,6 +23,14 @@ func DasAccountFromStr(account string) DasAccount {
 	return DasAccount(account)
 }
 
+func (d DasAccount) Format() string {
+	temp := string(d)
+	if strings.HasSuffix(temp, DasAccountSuffix) {
+		temp = strings.Split(temp, ".")[0]
+	}
+	return temp
+}
+
 func (d DasAccount) ValidErr() error {
 	if d == "" || !strings.HasSuffix(string(d), DasAccountSuffix) || strings.Contains(string(d), " ") {
 		return fmt.Errorf("invalid account:[%s], demo: hello_world.bit", d)
@@ -40,7 +48,7 @@ func (d DasAccount) AccountId() DasAccountId {
 	}
 	bys, _ := blake2b.Blake160([]byte(d))
 	id := &DasAccountId{}
-	id.SetBytes(bys[:dasAccountIdLen])
+	id.SetBytes(bys)
 	return *id
 }
 
