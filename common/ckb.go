@@ -19,8 +19,8 @@ func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, l
 	return LoadLiveCellsWithSize(client, key, capLimit, 100, latest, normal, filter)
 }
 
-func LoadLiveNormalCells(client rpc.Client, key *indexer.SearchKey, capLimit, size uint64, latest bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
-	return LoadLiveCellsWithSize(client, key, capLimit, size, latest, true, filter)
+func LoadLiveNormalCells(client rpc.Client, key *indexer.SearchKey, capLimit, size uint64, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
+	return LoadLiveCellsWithSize(client, key, capLimit, size, false, true, filter)
 }
 
 func LoadLiveCellsWithSize(client rpc.Client, key *indexer.SearchKey, capLimit, size uint64, latest, normal bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
