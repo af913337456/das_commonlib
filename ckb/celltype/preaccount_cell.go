@@ -17,7 +17,7 @@ var TestNetPreAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old, 
 	return &PreAccountCellParam{
 		Version:      1,
 		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
-		CellCodeInfo: DasActionCellScript,
+		CellCodeInfo: DasPreAccountCellScript,
 		PreAccountCellDatas: PreAccountCellDatas{
 			DepAccountCellData: dep,
 			OldAccountCellData: old,
