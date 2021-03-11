@@ -15,11 +15,10 @@ import (
  * Description:
  */
 
-var TestNetApplyRegisterCell = func(pubkey []byte, account string, height uint64, senderLockScript *types.Script) *ApplyRegisterCellParam {
-	pubkeyHash, _ := blake2b.Blake160(pubkey)
+var TestNetApplyRegisterCell = func(args []byte, account string, height uint64, senderLockScript *types.Script) *ApplyRegisterCellParam {
 	return &ApplyRegisterCellParam{
 		Version:      1,
-		PubkeyHash:   hex.EncodeToString(pubkeyHash),
+		PubkeyHash:   hex.EncodeToString(args),
 		Account:      account,
 		Height:       height,
 		CellCodeInfo: DasApplyRegisterCellScript,
