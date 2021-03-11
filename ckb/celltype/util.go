@@ -194,6 +194,15 @@ func MoleculeU64ToGo(bys []byte) (uint64, error) {
 	return t, nil
 }
 
+func MoleculeU64ToGo_BigEndian(bys []byte) (uint64, error) {
+	var t uint64
+	bytesBuffer := bytes.NewBuffer(bys)
+	if err := binary.Read(bytesBuffer, binary.BigEndian, &t); err != nil {
+		return 0, err
+	}
+	return t, nil
+}
+
 func MoleculeU32ToGoPercentage(bys []byte) (float64, error) {
 	v, e := MoleculeU32ToGo(bys)
 	if e != nil {
