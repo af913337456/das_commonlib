@@ -97,5 +97,5 @@ func (c *PreAccountCell) Data() ([]byte, error) {
 }
 
 func (c *PreAccountCell) TableData() []byte {
-	return c.p.Data.AsSlice()
+	return c.p.Data.AsSlice()[HeaderSizeUint:]
 }

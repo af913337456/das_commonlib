@@ -254,6 +254,7 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 		ret.MoleculeData = &data
 		return ret, nil
 	}
+	fmt.Println(ret.WitnessObj.Tag, ret.WitnessObj.TableType)
 	data, err := DataFromSlice(dasWitnessObj.TableBys, false)
 	if err != nil {
 		return nil, fmt.Errorf("fail to parse data: %s", err.Error())
