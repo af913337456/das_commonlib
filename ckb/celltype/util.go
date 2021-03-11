@@ -14,6 +14,7 @@ import (
 	"math"
 	"math/big"
 	"reflect"
+	"strings"
 )
 
 /**
@@ -36,12 +37,25 @@ import (
 // }
 
 func GoBytesToMoleculeHash(bytes []byte) Hash {
-	return *HashFromSliceUnchecked(bytes)
+	byteArr := [32]Byte{}
+	size := len(bytes)
+	for i := 0; i < size; i++ {
+		byteArr[i] = *ByteFromSliceUnchecked([]byte{bytes[i]})
+	}
+	return NewHashBuilder().Set(byteArr).Build()
 }
 
 func GoHexToMoleculeHash(hexStr string) Hash {
-	hexBytes, _ := hex.DecodeString(hexStr)
-	return *HashFromSliceUnchecked(hexBytes)
+	if strings.HasPrefix(hexStr, "0x") {
+		hexStr = hexStr[2:]
+	}
+	bytes, _ := hex.DecodeString(hexStr)
+	byteArr := [32]Byte{}
+	size := len(bytes)
+	for i := 0; i < size; i++ {
+		byteArr[i] = *ByteFromSliceUnchecked([]byte{bytes[i]})
+	}
+	return NewHashBuilder().Set(byteArr).Build()
 }
 
 func GoUint8ToMoleculeU8(i uint8) Uint8 {
@@ -87,30 +101,37 @@ func GoTimeUnixToMoleculeBytes(timeSec int64) [8]Byte {
 	bytebuf := bytes.NewBuffer([]byte{})
 	_ = binary.Write(bytebuf, binary.LittleEndian, timeSec)
 	timestampByteArr := [8]Byte{}
-	for index, bye := range bytebuf.Bytes() {
-		timestampByteArr[index] = *ByteFromSliceUnchecked([]byte{bye})
+	bytes := bytebuf.Bytes()
+	size := len(bytes)
+	for i := 0; i < size; i++ {
+		timestampByteArr[i] = *ByteFromSliceUnchecked([]byte{bytes[i]})
 	}
 	return timestampByteArr
 }
 
 func GoBytesToMoleculeAccountBytes(bys []byte) [10]Byte {
 	byteArr := [10]Byte{}
-	for index, bye := range bys {
-		byteArr[index] = *ByteFromSliceUnchecked([]byte{bye})
+	size := len(bys)
+	for i := 0; i < size; i++ {
+		byteArr[i] = *ByteFromSliceUnchecked([]byte{bys[i]})
 	}
 	return byteArr
 }
 
 func GoCkbScriptToMoleculeScript(script types.Script) Script {
 	// 这里 data 类型应该就是 0x00 ，type 就是 0x01
-	ht := 0x00
+	ht := 0
 	if script.HashType == types.HashTypeType {
-		ht = 0x01
+		ht = 1
+	}
+	argBytes := BytesDefault()
+	if script.Args != nil {
+		argBytes = GoBytesToMoleculeBytes(script.Args)
 	}
 	return NewScriptBuilder().
 		CodeHash(GoHexToMoleculeHash(script.CodeHash.String())).
 		HashType(GoByteToMoleculeByte(byte(ht))).
-		Args(GoBytesToMoleculeBytes(script.Args)).
+		Args(argBytes).
 		Build()
 }
 
@@ -254,35 +275,19 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 		ret.MoleculeData = &data
 		return ret, nil
 	}
-	fmt.Println(ret.WitnessObj.Tag, ret.WitnessObj.TableType)
-	data, err := DataFromSlice(dasWitnessObj.TableBys, false)
-	if err != nil {
-		return nil, fmt.Errorf("fail to parse data: %s", err.Error())
-	}
+	data := DataFromSliceUnchecked(dasWitnessObj.TableBys)
 	ret.MoleculeData = data
 	if data.Dep().IsNone() {
 		ret.MoleculeDepDataEntity = nil
 	} else {
-		if depData, err := DataEntityFromSlice(data.Dep().AsSlice(), false); err != nil {
-			return nil, fmt.Errorf("fail to parse dep dataEntity: %s", err.Error())
-		} else {
-			ret.MoleculeDepDataEntity = depData
-		}
+		ret.MoleculeDepDataEntity = DataEntityFromSliceUnchecked(data.Dep().AsSlice())
 	}
 	if data.Old().IsNone() {
 		ret.MoleculeOldDataEntity = nil
 	} else {
-		if oldData, err := DataEntityFromSlice(data.Old().AsSlice(), false); err != nil {
-			return nil, fmt.Errorf("fail to parse old dataEntity: %s", err.Error())
-		} else {
-			ret.MoleculeOldDataEntity = oldData
-		}
+		ret.MoleculeOldDataEntity = DataEntityFromSliceUnchecked(data.Old().AsSlice())
 	}
-	newData, err := DataEntityFromSlice(data.New().AsSlice(), false)
-	if err != nil {
-		return nil, fmt.Errorf("fail to parse new dataEntity: %s", err.Error())
-	}
-	ret.MoleculeNewDataEntity = newData
+	ret.MoleculeNewDataEntity = DataEntityFromSliceUnchecked(data.New().AsSlice())
 	return ret, nil
 }
 
