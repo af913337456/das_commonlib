@@ -12,7 +12,6 @@ import (
 	"context"
 	"github.com/nervosnetwork/ckb-sdk-go/indexer"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
-	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/pkg/errors"
 )
 
@@ -34,15 +33,15 @@ type CellCollectionIterator interface {
 }
 
 type LiveCellCollector struct {
-	Client      rpc.Client
-	SearchKey   *indexer.SearchKey
-	SearchOrder indexer.SearchOrder
-	Limit       uint64
-	LastCursor  string
-	EmptyData   bool
-	TypeScript  *types.Script
-	result      []*indexer.LiveCell
-	itemIndex   int
+	Client         rpc.Client
+	SearchKey      *indexer.SearchKey
+	SearchOrder    indexer.SearchOrder
+	Limit          uint64
+	LastCursor     string
+	EmptyData      bool
+	onlyNormalCell bool
+	result         []*indexer.LiveCell
+	itemIndex      int
 }
 
 func (c *LiveCellCollector) HasNext() bool {
@@ -93,12 +92,10 @@ func (c *LiveCellCollector) collect() ([]*indexer.LiveCell, string, error) {
 		return nil, "", err
 	}
 	for _, cell := range liveCells.Objects {
-		if c.TypeScript != nil {
-			if !c.TypeScript.Equals(cell.Output.Type) {
-				continue
-			}
-		}
 		if c.EmptyData && len(cell.OutputData) > 0 {
+			continue
+		}
+		if c.onlyNormalCell && cell.Output.Type != nil {
 			continue
 		}
 		result = append(result, cell)
@@ -106,12 +103,13 @@ func (c *LiveCellCollector) collect() ([]*indexer.LiveCell, string, error) {
 	return result, liveCells.LastCursor, nil
 }
 
-func NewLiveCellCollector(client rpc.Client, searchKey *indexer.SearchKey, searchOrder indexer.SearchOrder, limit uint64, afterCursor string) *LiveCellCollector {
+func NewLiveCellCollector(client rpc.Client, searchKey *indexer.SearchKey, searchOrder indexer.SearchOrder, limit uint64, afterCursor string, onlyNormalCell bool) *LiveCellCollector {
 	return &LiveCellCollector{
-		Client:      client,
-		SearchKey:   searchKey,
-		SearchOrder: searchOrder,
-		Limit:       limit,
-		LastCursor:  afterCursor,
+		Client:         client,
+		SearchKey:      searchKey,
+		SearchOrder:    searchOrder,
+		Limit:          limit,
+		LastCursor:     afterCursor,
+		onlyNormalCell: onlyNormalCell,
 	}
 }
