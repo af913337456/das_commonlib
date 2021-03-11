@@ -13,6 +13,7 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
 	"math"
 	"math/big"
+	"reflect"
 )
 
 /**
@@ -296,7 +297,7 @@ func buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 		dataBuilder = NewDataBuilder().
 				New(NewDataEntityOptBuilder().Set(newData).Build())
 	)
-	if depMolecule != nil {
+	if !IsInterfaceNil(depMolecule) {
 		depData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(depIndex)).
 			Version(GoUint32ToMoleculeU32(1)).
@@ -306,7 +307,7 @@ func buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 	} else {
 		dataBuilder.Dep(NewDataEntityOptBuilder().Build())
 	}
-	if oldMolecule != nil {
+	if !IsInterfaceNil(oldMolecule) {
 		oldData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(oldIndex)).
 			Version(GoUint32ToMoleculeU32(1)).
@@ -497,4 +498,15 @@ func GetTargetCellFromWitness(tx *types.Transaction, handle ValidHandle, skipHan
 		}
 	}
 	return nil
+}
+
+func IsInterfaceNil(i interface{}) bool {
+	ret := i == nil
+	if !ret {
+		defer func() {
+			recover()
+		}()
+		ret = reflect.ValueOf(i).IsNil()
+	}
+	return ret
 }
