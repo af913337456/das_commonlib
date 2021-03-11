@@ -17,19 +17,76 @@ import (
  * Description:
  */
 
-func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
-	createAt := NewTimestampBuilder().
-		Set(GoTimeUnixToMoleculeBytes(time.Now().Unix())).Build()
-	inviterAccountId := GoBytesToMoleculeBytes(DasAccountFromStr("xxx.bit").AccountId().Bytes())
+func Test_CreateData(t *testing.T) {
 	preAccountCellData :=
 		NewPreAccountCellDataBuilder().
 			Account(AccountCharsDefault()).
+			CreatedAt(TimestampDefault()).
+			OwnerLock(ScriptDefault()).
+			RefundLock(ScriptDefault()).
+			InviterWallet(BytesDefault()).
+			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
+			Price(PriceConfigDefault()).
+			Quote(Uint64Default()).
+			Build()
+	// new := NewDataEntityBuilder().
+	// 	Index(GoUint32ToMoleculeU32(0)).
+	// 	Version(GoUint32ToMoleculeU32(1)).
+	// 	Entity(GoBytesToMoleculeBytes(preAccountCellData.AsSlice())).
+	// 	Build()
+	// d := NewDataBuilder().
+	// 	Dep(DataEntityOptDefault()).
+	// 	Old(DataEntityOptDefault()).
+	// 	New(NewDataEntityOptBuilder().Set(new).Build()).
+	// 	Build()
+	// s := hex.EncodeToString(d.AsSlice())
+	// t.Log(s)
+	preAccountCell := NewPreAccountCell(TestNetPreAccountCell(0, 0, 0, nil, nil, &preAccountCellData))
+	witnessBys := NewDasWitnessData(TableType_PRE_ACCOUNT_CELL, preAccountCell.TableData()).ToWitness()
+	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
+	if err != nil {
+		panic(err)
+	}
+	// rawData
+	if preAccountCellData, err := PreAccountCellDataFromSlice(ret.MoleculeNewDataEntity.Entity().RawData(), false); err != nil {
+		panic(err)
+	} else {
+		t.Log(string(preAccountCellData.ChannelWallet().RawData()))
+		script, err := MoleculeScriptToGo(*preAccountCellData.RefundLock())
+		if err != nil {
+			panic(err)
+		}
+		t.Log(script.CodeHash.String())
+		t.Log(MoleculeU64ToGo(preAccountCellData.Quote().RawData()))
+	}
+}
+
+func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
+	createAt := NewTimestampBuilder().
+		Set(GoTimeUnixToMoleculeBytes(time.Now().Unix())).Build()
+
+	accountChars := NewAccountCharsBuilder()
+	chars := []byte("iqyueq.bit")
+	for _, item := range chars {
+		accountChar :=
+			NewAccountCharBuilder().
+				CharSetName(GoUint32ToMoleculeU32(uint32(AccountChar_En))).
+				Bytes(GoBytesToMoleculeBytes([]byte{item})).
+				Build()
+		accountChars.Push(accountChar)
+	}
+
+	inviterAccountId := GoBytesToMoleculeBytes(DasAccountFromStr("xxx.bit").AccountId().Bytes())
+	args, _ := hex.DecodeString("b7526803f67ebe70aba6")
+	preAccountCellData :=
+		NewPreAccountCellDataBuilder().
+			Account(accountChars.Build()).
 			CreatedAt(createAt).
 			OwnerLock(ScriptDefault()).
 			RefundLock(GoCkbScriptToMoleculeScript(types.Script{
 				CodeHash: types.HexToHash("123456aa"),
 				HashType: types.HashTypeType,
-				Args:     nil,
+				Args:     args,
 			})).
 			InviterWallet(inviterAccountId).
 			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
@@ -37,21 +94,11 @@ func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
 			Quote(GoUint64ToMoleculeU64(10086)).
 			Build()
 	preAccountCell := NewPreAccountCell(TestNetPreAccountCell(0, 0, 0, nil, nil, &preAccountCellData))
-	tableBys := preAccountCell.TableData()
-	data := DataFromSliceUnchecked(tableBys)
-	ret := &ParseDasWitnessBysDataObj{}
-	ret.MoleculeData = data
-	if data.Dep().IsNone() {
-		ret.MoleculeDepDataEntity = nil
-	} else {
-		ret.MoleculeDepDataEntity = DataEntityFromSliceUnchecked(data.Dep().AsSlice())
+	witnessBys := NewDasWitnessData(preAccountCell.TableType(), preAccountCell.TableData()).ToWitness()
+	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
+	if err != nil {
+		panic(err)
 	}
-	if data.Old().IsNone() {
-		ret.MoleculeOldDataEntity = nil
-	} else {
-		ret.MoleculeOldDataEntity = DataEntityFromSliceUnchecked(data.Old().AsSlice())
-	}
-	ret.MoleculeNewDataEntity = DataEntityFromSliceUnchecked(data.New().AsSlice())
 	if preAccountCellData, err := PreAccountCellDataFromSlice(ret.MoleculeNewDataEntity.Entity().AsSlice(), false); err != nil {
 		panic(err)
 	} else {
@@ -66,7 +113,7 @@ func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
 }
 
 func Test_PreAccountDataFromBytes(t *testing.T) {
-	witnessHex := "64617306000000e9010000100000001000000010000000d90100001000000014000000180000000000000001000000c101000024000000220100004b010000740100008201000090010000b1010000b9010000fe0000002c00000041000000560000006b0000008000000095000000aa000000bf000000d4000000e9000000150000000c0000001000000001000000010000006c150000000c00000010000000010000000100000067150000000c00000010000000010000000100000068150000000c0000001000000001000000010000005f150000000c00000010000000010000000100000031150000000c00000010000000010000000100000032150000000c0000001000000001000000010000002e150000000c00000010000000010000000100000062150000000c00000010000000010000000100000069150000000c0000001000000001000000010000007429000000100000001000000011000000011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f29000000100000001000000011000000011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f0a000000ddd1866d906c5d39824b0a000000ddd1866d906c5d39824b2100000010000000110000001900000006c0cf6a000000000060ae0a0000000000c73500000000000058f7496000000000"
+	witnessHex := "64617306000000290200001000000010000000100000001902000010000000140000001800000000000000010000000102000024000000220100006b010000b4010000c2010000d0010000f1010000f9010000fe0000002c00000041000000560000006b0000008000000095000000aa000000bf000000d4000000e9000000150000000c0000001000000001000000010000006c150000000c00000010000000010000000100000067150000000c00000010000000010000000100000068150000000c0000001000000001000000010000005f150000000c00000010000000010000000100000031150000000c00000010000000010000000100000032150000000c0000001000000001000000010000002e150000000c00000010000000010000000100000062150000000c00000010000000010000000100000069150000000c00000010000000010000000100000074490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f0a000000ddd1866d906c5d39824b0a000000ddd1866d906c5d39824b2100000010000000110000001900000006c0cf6a000000000060ae0a0000000000c7350000000000001f104a6000000000"
 	bys, err := hex.DecodeString(witnessHex)
 	if err != nil {
 		panic(err)
