@@ -40,7 +40,7 @@ func (d DasAccount) AccountId() DasAccountId {
 	}
 	bys, _ := blake2b.Blake160([]byte(d))
 	id := &DasAccountId{}
-	id.SetBytes(bys)
+	id.SetBytes(bys[:dasAccountIdLen])
 	return *id
 }
 
