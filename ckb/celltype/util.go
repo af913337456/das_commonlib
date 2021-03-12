@@ -243,13 +243,13 @@ func CalDasAwardCap(cap uint64, rate float64) (uint64, error) {
 	return uint64(r), nil
 }
 
-func CalAccountSpend(account string) uint64 {
+func CalAccountSpend(account DasAccount) uint64 {
 	return uint64(len([]byte(account))) * OneCkb
 }
 
-func CalPreAccountCellCap(years uint, price, quote uint64, account string) uint64 {
+func CalPreAccountCellCap(years uint, price, quote uint64, account DasAccount) uint64 {
 	// PreAccountCell.capacity >= c + AccountCell 基础成本 + RefCell 基础成本 + Account 字节长度
-	return uint64(price/quote)*uint64(years) + AccountCellBaseCap + RefCellBaseCap + uint64(len([]byte(account)))*OneCkb
+	return uint64(price/quote)*uint64(years) + AccountCellBaseCap + RefCellBaseCap + uint64(len([]byte(account.Format())))*OneCkb
 }
 
 func CalBuyAccountYearSec(years uint) int64 {
