@@ -152,7 +152,7 @@ type WalletCellParam struct {
 type ApplyRegisterCellParam struct {
 	Version              uint32          `json:"version"`
 	PubkeyHashBytes      []byte          `json:"pubkey_hash_bytes"`
-	Account              string          `json:"account"`
+	Account              DasAccount      `json:"account"`
 	Height               uint64          `json:"height"`
 	CellCodeInfo         DASCellBaseInfo `json:"cell_code_info"`
 	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`

@@ -18,7 +18,7 @@ var TestNetApplyRegisterCell = func(args []byte, account DasAccount, height uint
 	return &ApplyRegisterCellParam{
 		Version:         1,
 		PubkeyHashBytes: args,
-		Account:         string(account),
+		Account:         account,
 		Height:          height,
 		CellCodeInfo:    DasApplyRegisterCellScript,
 		SenderLockScriptInfo: DASCellBaseInfo{
@@ -93,7 +93,10 @@ func (c *ApplyRegisterCell) TableData() []byte {
 	return nil
 }
 
-func ApplyRegisterDataId(pubKeyHexBytes []byte, account string) ([]byte, error) {
+func ApplyRegisterDataId(pubKeyHexBytes []byte, account DasAccount) ([]byte, error) {
+	if err := account.ValidErr(); err != nil {
+		return nil, fmt.Errorf("ApplyRegisterDataId err: %s", err.Error())
+	}
 	accountBytes := []byte(account)
 	targetBytes := append(pubKeyHexBytes, accountBytes...)
 	return blake2b.Blake256(targetBytes)

@@ -32,8 +32,13 @@ func (d DasAccount) Format() string {
 }
 
 func (d DasAccount) ValidErr() error {
-	if d == "" || !strings.HasSuffix(string(d), DasAccountSuffix) || strings.Contains(string(d), " ") {
-		return fmt.Errorf("invalid account:[%s], demo: hello_world.bit", d)
+	if d == "" ||
+		!strings.HasSuffix(string(d), DasAccountSuffix) ||
+		strings.Contains(string(d), " ") || strings.Contains(string(d), "_") {
+		return fmt.Errorf("invalid account:[%s], demo: helloWorld.bit", d)
+	}
+	if size := len([]rune(d)); size < MinAccountCharsLen {
+		return fmt.Errorf("account's char number min is: %d", MinAccountCharsLen)
 	}
 	return nil
 }
