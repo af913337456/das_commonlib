@@ -1,7 +1,6 @@
 package celltype
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
@@ -15,13 +14,13 @@ import (
  * Description:
  */
 
-var TestNetApplyRegisterCell = func(args []byte, account string, height uint64, senderLockScript *types.Script) *ApplyRegisterCellParam {
+var TestNetApplyRegisterCell = func(args []byte, account DasAccount, height uint64, senderLockScript *types.Script) *ApplyRegisterCellParam {
 	return &ApplyRegisterCellParam{
-		Version:      1,
-		PubkeyHash:   hex.EncodeToString(args),
-		Account:      account,
-		Height:       height,
-		CellCodeInfo: DasApplyRegisterCellScript,
+		Version:         1,
+		PubkeyHashBytes: args,
+		Account:         string(account),
+		Height:          height,
+		CellCodeInfo:    DasApplyRegisterCellScript,
 		SenderLockScriptInfo: DASCellBaseInfo{
 			Dep: DASCellBaseInfoDep{
 				TxHash:  types.HexToHash("0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6"),
@@ -87,7 +86,7 @@ func (c *ApplyRegisterCell) TableType() TableType {
 }
 
 func (c *ApplyRegisterCell) Data() ([]byte, error) {
-	idHash, err := ApplyRegisterDataId(c.p.PubkeyHash, c.p.Account)
+	idHash, err := ApplyRegisterDataId(c.p.PubkeyHashBytes, c.p.Account)
 	if err != nil {
 		return nil, fmt.Errorf("ApplyRegisterDataId err: %s", err.Error())
 	}
@@ -98,6 +97,8 @@ func (c *ApplyRegisterCell) TableData() []byte {
 	return nil
 }
 
-func ApplyRegisterDataId(pubKeyHex, account string) ([]byte, error) {
-	return blake2b.Blake256([]byte(pubKeyHex + account))
+func ApplyRegisterDataId(pubKeyHexBytes []byte, account string) ([]byte, error) {
+	accountBytes := []byte(account)
+	targetBytes := append(pubKeyHexBytes, accountBytes...)
+	return blake2b.Blake256(targetBytes)
 }
