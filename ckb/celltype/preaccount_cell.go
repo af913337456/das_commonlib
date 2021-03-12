@@ -13,9 +13,10 @@ import (
  * Description:
  */
 
-var TestNetPreAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old, new *PreAccountCellData) *PreAccountCellParam {
+var TestNetPreAccountCell = func(account DasAccount, depIndex, oldIndex, newIndex uint32, dep, old, new *PreAccountCellData) *PreAccountCellParam {
 	return &PreAccountCellParam{
 		Version:      1,
+		Account:      account,
 		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
 		CellCodeInfo: DasPreAccountCellScript,
 		PreAccountCellDatas: PreAccountCellDatas{
@@ -92,7 +93,7 @@ func (c *PreAccountCell) Data() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	accountId := DasAccountIdFromBytes(c.p.PreAccountCellDatas.NewAccountCellData.Account().AsSlice())
+	accountId := c.p.Account.AccountId()
 	return append(dataHash, accountId.Bytes()...), nil
 }
 

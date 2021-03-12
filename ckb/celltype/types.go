@@ -166,6 +166,7 @@ type PreAccountCellDatas struct {
 type PreAccountCellParam struct {
 	Version                   uint32              `json:"version"`
 	Data                      Data                `json:"data"`
+	Account                   DasAccount          `json:"account"`
 	PreAccountCellDatas       PreAccountCellDatas `json:"-"`
 	CellCodeInfo              DASCellBaseInfo     `json:"cell_code_info"`
 	AlwaysSpendableScriptInfo DASCellBaseInfo     `json:"always_spendable_script_info"`
