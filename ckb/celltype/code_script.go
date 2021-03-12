@@ -17,6 +17,12 @@ import (
  */
 
 var (
+	TestNetLockScriptDep = DASCellBaseInfoDep{
+		TxHash:  types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
+		TxIndex: 0,
+		DepType: types.DepTypeDepGroup,
+	}
+
 	DasETHLockCellInfo = DASCellBaseInfoOut{
 		CodeHash:     types.HexToHash(PwLockTestNetCodeHash), // default
 		CodeHashType: types.HashTypeType,

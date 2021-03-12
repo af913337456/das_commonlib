@@ -22,11 +22,7 @@ var TestNetApplyRegisterCell = func(args []byte, account DasAccount, height uint
 		Height:          height,
 		CellCodeInfo:    DasApplyRegisterCellScript,
 		SenderLockScriptInfo: DASCellBaseInfo{
-			Dep: DASCellBaseInfoDep{
-				TxHash:  types.HexToHash("0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6"),
-				TxIndex: 0,
-				DepType: types.DepTypeDepGroup,
-			},
+			Dep: TestNetLockScriptDep,
 			Out: DASCellBaseInfoOutFromScript(senderLockScript),
 		},
 	}
