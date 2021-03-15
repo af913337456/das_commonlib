@@ -21,11 +21,12 @@ var TestNetWalletCell = func(accountId DasAccountId) *WalletCellParam {
 }
 
 /**
-lock: <lock_script>
-type: <apply_register_script>
+lock: <always_success>
+type:
+    code_hash: <wallet-cell-type>
+    type: type
+    args: <account_id>
 data:
-  hash(pubkey_hash + account)
-  Timestamp // cell 创建时 TimeCell 的时间
 */
 
 type WalletCell struct {

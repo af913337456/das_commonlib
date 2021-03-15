@@ -35,12 +35,12 @@ var (
 	}
 	DasAnyOneCanSendCellInfo = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x6cb20b88912311e6bba89a5fcfc53cfebcc39b99c3cce0796ce3e485a5d47011"),
+			TxHash:  types.HexToHash("0x88462008b19c9ac86fb9fef7150c4f6ef7305d457d6b200c8852852012923bf1"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0xd483925160e4232b2cb29f012e8380b7b612d71cf4e79991476b6bcf610735f6"), // default
+			CodeHash:     types.HexToHash("0xf1ef61b6977508d9ec56fe43399a01e576086a76cf0f7c687d1418335e8c401f"), // default
 			CodeHashType: types.HashTypeData,
 			Args:         emptyHexToArgsBytes(),
 		},
