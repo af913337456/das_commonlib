@@ -38,6 +38,13 @@ const (
 	PwCoreLockScriptType_TRON PwCoreLockScriptType = 3
 )
 
+type RefCellType uint8
+
+const (
+	RefCellType_Owner   = 0
+	RefCellType_Manager = 1
+)
+
 var EmptyDataHash = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 var EmptyAccountId = DasAccountId{}
 

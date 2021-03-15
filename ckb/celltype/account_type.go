@@ -52,10 +52,8 @@ func (d DasAccount) AccountId() DasAccountId {
 		return EmptyAccountId
 	}
 	bys, _ := blake2b.Blake160([]byte(d))
-	fmt.Println(bys)
 	id := &DasAccountId{}
 	id.SetBytes(bys)
-	fmt.Println(id)
 	return *id
 }
 

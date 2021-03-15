@@ -12,17 +12,14 @@ import (
  * Description:
  */
 
-var TestNetRefCell = func(lockScript *types.Script, accountId DasAccountId) *RefcellParam {
+var TestNetRefCell = func(lockScript *types.Script, accountId DasAccountId, refType RefCellType) *RefcellParam {
 	return &RefcellParam{
 		Version:      1,
 		AccountId:    accountId,
+		RefType:      refType,
 		CellCodeInfo: DasRefCellScript,
 		UserLockScript: DASCellBaseInfo{
-			Dep: DASCellBaseInfoDep{
-				TxHash:  types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
-				TxIndex: 0,
-				DepType: types.DepTypeDepGroup,
-			},
+			Dep: TestNetLockScriptDep,
 			Out: DASCellBaseInfoOut{
 				CodeHash:     lockScript.CodeHash,
 				CodeHashType: lockScript.HashType,
@@ -69,12 +66,17 @@ func (c *Refcell) TypeScript() *types.Script {
 	return &types.Script{
 		CodeHash: c.p.CellCodeInfo.Out.CodeHash,
 		HashType: c.p.CellCodeInfo.Out.CodeHashType,
-		Args:     c.p.AccountId.Bytes(),
+		Args:     c.p.CellCodeInfo.Out.Args,
 	}
 }
 
+/**
+data:
+  id // 10 Bytes 的 Account ID
+  role // 1 Bytes 的身份区分符
+*/
 func (c *Refcell) Data() ([]byte, error) {
-	return nil, nil
+	return append(c.p.AccountId.Bytes(), []byte{uint8(c.p.RefType)}...), nil
 }
 
 func (c *Refcell) TableType() TableType {
