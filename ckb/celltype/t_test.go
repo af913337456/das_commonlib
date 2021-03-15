@@ -14,6 +14,10 @@ import (
  * Description:
  */
 
+func Test_CalPreAccountCellCap(t *testing.T) {
+	t.Log(CalPreAccountCellCap(1, 5000000, 1000, "12345678.bit"))
+}
+
 func Test_Rat(t *testing.T) {
 	v := GoUint32ToMoleculeU32(3000)
 	fmt.Println(MoleculeU32ToGoPercentage(v.RawData()))

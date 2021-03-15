@@ -249,7 +249,10 @@ func CalAccountSpend(account DasAccount) uint64 {
 
 func CalPreAccountCellCap(years uint, price, quote uint64, account DasAccount) uint64 {
 	// PreAccountCell.capacity >= c + AccountCell 基础成本 + RefCell 基础成本 + Account 字节长度
-	return uint64(price/quote)*uint64(years) + AccountCellBaseCap + RefCellBaseCap + uint64(len([]byte(account.Format())))*OneCkb
+	registerFee := (price / quote * uint64(years)) * OneCkb
+	storageFee := AccountCellBaseCap + 2*RefCellBaseCap
+	accountCharFee := uint64(len([]byte(account))) * OneCkb
+	return registerFee + storageFee + accountCharFee
 }
 
 func CalBuyAccountYearSec(years uint) int64 {

@@ -41,7 +41,7 @@ func Test_CreateData(t *testing.T) {
 	// 	Build()
 	// s := hex.EncodeToString(d.AsSlice())
 	// t.Log(s)
-	preAccountCell := NewPreAccountCell(TestNetPreAccountCell(0, 0, 0, nil, nil, &preAccountCellData))
+	preAccountCell := NewPreAccountCell(TestNetPreAccountCell("", 0, 0, 0, nil, nil, &preAccountCellData))
 	witnessBys := NewDasWitnessData(TableType_PRE_ACCOUNT_CELL, preAccountCell.TableData()).ToWitness()
 	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
 	if err != nil {
@@ -93,7 +93,7 @@ func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
 			Price(PriceConfigDefault()).
 			Quote(GoUint64ToMoleculeU64(10086)).
 			Build()
-	preAccountCell := NewPreAccountCell(TestNetPreAccountCell(0, 0, 0, nil, nil, &preAccountCellData))
+	preAccountCell := NewPreAccountCell(TestNetPreAccountCell("", 0, 0, 0, nil, nil, &preAccountCellData))
 	witnessBys := NewDasWitnessData(preAccountCell.TableType(), preAccountCell.TableData()).ToWitness()
 	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
 	if err != nil {
