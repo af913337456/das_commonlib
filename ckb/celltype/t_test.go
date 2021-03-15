@@ -14,6 +14,12 @@ import (
  * Description:
  */
 
+func Test_AccountId(t *testing.T) {
+	acc := DasAccountFromStr("12345666.bit")
+	// 5bd281eef6f9d72d71a7
+	t.Log(hex.EncodeToString(acc.AccountId().Bytes()))
+}
+
 func Test_CalPreAccountCellCap(t *testing.T) {
 	t.Log(CalPreAccountCellCap(1, 5000000, 1000, "12345678.bit"))
 }

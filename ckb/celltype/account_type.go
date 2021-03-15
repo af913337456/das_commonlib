@@ -52,8 +52,10 @@ func (d DasAccount) AccountId() DasAccountId {
 		return EmptyAccountId
 	}
 	bys, _ := blake2b.Blake160([]byte(d))
+	fmt.Println(bys)
 	id := &DasAccountId{}
 	id.SetBytes(bys)
+	fmt.Println(id)
 	return *id
 }
 
@@ -74,7 +76,7 @@ func HexToHash(s string) DasAccountId {
 func (d *DasAccountId) SetBytes(b []byte) {
 	bLen := len(b)
 	if bLen > len(d) {
-		b = b[bLen-dasAccountIdLen:]
+		b = b[:dasAccountIdLen]
 	}
 	copy(d[dasAccountIdLen-len(b):], b)
 }
