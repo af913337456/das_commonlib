@@ -195,19 +195,23 @@ func (builder *TransactionBuilder) AddDasSpecOutput(cell celltype.ICellType) *Tr
 }
 
 func (builder *TransactionBuilder) AddDasSpecOutputWithIncrementCellCap(cell celltype.ICellType, cellCap uint64) *TransactionBuilder {
-	return builder.addDasSpecOutput(cell, nil, cellCap)
+	return builder.addDasSpecOutput(cell, nil, 0, cellCap)
 }
 
 func (builder *TransactionBuilder) AddDasSpecOutputWithCallback(cell celltype.ICellType, callback celltype.AddDasOutputCallback) *TransactionBuilder {
-	return builder.addDasSpecOutput(cell, callback, 0)
+	return builder.addDasSpecOutput(cell, callback, 0, 0)
 }
 
-func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback, cellCap uint64) *TransactionBuilder {
+func (builder *TransactionBuilder) AddDasSpecOutputWithCustomCellCap(cell celltype.ICellType, cellCap uint64) *TransactionBuilder {
+	return builder.addDasSpecOutput(cell, nil, cellCap, 0)
+}
+
+func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback, custom, increment uint64) *TransactionBuilder {
 	builder.AddCellDep(cell.LockDepCell())
 	builder.AddCellDep(cell.TypeDepCell())
 	dataBys, _ := cell.Data()
 	witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
-	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback, cellCap)
+	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback, custom, increment)
 	return builder
 }
 
@@ -224,7 +228,7 @@ func normalChargeOutputCellCap() uint64 {
 }
 
 func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script,
-	data, witnessData []byte, callback celltype.AddDasOutputCallback, incrementCellCap uint64) *TransactionBuilder {
+	data, witnessData []byte, callback celltype.AddDasOutputCallback, customCellCap, incrementCellCap uint64) *TransactionBuilder {
 	output := &types.CellOutput{
 		Lock: lockScript,
 		Type: typeScript,
@@ -232,7 +236,11 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 	if data == nil {
 		data = []byte{}
 	}
-	output.Capacity = output.OccupiedCapacity(data)*celltype.OneCkb + incrementCellCap
+	if customCellCap == 0 {
+		output.Capacity = output.OccupiedCapacity(data)*celltype.OneCkb + incrementCellCap
+	} else {
+		output.Capacity = customCellCap
+	}
 	if callback != nil {
 		callback(output.Capacity)
 	}
