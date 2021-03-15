@@ -41,7 +41,7 @@ var (
 		},
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash("0xf1ef61b6977508d9ec56fe43399a01e576086a76cf0f7c687d1418335e8c401f"), // default
-			CodeHashType: types.HashTypeData,
+			CodeHashType: types.HashTypeType,
 			Args:         emptyHexToArgsBytes(),
 		},
 	}
