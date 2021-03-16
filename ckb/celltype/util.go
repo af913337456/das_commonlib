@@ -186,7 +186,11 @@ func AccountCharsToAccountId(accountChars AccountChars) DasAccountId {
 		char := accountChars.Get(index)
 		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
 	}
-	return DasAccountIdFromBytes(accountRawBytes)
+	accountStr := string(accountRawBytes)
+	if !strings.HasSuffix(accountStr, DasAccountSuffix) {
+		accountStr = accountStr + DasAccountSuffix
+	}
+	return DasAccountFromStr(accountStr).AccountId()
 }
 
 func MoleculeU8ToGo(bys []byte) (uint8, error) {

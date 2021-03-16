@@ -64,6 +64,54 @@ func Test_ParseProposeCellData(t *testing.T) {
 	}
 }
 
+type accountChar struct {
+	CharSetName AccountCharType `json:"char_set_name"`
+	Bytes       []byte          `json:"bytes"`
+}
+type accountChars []accountChar
+
+func (chars accountChars) MoleculeAccountChars() AccountChars {
+	accountChars := NewAccountCharsBuilder()
+	for _, item := range chars {
+		if string(item.Bytes) == "." {
+			break
+		}
+		accountChar :=
+			NewAccountCharBuilder().
+				CharSetName(GoUint32ToMoleculeU32(uint32(item.CharSetName))).
+				Bytes(GoBytesToMoleculeBytes(item.Bytes)).
+				Build()
+		accountChars.Push(accountChar)
+		// fmt.Println(string(item.Bytes))
+	}
+	return accountChars.Build()
+}
+func Test_RecoverAccountIdFromChars(t *testing.T) {
+	const testAccount = DasAccount("22222222.bit")
+	t.Log(testAccount.AccountId().HexStr())
+	accountChars := accountChars{}
+	accountBytes := []byte(testAccount)
+	for _, item := range accountBytes {
+		accountChars = append(accountChars, accountChar{
+			CharSetName: AccountChar_En,
+			Bytes:       []byte{item},
+		})
+	}
+	preAccountCellData :=
+		NewPreAccountCellDataBuilder().
+			Account(accountChars.MoleculeAccountChars()).
+			CreatedAt(TimestampDefault()).
+			OwnerLock(ScriptDefault()).
+			RefundLock(ScriptDefault()).
+			InviterWallet(BytesDefault()).
+			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
+			Price(PriceConfigDefault()).
+			Quote(Uint64Default()).
+			Build()
+	recover := AccountCharsToAccountId(*preAccountCellData.Account())
+	t.Log(recover.HexStr())
+}
+
 func Test_CreateData(t *testing.T) {
 	preAccountCellData :=
 		NewPreAccountCellDataBuilder().
