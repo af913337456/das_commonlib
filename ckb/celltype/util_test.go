@@ -17,6 +17,25 @@ import (
  * Description:
  */
 
+func Test_ParseProposeCellData(t *testing.T) {
+	cellData := "0x646173000000001b0000000c000000170000000700000070726f706f736500000000"
+	cellData = cellData[2:]
+	cellDataBytes, err := hex.DecodeString(cellData)
+	if err != nil {
+		panic(err)
+	}
+	if das, err := ParseTxWitnessToDasWitnessObj(cellDataBytes); err != nil {
+		panic(err)
+	} else {
+		index, err := MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
+		if err != nil {
+			panic(err)
+		} else {
+			t.Log(index)
+		}
+	}
+}
+
 func Test_CreateData(t *testing.T) {
 	preAccountCellData :=
 		NewPreAccountCellDataBuilder().

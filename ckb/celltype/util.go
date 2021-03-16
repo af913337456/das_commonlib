@@ -495,6 +495,9 @@ func GetTargetCellFromWitness(tx *types.Transaction, handle ValidHandle, skipHan
 		if das, err := ParseTxWitnessToDasWitnessObj(cellData); err != nil {
 			skipHandle(fmt.Errorf("getTargetCellFromWitness ParseTxWitnessToDasWitnessObj err: %s, skip this one", err.Error()))
 		} else {
+			if das.MoleculeNewDataEntity == nil {
+				continue
+			}
 			outIndex, err := MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
 			if err != nil {
 				return fmt.Errorf("getTargetCellFromWitness get outIndex failed: %s", err.Error())
