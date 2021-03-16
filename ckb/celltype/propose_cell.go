@@ -88,6 +88,7 @@ table ProposalCellData {
 var TestNetProposeCell = func(depIndex, oldIndex, newIndex uint32, dep, old, new *ProposalCellData) *ProposeCellParam {
 	acp := &ProposeCellParam{
 		Version:                   1,
+		ProposeCellNew:            *new,
 		Data:                      *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
 		CellCodeInfo:              DasProposeCellScript,
 		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
@@ -137,7 +138,7 @@ func (c *ProposeCell) TypeScript() *types.Script {
 }
 
 func (c *ProposeCell) Data() ([]byte, error) {
-	hashBys, _ := blake2b.Blake256(c.ProposalCellData())
+	hashBys, _ := blake2b.Blake256(c.p.ProposeCellNew.AsSlice())
 	return hashBys, nil
 }
 
@@ -147,9 +148,4 @@ func (c *ProposeCell) TableType() TableType {
 
 func (c *ProposeCell) TableData() []byte {
 	return c.p.Data.AsSlice()
-}
-
-func (c *ProposeCell) ProposalCellData() []byte {
-	entity, _ := c.p.Data.New().IntoDataEntity()
-	return entity.AsSlice()
 }

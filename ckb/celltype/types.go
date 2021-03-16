@@ -284,10 +284,11 @@ type BiddingCellParam struct {
 
 type ProposeCellParam struct {
 	// AccountCommonParam
-	Version                   uint32          `json:"version"`
-	Data                      Data            `json:"data"`
-	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+	Version                   uint32           `json:"version"`
+	Data                      Data             `json:"data"`
+	ProposeCellNew            ProposalCellData `json:"propose_cell_new"`
+	CellCodeInfo              DASCellBaseInfo  `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo  `json:"always_spendable_script_info"`
 }
 
 type AccountCellDataPreObj_Old_New struct {
