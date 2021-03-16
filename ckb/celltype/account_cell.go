@@ -161,7 +161,7 @@ func NextAccountIdFromOutputData(data []byte) (DasAccountId, error) {
 func ExpiredAtFromOutputData(data []byte) (int64, error) {
 	endLen := HashBytesLen + dasAccountIdLen*2 + 8
 	if size := len(data); size < endLen {
-		return 0, fmt.Errorf("ExpiredAtFromOutputData invalid data, len not enough: %d", size)
+		return 0, fmt.Errorf("ExpiredAtFromOutputData invalid data, len not enough, your: %d, want: %d", size, endLen)
 	}
 	return common.BytesToInt64(data[endLen-8 : endLen]), nil
 }
