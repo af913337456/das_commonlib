@@ -485,24 +485,17 @@ func CalTypeIdFromScript(script *types.Script) types.Hash {
 }
 
 type SkipHandle func(err error)
-type ValidHandle func(outIndex uint32, rawWitnessData []byte, witnessParseObj *ParseDasWitnessBysDataObj) (bool, error)
+type ValidHandle func(rawWitnessData []byte, witnessParseObj *ParseDasWitnessBysDataObj) (bool, error)
 
 func GetTargetCellFromWitness(tx *types.Transaction, handle ValidHandle, skipHandle SkipHandle) error {
 	inputSize := len(tx.Inputs)
 	witnessSize := len(tx.Witnesses)
 	for i := inputSize + 1; i < witnessSize; i++ { // (inputSize + 1) skip action cell
-		cellData := tx.Witnesses[i]
-		if das, err := ParseTxWitnessToDasWitnessObj(cellData); err != nil {
+		rawWitnessBytes := tx.Witnesses[i]
+		if dasObj, err := ParseTxWitnessToDasWitnessObj(rawWitnessBytes); err != nil {
 			skipHandle(fmt.Errorf("getTargetCellFromWitness ParseTxWitnessToDasWitnessObj err: %s, skip this one", err.Error()))
 		} else {
-			if das.MoleculeNewDataEntity == nil {
-				continue
-			}
-			outIndex, err := MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
-			if err != nil {
-				return fmt.Errorf("getTargetCellFromWitness get outIndex failed: %s", err.Error())
-			}
-			if stop, resp := handle(outIndex, cellData, das); resp != nil {
+			if stop, resp := handle(rawWitnessBytes, dasObj); resp != nil {
 				return resp
 			} else if stop {
 				break

@@ -329,6 +329,39 @@ type ParseDasWitnessBysDataObj struct {
 	MoleculeNewDataEntity *DataEntity
 }
 
+func (p ParseDasWitnessBysDataObj) NewEntity() (*DataEntity, uint32, error) {
+	if p.MoleculeNewDataEntity != nil && len(p.MoleculeNewDataEntity.inner) > 0 {
+		index, err := MoleculeU32ToGo(p.MoleculeNewDataEntity.Index().RawData())
+		if err != nil {
+			return nil, 0, err
+		}
+		return p.MoleculeNewDataEntity, index, nil
+	}
+	return nil, 0, nil
+}
+
+func (p ParseDasWitnessBysDataObj) DepEntity() (*DataEntity, uint32, error) {
+	if p.MoleculeDepDataEntity != nil && len(p.MoleculeDepDataEntity.inner) > 0 {
+		index, err := MoleculeU32ToGo(p.MoleculeDepDataEntity.Index().RawData())
+		if err != nil {
+			return nil, 0, err
+		}
+		return p.MoleculeDepDataEntity, index, nil
+	}
+	return nil, 0, nil
+}
+
+func (p ParseDasWitnessBysDataObj) OldEntity() (*DataEntity, uint32, error) {
+	if p.MoleculeOldDataEntity != nil && len(p.MoleculeOldDataEntity.inner) > 0 {
+		index, err := MoleculeU32ToGo(p.MoleculeOldDataEntity.Index().RawData())
+		if err != nil {
+			return nil, 0, err
+		}
+		return p.MoleculeOldDataEntity, index, nil
+	}
+	return nil, 0, nil
+}
+
 type ProposeWitnessSliceDataObject struct {
 	AccountId DasAccountId      `json:"account_id"`
 	ItemType  AccountCellStatus `json:"item_type"`

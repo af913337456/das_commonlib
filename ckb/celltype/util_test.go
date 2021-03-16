@@ -18,7 +18,7 @@ import (
  */
 
 func Test_ParseProposeCellData(t *testing.T) {
-	cellData := "0x64617305000000fd000000100000001000000010000000ed0000001000000014000000180000000000000001000000d1000000d1000000140000005d0000006b00000073000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000c75fd5f8add2a04db9ffcaf88b437d76f18127970a000000b7526803f67ebe70aba600000000000000005e00000008000000560000000c0000003100000025000000100000001a0000001b00000000000000000000000000001da30727b69b2db9126025000000100000001a0000001b0000001da30727b69b2db9126002ffffffffffffffffffff"
+	cellData := "0x64617302000000d100000010000000d1000000d1000000c10000001000000014000000180000000600000001000000a5000000a5000000200000002a0000005f0000009400000098000000a0000000a100000000000000000000000000350000001000000030000000310000000000000000000000000000000000000000000000000000000000000000000000000000000035000000100000003000000031000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000004000000"
 	cellData = cellData[2:]
 	cellDataBytes, err := hex.DecodeString(cellData)
 	if err != nil {
@@ -27,23 +27,39 @@ func Test_ParseProposeCellData(t *testing.T) {
 	if das, err := ParseTxWitnessToDasWitnessObj(cellDataBytes); err != nil {
 		panic(err)
 	} else {
-		_, err := MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
+		t.Log(das.WitnessObj.TableType)
+		if len(das.MoleculeDepDataEntity.AsSlice()) > 0 {
+			panic("dep not empty")
+		}
+		if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
+			panic("empty")
+		}
+		if das.MoleculeNewDataEntity.Entity().IsEmpty() {
+			panic("empty")
+		}
+		accountCellData, err := AccountCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
+		if err != nil {
+			panic(err)
+		}
+		t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
+		_, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
 		if err != nil {
 			panic(err)
 		} else {
-			newEntity := das.MoleculeNewDataEntity
-			depEntity := das.MoleculeDepDataEntity
-			if !newEntity.IsEmpty() && (depEntity == nil || depEntity.IsEmpty()) {
-				proposeCellData, err := ProposalCellDataFromSlice(newEntity.Entity().RawData(), false)
-				if err != nil {
-					panic(err)
-				}
-				lock, err := MoleculeScriptToGo(*proposeCellData.ProposerLock())
-				if err != nil {
-					panic(err)
-				}
-				t.Log(lock.CodeHash.String())
-			}
+			t.Log("success")
+			// newEntity := das.MoleculeNewDataEntity
+			// depEntity := das.MoleculeDepDataEntity
+			// if !newEntity.IsEmpty() && (depEntity == nil || depEntity.IsEmpty()) {
+			// 	proposeCellData, err := ProposalCellDataFromSlice(newEntity.Entity().RawData(), false)
+			// 	if err != nil {
+			// 		panic(err)
+			// 	}
+			// 	lock, err := MoleculeScriptToGo(*proposeCellData.ProposerLock())
+			// 	if err != nil {
+			// 		panic(err)
+			// 	}
+			// 	t.Log(lock.CodeHash.String())
+			// }
 		}
 	}
 }
