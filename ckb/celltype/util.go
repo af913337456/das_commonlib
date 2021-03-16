@@ -336,8 +336,11 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 		if err != nil {
 			return nil, fmt.Errorf("FindSenderLockScriptByInputList err: %s", err.Error())
 		}
-		for _, output := range tx.Transaction.Outputs {
-			if output.Type == nil && output.Lock.CodeHash == CodeHash && output.Lock.HashType == types.HashTypeType {
+		size := len(tx.Transaction.Outputs)
+		for i := 0; i < size; i++ {
+			output := tx.Transaction.Outputs[i]
+			if output.Type == nil && output.Lock.CodeHash == CodeHash &&
+				output.Lock.HashType == types.HashTypeType && item.PreviousOutput.Index == uint(i) {
 				return &types.Script{
 					CodeHash: CodeHash,
 					HashType: types.HashTypeType,
