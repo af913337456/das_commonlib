@@ -114,9 +114,10 @@ const (
 )
 
 const (
-	AccountChar_Emoji AccountCharType = 0
-	AccountChar_En    AccountCharType = 1
-	AccountChar_Zh_Cn AccountCharType = 2
+	AccountChar_Emoji  AccountCharType = 0
+	AccountChar_Number AccountCharType = 1
+	AccountChar_En     AccountCharType = 2
+	AccountChar_Zh_Cn  AccountCharType = 3
 )
 
 const (
