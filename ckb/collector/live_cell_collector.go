@@ -95,7 +95,7 @@ func (c *LiveCellCollector) collect() ([]*indexer.LiveCell, string, error) {
 		if c.EmptyData && len(cell.OutputData) > 0 {
 			continue
 		}
-		if c.onlyNormalCell && cell.Output.Type != nil {
+		if c.onlyNormalCell && (cell.Output.Type != nil || len(cell.OutputData) > 0) {
 			continue
 		}
 		result = append(result, cell)
