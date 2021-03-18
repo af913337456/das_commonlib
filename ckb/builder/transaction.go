@@ -144,8 +144,9 @@ func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.InputWith
 		witnessData, err := cellInput.GetWitnessData(inputIndex)
 		if err != nil {
 			return nil, fmt.Errorf("AddWitnessInput err: %s", err.Error())
+		} else if witnessData != nil {
+			builder.customWitnessList = append(builder.customWitnessList, witnessData)
 		}
-		builder.customWitnessList = append(builder.customWitnessList, witnessData)
 	}
 	return builder, nil
 }
