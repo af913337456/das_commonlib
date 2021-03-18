@@ -209,16 +209,17 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes := []byte{}
 	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
 
+	account := AccountCharsToAccount(*newData.AccountInfo.Account())
 	accountId := newData.AccountInfo.Id()
 
-	fmt.Println("accountCellOutputData -------------> ", hex.EncodeToString(accountId.AsSlice()))
 	fmt.Println("accountCellOutputData -------------> ", hex.EncodeToString(accountId.RawData()))
+	fmt.Println("accountCellOutputData -------------> ", account)
 
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
-	dataBytes = append(dataBytes, accountId.RawData()...)                                           // id
-	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)                                 // next
-	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)                            // expired_at
-	dataBytes = append(dataBytes, AccountCharsToAccount(*newData.AccountInfo.Account()).Bytes()...) // account
+	dataBytes = append(dataBytes, accountId.RawData()...)                // id
+	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)      // next
+	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...) // expired_at
+	dataBytes = append(dataBytes, account.Bytes()...)                    // account
 	return dataBytes, nil
 }
 

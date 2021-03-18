@@ -24,6 +24,9 @@ func DasAccountFromStr(account string) DasAccount {
 }
 
 func (d DasAccount) Bytes() []byte {
+	if d == "" {
+		return []byte{}
+	}
 	return []byte(d)
 }
 

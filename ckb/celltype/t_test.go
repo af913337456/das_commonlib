@@ -18,6 +18,9 @@ func Test_AccountId(t *testing.T) {
 	acc := DasAccountFromStr("12345666.bit")
 	// 5bd281eef6f9d72d71a7
 	t.Log(hex.EncodeToString(acc.AccountId().Bytes()))
+
+	bys, _ := hex.DecodeString("00000000000000000000")
+	t.Log(DasAccountIdFromBytes(bys).HexStr())
 }
 
 func Test_CalPreAccountCellCap(t *testing.T) {

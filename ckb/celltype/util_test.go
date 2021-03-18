@@ -108,6 +108,8 @@ func Test_RecoverAccountIdFromChars(t *testing.T) {
 			Price(PriceConfigDefault()).
 			Quote(Uint64Default()).
 			Build()
+	account := AccountCharsToAccount(*preAccountCellData.Account())
+	t.Log(account)
 	recover := AccountCharsToAccountId(*preAccountCellData.Account())
 	t.Log(recover.HexStr())
 }

@@ -160,7 +160,7 @@ func AccountCharsToAccount(accountChars AccountChars) DasAccount {
 		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
 	}
 	accountStr := string(accountRawBytes)
-	if !strings.HasSuffix(accountStr, DasAccountSuffix) {
+	if accountStr != "" && !strings.HasSuffix(accountStr, DasAccountSuffix) {
 		accountStr = accountStr + DasAccountSuffix
 	}
 	return DasAccount(accountStr)
