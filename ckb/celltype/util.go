@@ -159,7 +159,11 @@ func AccountCharsToAccount(accountChars AccountChars) DasAccount {
 		char := accountChars.Get(index)
 		accountRawBytes = append(accountRawBytes, char.Bytes().RawData()...)
 	}
-	return DasAccount(accountRawBytes)
+	accountStr := string(accountRawBytes)
+	if !strings.HasSuffix(accountStr, DasAccountSuffix) {
+		accountStr = accountStr + DasAccountSuffix
+	}
+	return DasAccount(accountStr)
 }
 
 func AccountCharsToAccountId(accountChars AccountChars) DasAccountId {

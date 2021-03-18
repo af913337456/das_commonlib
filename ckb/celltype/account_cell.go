@@ -1,6 +1,7 @@
 package celltype
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/common"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
@@ -207,13 +208,17 @@ func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes := []byte{}
 	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
+
+	accountId := newData.AccountInfo.Id()
+
+	fmt.Println("accountCellOutputData -------------> ", hex.EncodeToString(accountId.AsSlice()))
+	fmt.Println("accountCellOutputData -------------> ", hex.EncodeToString(accountId.RawData()))
+
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
-	accountBytes := newData.AccountInfo.Account().AsSlice()
-	accountIdBytes, _ := blake2b.Blake160(accountBytes)
-	dataBytes = append(dataBytes, DasAccountIdFromBytes(accountIdBytes).Bytes()...) // id
-	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)                 // next
-	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)            // expired_at
-	dataBytes = append(dataBytes, accountBytes...)                                  // account
+	dataBytes = append(dataBytes, accountId.RawData()...)                                           // id
+	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)                                 // next
+	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...)                            // expired_at
+	dataBytes = append(dataBytes, AccountCharsToAccount(*newData.AccountInfo.Account()).Bytes()...) // account
 	return dataBytes, nil
 }
 

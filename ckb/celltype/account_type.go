@@ -23,6 +23,10 @@ func DasAccountFromStr(account string) DasAccount {
 	return DasAccount(account)
 }
 
+func (d DasAccount) Bytes() []byte {
+	return []byte(d)
+}
+
 func (d DasAccount) Format() string {
 	temp := string(d)
 	if strings.HasSuffix(temp, DasAccountSuffix) {
