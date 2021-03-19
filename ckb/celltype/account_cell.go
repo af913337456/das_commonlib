@@ -211,8 +211,9 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	account := AccountCharsToAccount(*newData.AccountInfo.Account())
 	accountId := newData.AccountInfo.Id()
 
-	fmt.Println("accountCellOutputData -------------> ", hex.EncodeToString(accountId.RawData()))
-	fmt.Println("accountCellOutputData -------------> ", account)
+	fmt.Println("accountCellOutputData -------accountId------> ", hex.EncodeToString(accountId.RawData()))
+	fmt.Println("accountCellOutputData -------account__------> ", account)
+	fmt.Println("accountCellOutputData -------expired__------> ", newData.ExpiredAt)
 
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	dataBytes = append(dataBytes, accountId.RawData()...)                // id
@@ -222,7 +223,7 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	if accountBytes := account.Bytes(); len(accountBytes) > 0 {
 		dataBytes = append(dataBytes, account.Bytes()...) // account
 	} else {
-		dataBytes = append(dataBytes, []byte{}...)
+		dataBytes = append(dataBytes, []byte{0}...) // root account
 	}
 	return dataBytes, nil
 }
