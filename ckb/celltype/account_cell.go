@@ -251,7 +251,7 @@ func AccountCellCap(account string) (uint64, error) {
 	dataBytes = append(dataBytes, expiredAtBytes...)
 	dataBytes = append(dataBytes, accountBytes...)
 
-	return output.OccupiedCapacity(dataBytes), nil
+	return output.OccupiedCapacity(dataBytes) * OneCkb, nil
 }
 
 func (c *AccountCell) Data() ([]byte, error) {

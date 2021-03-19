@@ -139,11 +139,16 @@ func Test_AccountChar(t *testing.T) {
 func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// registerAt:=
 	// 2021-01-28 18:02:50, 1611828171
+	accountCellCap, err := AccountCellCap("11111111.bit")
+	if err != nil {
+		panic(err)
+	}
 	param := CalAccountCellExpiredAtParam{
 		Quote:             1000, // 1000 ckb = 1 usd
-		AccountCellCap:    178,
-		PriceConfigNew:    1000000, // 10 usd
-		PreAccountCellCap: 200,
+		AccountCellCap:    accountCellCap,
+		PriceConfigNew:    5000000, // 10 usd
+		PreAccountCellCap: 5000 * OneCkb,
+		RefCellCap:        2 * RefCellBaseCap,
 	}
 	timeSec, err := CalAccountCellExpiredAt(param, time.Now().Unix())
 	if err != nil {

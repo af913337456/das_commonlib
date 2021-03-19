@@ -445,21 +445,20 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 }
 
 /**
-ConfigCell.price * quote * account.bytes.length 这个是 365 天的单价，
-expiredAt = ((PreAccountCell.capacity - AccountCell.capacity - RefCell.capacity) /
-		(ConfigCell.price * quote * account.bytes.length)) * 365
+singlePrice = ConfigCell.price / quote * 10^8 / 365 * 86400
+expiredAt = ((PreAccountCell.capacity - AccountCell.capacity - RefCell.capacity) / singlePrice
 */
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {
-	divPerDayPrice := new(big.Rat).SetFrac(new(big.Int).
-		SetInt64(int64(param.PriceConfigNew)), new(big.Int).
-		SetInt64(int64(param.Quote)))
-
-	if dis := param.PreAccountCellCap - param.AccountCellCap; dis <= 0 {
+	divPerDayPrice := new(big.Rat).SetFrac(
+		new(big.Int).SetUint64(param.PriceConfigNew*OneCkb),
+		new(big.Int).SetInt64(int64(param.Quote)))
+	if param.PreAccountCellCap < param.AccountCellCap+param.RefCellCap {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	} else {
-		disRat := new(big.Rat).SetInt64(int64(dis))
+		dis := (param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap) * oneYearDays * oneDaySec
+		disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(dis))
 		div, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
-		return uint64(registerAt) + uint64(math.Floor(div*oneYearDays*oneDaySec)), nil
+		return uint64(registerAt) + uint64(math.Floor(div)), nil
 	}
 }
 
