@@ -143,11 +143,13 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	// CalAccountCellExpiredAt ====>
+	// {"quote":1000,"account_cell_cap":14600000000,"price_config_new":5000000,"pre_account_cell_cap":536800000000,"ref_cell_cap":21000000000}
 	param := CalAccountCellExpiredAtParam{
 		Quote:             1000, // 1000 ckb = 1 usd
 		AccountCellCap:    accountCellCap,
 		PriceConfigNew:    5000000, // 10 usd
-		PreAccountCellCap: 5356 * OneCkb,
+		PreAccountCellCap: 5368 * OneCkb,
 		RefCellCap:        2 * RefCellBaseCap,
 	}
 	timeSec, err := CalAccountCellExpiredAt(param, time.Now().Unix())
