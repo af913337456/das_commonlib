@@ -236,17 +236,17 @@ func AccountCellCap(account string) (uint64, error) {
 		},
 	}
 	dataBytes := []byte{}
-	// var accountBytes []byte
+	var accountBytes []byte
 	expiredAtBytes := GoUint64ToBytes(0)
-	// if account != "" {
-	// 	accountBytes = []byte(account)
-	// }
+	if account != "" {
+		accountBytes = []byte(account)
+	}
 
 	dataBytes = append(dataBytes, EmptyDataHash...)
 	dataBytes = append(dataBytes, EmptyAccountId.Bytes()...)
 	dataBytes = append(dataBytes, EmptyAccountId.Bytes()...)
 	dataBytes = append(dataBytes, expiredAtBytes...)
-	// dataBytes = append(dataBytes, accountBytes...)
+	dataBytes = append(dataBytes, accountBytes...)
 
 	return output.OccupiedCapacity(dataBytes) * OneCkb, nil
 }
