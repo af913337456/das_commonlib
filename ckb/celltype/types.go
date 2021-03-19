@@ -3,6 +3,7 @@ package celltype
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -445,4 +446,9 @@ type CalAccountCellExpiredAtParam struct {
 	// AccountBytesLen    uint32 `json:"account_bytes_len"`
 	PreAccountCellCap uint64 `json:"pre_account_cell_cap"`
 	RefCellCap        uint64 `json:"ref_cell_cap"`
+}
+
+func (c CalAccountCellExpiredAtParam) Json() string {
+	bys, _ := json.Marshal(c)
+	return string(bys)
 }

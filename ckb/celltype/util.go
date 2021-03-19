@@ -449,16 +449,18 @@ singlePrice = ConfigCell.price / quote * 10^8 / 365 * 86400
 expiredAt = ((PreAccountCell.capacity - AccountCell.capacity - RefCell.capacity) / singlePrice
 */
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {
+	fmt.Println("CalAccountCellExpiredAt ====>", param.Json())
 	divPerDayPrice := new(big.Rat).SetFrac(
 		new(big.Int).SetUint64(param.PriceConfigNew*OneCkb),
 		new(big.Int).SetInt64(int64(param.Quote)))
 	if param.PreAccountCellCap < param.AccountCellCap+param.RefCellCap {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	} else {
-		dis := (param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap) * oneYearDays * oneDaySec
+		cis := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
+		dis := cis * oneYearDays * oneDaySec
 		disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(dis))
-		div, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
-		return uint64(registerAt) + uint64(math.Floor(div)), nil
+		duration, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
+		return uint64(registerAt) + uint64(math.Floor(duration)), nil
 	}
 }
 

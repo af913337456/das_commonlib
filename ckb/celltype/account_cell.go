@@ -183,20 +183,15 @@ func IsAccountFrozen(accountCellData []byte, cmpTimeSec, frozenRangeSec int64) (
 }
 
 func SetAccountCellNextAccountId(data []byte, accountId DasAccountId) []byte {
-	minLen := HashBytesLen
 	accountIdEndLen := HashBytesLen + dasAccountIdLen
-	if size := len(data); size < minLen {
+	accountNxEndLen := HashBytesLen + 2*dasAccountIdLen
+	if size := len(data); size < accountNxEndLen {
 		data = append(data, EmptyDataHash[:]...)
 		data = append(data, EmptyAccountId.Bytes()...)
-	} else if size < accountIdEndLen {
 		data = append(data, EmptyAccountId.Bytes()...)
 	}
-	dataLen := len(data)
-	temp1 := make([]byte, 0, HashBytesLen)
-	temp2 := make([]byte, 0, dataLen-minLen)
-	prefix := append(temp1, data[:HashBytesLen]...)
-	suffix := append(temp2, data[accountIdEndLen:]...)
-	return append(append(prefix, accountId.Bytes()...), suffix...)
+	fmt.Println(data[:HashBytesLen])
+	return append(append(data[:accountIdEndLen], accountId.Bytes()...), data[accountNxEndLen:]...)
 }
 
 func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
