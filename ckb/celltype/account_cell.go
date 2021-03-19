@@ -141,7 +141,6 @@ func (c *AccountCell) TypeScript() *types.Script {
   next // 下一个 AccountCell 的 ID
   expired_at // 小端编码的 u64 时间戳
   account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息，不含 .bit
-
 */
 
 func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
@@ -219,7 +218,12 @@ func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
 	dataBytes = append(dataBytes, accountId.RawData()...)                // id
 	dataBytes = append(dataBytes, newData.NextAccountId.Bytes()...)      // next
 	dataBytes = append(dataBytes, GoUint64ToBytes(newData.ExpiredAt)...) // expired_at
-	dataBytes = append(dataBytes, account.Bytes()...)                    // account
+
+	if accountBytes := account.Bytes(); len(accountBytes) > 0 {
+		dataBytes = append(dataBytes, account.Bytes()...) // account
+	} else {
+		dataBytes = append(dataBytes, []byte{}...)
+	}
 	return dataBytes, nil
 }
 
