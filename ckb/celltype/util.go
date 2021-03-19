@@ -460,6 +460,7 @@ func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int6
 		dis := cis * oneYearDays * oneDaySec
 		disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(dis))
 		duration, _ := new(big.Rat).Quo(disRat, divPerDayPrice).Float64()
+		fmt.Println("CalAccountCellExpiredAt ====>", duration)
 		return uint64(registerAt) + uint64(math.Floor(duration)), nil
 	}
 }

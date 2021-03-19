@@ -190,7 +190,6 @@ func SetAccountCellNextAccountId(data []byte, accountId DasAccountId) []byte {
 		data = append(data, EmptyAccountId.Bytes()...)
 		data = append(data, EmptyAccountId.Bytes()...)
 	}
-	fmt.Println(data[:HashBytesLen])
 	return append(append(data[:accountIdEndLen], accountId.Bytes()...), data[accountNxEndLen:]...)
 }
 

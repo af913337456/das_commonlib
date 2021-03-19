@@ -65,7 +65,7 @@ var (
 	}
 	DasWalletCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x88d1d4a5169860afbfba54965595898866133e117da54d300b74c03c7b2d839f"),
+			TxHash:  types.HexToHash("0x94cddbfa870ec330f27813c28804c53b6fe3333e13cde2f30d147da52a30fd3c"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -77,7 +77,7 @@ var (
 	}
 	DasApplyRegisterCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x7c60922ca7ff80d7d8f9f31fbb2ce25e7748ea47d8c4bcb73978375d2b9ea981"),
+			TxHash:  types.HexToHash("0x64dabae20372b1d268407de0aa85b554d78bfa8f073eaa96b40ce60533472a33"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -89,7 +89,7 @@ var (
 	}
 	DasRefCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x1cbacf9b9221600d30793297e41566fcc09fc362fade48d19558535a5bf5b276"),
+			TxHash:  types.HexToHash("0xcefdb67cdda1d9d0f8ef990a17cc04fb06af5329f0f2fd784d0e476bab86e04d"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -101,7 +101,7 @@ var (
 	}
 	DasPreAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xe704f1ccad18d33c843fe02930c6598e9c4c22c6345ed2211cc2b04a4d8bfefb"),
+			TxHash:  types.HexToHash("0xa6b852bfe6b9827c86a3d9d60f4f86374a15dbcb94f06147d33e5e330c1b8594"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -113,7 +113,7 @@ var (
 	}
 	DasProposeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x7044220f6b9de6473473f0c548dc30a04564792192970786d6cc6d9b8ab742dd"),
+			TxHash:  types.HexToHash("0xc1af2d9967207dd7646418bb7d778a7f0bafb04800799327d2b34bdaaf57a9a3"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -125,7 +125,7 @@ var (
 	}
 	DasAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x86610ae8e8185ee5efe1e7dba785984cbfe0d431855803ec3c8f9589b051f98f"),
+			TxHash:  types.HexToHash("0x02f775977e6e4d06f1c9ca5db70d255df7dd172e6601793bc6a518d2887860fa"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -173,7 +173,7 @@ var (
 	// }
 	DasConfigCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xe940acf7dae23bd133d5ab2a1dd82fbea09c21bf11e152246be9a8c8d174da6b"),
+			TxHash:  types.HexToHash("0x859517d8b42e1a154d92904d8c1ea5859b5a88d57704f76e6886aa9dd55c99cd"),
 			TxIndex: 0,
 			DepType: "",
 		},
