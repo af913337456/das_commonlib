@@ -113,7 +113,7 @@ var (
 	}
 	DasProposeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x037b5820c05990e596170da0babb68f07b4e7b83ffa502919347ddcbd79eddf1"),
+			TxHash:  types.HexToHash("0x0aa3c54831c33fa3c32d7710ed3d4efb707dfb82763c4728b621b2100989af39"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},

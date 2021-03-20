@@ -20,14 +20,10 @@ type KafkaMessageQueueConsumer struct {
 	Ctx           context.Context
 }
 
-func NewDefaultKafkaMessageQueueConsumer(brokers []string, groupName string, autoCommit bool, initOffset int64, ctx context.Context) (*KafkaMessageQueueConsumer, error) {
+func NewDefaultKafkaMessageQueueConsumer(brokers []string, groupName string, autoCommit bool, ctx context.Context) (*KafkaMessageQueueConsumer, error) {
 	config := sarama.NewConfig()
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRange
-	if initOffset == 0 {
-		config.Consumer.Offsets.Initial = sarama.OffsetOldest
-	} else {
-		config.Consumer.Offsets.Initial = initOffset
-	}
+	config.Consumer.Offsets.Initial = sarama.OffsetOldest
 	config.Consumer.Offsets.AutoCommit.Enable = autoCommit
 	config.Consumer.Fetch.Default = 1024
 	config.Consumer.Fetch.Max = 1024 * 2
