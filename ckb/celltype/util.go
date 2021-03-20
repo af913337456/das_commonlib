@@ -338,7 +338,7 @@ func buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 	return &d
 }
 
-func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, inputList []*types.CellInput, CodeHash types.Hash) (*types.Script, error) {
+func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, inputList []*types.CellInput, isLock bool, CodeHash types.Hash) (*types.Script, error) {
 	for _, item := range inputList {
 		tx, err := rpcClient.GetTransaction(ctx, item.PreviousOutput.TxHash)
 		if err != nil {
@@ -347,13 +347,26 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 		size := len(tx.Transaction.Outputs)
 		for i := 0; i < size; i++ {
 			output := tx.Transaction.Outputs[i]
-			if output.Type == nil && output.Lock.CodeHash == CodeHash &&
-				output.Lock.HashType == types.HashTypeType && item.PreviousOutput.Index == uint(i) {
-				return &types.Script{
-					CodeHash: CodeHash,
-					HashType: types.HashTypeType,
-					Args:     output.Lock.Args,
-				}, nil
+			if isLock {
+				if output.Lock == nil && output.Lock.CodeHash == CodeHash &&
+					output.Lock.HashType == types.HashTypeType && item.PreviousOutput.Index == uint(i) {
+					return &types.Script{
+						CodeHash: CodeHash,
+						HashType: types.HashTypeType,
+						Args:     output.Lock.Args,
+					}, nil
+				}
+			} else {
+				if output.Type == nil &&
+					output.Type.CodeHash == CodeHash &&
+					output.Type.HashType == types.HashTypeType &&
+					item.PreviousOutput.Index == uint(i) {
+					return &types.Script{
+						CodeHash: CodeHash,
+						HashType: types.HashTypeType,
+						Args:     output.Type.Args,
+					}, nil
+				}
 			}
 		}
 	}
