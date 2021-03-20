@@ -20,10 +20,14 @@ type KafkaMessageQueueConsumer struct {
 	Ctx           context.Context
 }
 
-func NewDefaultKafkaMessageQueueConsumer(brokers []string, groupName string, autoCommit bool, ctx context.Context) (*KafkaMessageQueueConsumer, error) {
+func NewDefaultKafkaMessageQueueConsumer(brokers []string, groupName string, autoCommit bool, initOffset int64, ctx context.Context) (*KafkaMessageQueueConsumer, error) {
 	config := sarama.NewConfig()
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRange
-	config.Consumer.Offsets.Initial = sarama.OffsetOldest
+	if initOffset == 0 {
+		config.Consumer.Offsets.Initial = sarama.OffsetOldest
+	} else {
+		config.Consumer.Offsets.Initial = initOffset
+	}
 	config.Consumer.Offsets.AutoCommit.Enable = autoCommit
 	config.Consumer.Fetch.Default = 1024
 	config.Consumer.Fetch.Max = 1024 * 2
@@ -77,7 +81,7 @@ func (consumer *HandCommitConsumer) ConsumeClaim(session sarama.ConsumerGroupSes
 		default:
 			if consumer.HandleMsg != nil {
 				if consumer.HandleMsg(message) {
-					session.MarkMessage(message, "")
+					session.MarkMessage(message, "") // MarkMessage 并不是实时写入kafka，有可能在程序crash时丢掉未提交的offset
 				}
 			}
 		}
