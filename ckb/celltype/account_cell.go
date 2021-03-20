@@ -236,8 +236,9 @@ func AccountCellCap(account string) (uint64, error) {
 		},
 	}
 	dataBytes := []byte{}
-	var accountBytes []byte
 	expiredAtBytes := GoUint64ToBytes(0)
+
+	var accountBytes []byte
 	if account != "" {
 		accountBytes = []byte(account)
 	}

@@ -440,10 +440,10 @@ func (p ProposeWitnessSliceDataObjectLL) ToMoleculeProposalCellData(incomeLockSc
 }
 
 type CalAccountCellExpiredAtParam struct {
-	Quote          uint64 `json:"quote"`
-	AccountCellCap uint64 `json:"account_cell_cap"`
-	PriceConfigNew uint64 `json:"price_config_new"`
-	// AccountBytesLen    uint32 `json:"account_bytes_len"`
+	Quote             uint64 `json:"quote"`
+	AccountCellCap    uint64 `json:"account_cell_cap"`
+	PriceConfigNew    uint64 `json:"price_config_new"`
+	AccountBytesLen   uint32 `json:"account_bytes_len"`
 	PreAccountCellCap uint64 `json:"pre_account_cell_cap"`
 	RefCellCap        uint64 `json:"ref_cell_cap"`
 }
