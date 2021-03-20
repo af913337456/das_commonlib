@@ -348,7 +348,7 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 		for i := 0; i < size; i++ {
 			output := tx.Transaction.Outputs[i]
 			if isLock {
-				if output.Lock == nil && output.Lock.CodeHash == CodeHash &&
+				if output.Lock != nil && output.Lock.CodeHash == CodeHash &&
 					output.Lock.HashType == types.HashTypeType && item.PreviousOutput.Index == uint(i) {
 					return &types.Script{
 						CodeHash: CodeHash,
@@ -357,7 +357,7 @@ func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, 
 					}, nil
 				}
 			} else {
-				if output.Type == nil &&
+				if output.Type != nil &&
 					output.Type.CodeHash == CodeHash &&
 					output.Type.HashType == types.HashTypeType &&
 					item.PreviousOutput.Index == uint(i) {
