@@ -35,6 +35,10 @@ func BytesToInt64(buf []byte) int64 {
 	return int64(binary.BigEndian.Uint64(buf))
 }
 
+func BytesToInt64_LittleEndian(buf []byte) int64 {
+	return int64(binary.LittleEndian.Uint64(buf))
+}
+
 func SplitKeyName(key []byte) (string, string) {
 	k := string(key)
 	length := len(key)

@@ -18,6 +18,23 @@ import (
  * Description:
  */
 
+func Test_ExpiredAtFromOutputData(t *testing.T) {
+	dataHex := "f44c70c8921227458a62fe683d84a90baa0386877d3f87b385d7cd3b872e3dfb717ce4f160d8ec367e3fffffffffffffffffffff40fb37620000000031313131313131312e626974"
+	dataBys, _ := hex.DecodeString(dataHex)
+	expired, e := ExpiredAtFromOutputData(dataBys)
+	if e != nil {
+		panic(e)
+	}
+	t.Log(expired)
+}
+
+func Test_DefaultAccountCellDataBytes(t *testing.T) {
+	id := DasAccountIdFromBytes([]byte("123"))
+	nextId := DasAccountIdFromBytes([]byte("456"))
+	bys := DefaultAccountCellDataBytes(id, nextId)
+	t.Log(bys)
+}
+
 func Test_DasAccountIdFromBytes(t *testing.T) {
 	id := DasAccountIdFromBytes([]byte{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1})
 	fmt.Println(id.HexStr())

@@ -163,7 +163,7 @@ func ExpiredAtFromOutputData(data []byte) (int64, error) {
 	if size := len(data); size < endLen {
 		return 0, fmt.Errorf("ExpiredAtFromOutputData invalid data, len not enough, your: %d, want: %d", size, endLen)
 	}
-	return common.BytesToInt64(data[endLen-8 : endLen]), nil
+	return common.BytesToInt64_LittleEndian(data[endLen-8 : endLen]), nil
 }
 
 func IsAccountExpired(accountCellData []byte, cmpTimeSec int64) (bool, error) {
