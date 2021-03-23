@@ -171,7 +171,7 @@ func IsAccountExpired(accountCellData []byte, cmpTimeSec int64) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return cmpTimeSec <= expired, nil
+	return cmpTimeSec >= expired, nil
 }
 
 func IsAccountFrozen(accountCellData []byte, cmpTimeSec, frozenRangeSec int64) (bool, error) {
