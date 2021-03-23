@@ -352,6 +352,9 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 			builder.tx.Witnesses = append(builder.tx.Witnesses, witness)
 		}
 	}
+	if want := builder.totalOutputCap + builder.fee; builder.totalInputCap < want {
+		return nil, fmt.Errorf("not enough capacity, input: %d, want: %d", builder.totalInputCap, want)
+	}
 	return retList, nil
 }
 
