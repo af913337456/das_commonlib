@@ -179,7 +179,7 @@ func IsAccountFrozen(accountCellData []byte, cmpTimeSec, frozenRangeSec int64) (
 	if err != nil {
 		return false, err
 	}
-	return expired >= cmpTimeSec && expired < cmpTimeSec+frozenRangeSec, nil
+	return expired < cmpTimeSec && expired+frozenRangeSec > cmpTimeSec, nil
 }
 
 func SetAccountCellNextAccountId(data []byte, accountId DasAccountId) []byte {
