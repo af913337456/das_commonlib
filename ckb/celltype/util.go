@@ -469,8 +469,8 @@ func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int6
 	if param.PreAccountCellCap < param.AccountCellCap+param.RefCellCap {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	} else {
-		cis := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
-		dis := cis * oneYearDays * oneDaySec
+		storageFee := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
+		dis := storageFee * oneYearDays * oneDaySec
 		disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(dis))
 		dra := new(big.Rat).Quo(disRat, divPerDayPrice)
 		duration, _ := dra.Float64()

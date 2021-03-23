@@ -19,7 +19,7 @@ import (
  */
 
 func Test_ExpiredAtFromOutputData(t *testing.T) {
-	dataHex := "f44c70c8921227458a62fe683d84a90baa0386877d3f87b385d7cd3b872e3dfb717ce4f160d8ec367e3fffffffffffffffffffff40fb37620000000031313131313131312e626974"
+	dataHex := "c4de24c38f1a22e65b9a1a24aaae7d4db37e7ae138e9d44651d76f1d179f95e8ee06f79afc0af40e7198faf1611a8fa5324263b3f2dd3b620000000062616161616161612e626974"
 	dataBys, _ := hex.DecodeString(dataHex)
 	expired, e := ExpiredAtFromOutputData(dataBys)
 	if e != nil {
