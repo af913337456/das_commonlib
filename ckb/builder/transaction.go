@@ -257,10 +257,14 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 
 func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 	if min := celltype.CkbTxMinOutputCKBValue + builder.fee; builder.totalOutputCap >= min {
-		if dis := builder.totalOutputCap + builder.fee; dis > builder.totalInputCap {
-			return dis
+		if totalSpend := builder.totalOutputCap + builder.fee; totalSpend > builder.totalInputCap {
+			return totalSpend - builder.totalInputCap
+		} else if left := builder.totalInputCap - totalSpend; left > celltype.CkbTxMinOutputCKBValue {
+			return left // 直接返回 left
+		} else {
+			// 不满足 61，为了避免余额丢失，需要凑到 >= 61，找零
+			return celltype.CkbTxMinOutputCKBValue
 		}
-		return 0
 	} else {
 		return min // 最少 61 kb + fee
 	}
@@ -272,9 +276,12 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 
 // 在加完 input 和 output 后调用
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
-	chargeCap := builder.totalInputCap - builder.totalOutputCap - builder.fee
-	if chargeCap <= 0 {
+	if builder.totalInputCap < builder.totalOutputCap+builder.fee {
 		return builder
+	}
+	chargeCap := builder.totalInputCap - (builder.totalOutputCap + builder.fee)
+	if chargeCap < celltype.CkbTxMinOutputCKBValue {
+		return builder // 剩下的，不满足最小值，那么给矿工
 	}
 	builder.AddCellDep(&types.CellDep{
 		OutPoint: signCell.OutPoint,
