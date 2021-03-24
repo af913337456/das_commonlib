@@ -89,10 +89,6 @@ func (c *ApplyRegisterCell) Data() ([]byte, error) {
 	return append(idHash, GoUint64ToBytes(c.p.Height)...), nil
 }
 
-func (c *ApplyRegisterCell) TableData() []byte {
-	return nil
-}
-
 func ApplyRegisterDataId(pubKeyHexBytes []byte, account DasAccount) ([]byte, error) {
 	if err := account.ValidErr(); err != nil {
 		return nil, fmt.Errorf("ApplyRegisterDataId err: %s", err.Error())

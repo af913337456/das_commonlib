@@ -162,18 +162,16 @@ type ApplyRegisterCellParam struct {
 	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`
 }
 
-type PreAccountCellDatas struct {
-	DepAccountCellData *PreAccountCellData `json:"-"`
-	OldAccountCellData *PreAccountCellData `json:"-"`
+type PreAccountCellTxDataParam struct {
 	NewAccountCellData *PreAccountCellData `json:"-"`
 }
 type PreAccountCellParam struct {
-	Version                   uint32              `json:"version"`
-	Data                      Data                `json:"data"`
-	Account                   DasAccount          `json:"account"`
-	PreAccountCellDatas       PreAccountCellDatas `json:"-"`
-	CellCodeInfo              DASCellBaseInfo     `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo     `json:"always_spendable_script_info"`
+	Version uint32 `json:"version"`
+	// Data                      Data                `json:"data"`
+	Account                   DasAccount                `json:"account"`
+	TxDataParam               PreAccountCellTxDataParam `json:"-"`
+	CellCodeInfo              DASCellBaseInfo           `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo           `json:"always_spendable_script_info"`
 }
 
 type RefcellParam struct {
@@ -214,8 +212,9 @@ table OnSaleCellData {
 }
 */
 type OnSaleCellParam struct {
-	Version                   uint32          `json:"version"`
-	Data                      Data            `json:"data"`
+	Version uint32 `json:"version"`
+	// Data                      Data            `json:"data"`
+	OnSaleCellData            OnSaleCellData  `json:"-"`
 	Price                     uint64          `json:"price"`
 	AccountId                 DasAccountId    `json:"account_id"`
 	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
@@ -290,22 +289,20 @@ type ProposeCellParam struct {
 	// AccountCommonParam
 	Version                   uint32           `json:"version"`
 	Data                      Data             `json:"data"`
-	ProposeCellNew            ProposalCellData `json:"propose_cell_new"`
+	TxDataParam               ProposalCellData `json:"tx_data_param"`
 	CellCodeInfo              DASCellBaseInfo  `json:"cell_code_info"`
 	AlwaysSpendableScriptInfo DASCellBaseInfo  `json:"always_spendable_script_info"`
 }
 
 type AccountCellDataPreObj_Old_New struct {
-	OldData    *AccountCellData
-	NewData    *AccountCellFullData
-	InputIndex uint32
+	NewData *AccountCellTxDataParam
 }
 
-func (a *AccountCellDataPreObj_Old_New) ToAccountCell(outputIndex uint32) *AccountCell {
-	return NewAccountCell(TestNetAccountCell(0, a.InputIndex, outputIndex, nil, a.OldData, a.NewData))
+func (a *AccountCellDataPreObj_Old_New) ToAccountCell() *AccountCell {
+	return NewAccountCell(TestNetAccountCell(a.NewData))
 }
 
-type AccountCellFullData struct {
+type AccountCellTxDataParam struct {
 	NextAccountId DasAccountId `json:"next_account_id"`
 	// RegisteredAt  uint64          `json:"registered_at"`
 	ExpiredAt   uint64          `json:"expired_at"`
@@ -313,16 +310,13 @@ type AccountCellFullData struct {
 }
 
 type AccountCellDatas struct {
-	DepAccountCellData *AccountCellData     `json:"-"`
-	OldAccountCellData *AccountCellData     `json:"-"`
-	NewAccountCellData *AccountCellFullData `json:"-"`
+	NewAccountCellData *AccountCellTxDataParam `json:"-"`
 }
 type AccountCellParam struct {
-	AccountCellDatas          AccountCellDatas `json:"-"`
-	Version                   uint32           `json:"version"`
-	Data                      Data             `json:"data"`
-	CellCodeInfo              DASCellBaseInfo  `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo  `json:"always_spendable_script_info"`
+	TxDataParam               *AccountCellTxDataParam `json:"-"`
+	Version                   uint32                  `json:"version"`
+	CellCodeInfo              DASCellBaseInfo         `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo         `json:"always_spendable_script_info"`
 }
 
 type ParseDasWitnessBysDataObj struct {

@@ -14,12 +14,11 @@ import (
  */
 
 var TestNetOnSaleCell = func(newIndex uint32, price uint64, accountId DasAccountId) *OnSaleCellParam {
-	onSaleMoleData := NewOnSaleCellDataBuilder().Price(GoUint64ToMoleculeU64(price)).Build()
 	return &OnSaleCellParam{
-		Version: 1,
-		Price:   price,
-		Data: *buildDasCommonMoleculeDataObj(
-			0, 0, newIndex, nil, nil, &onSaleMoleData),
+		Version:        1,
+		Price:          price,
+		OnSaleCellData: NewOnSaleCellDataBuilder().Price(GoUint64ToMoleculeU64(price)).Build(),
+		// Data: *buildDasCommonMoleculeDataObj(0, 0, newIndex, nil, nil, &onSaleMoleData),
 		AccountId:                 accountId,
 		CellCodeInfo:              DasOnSaleCellScript,
 		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
@@ -68,7 +67,7 @@ func (c *OnSaleCell) TypeScript() *types.Script {
 }
 
 func (c *OnSaleCell) Data() ([]byte, error) {
-	bys, err := blake2b.Blake256(c.TableData())
+	bys, err := blake2b.Blake256(c.p.OnSaleCellData.AsSlice())
 	if err != nil {
 		return nil, err
 	}
@@ -77,8 +76,4 @@ func (c *OnSaleCell) Data() ([]byte, error) {
 
 func (c *OnSaleCell) TableType() TableType {
 	return TableType_ON_SALE_CELL
-}
-
-func (c *OnSaleCell) TableData() []byte {
-	return c.p.Data.AsSlice()
 }

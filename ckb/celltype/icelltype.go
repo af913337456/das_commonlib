@@ -17,7 +17,7 @@ type ICellType interface {
 	TypeScript() *types.Script
 	TableType() TableType
 	Data() ([]byte, error)
-	TableData() []byte
+	// TableData() []byte
 }
 
 type ICellData interface {

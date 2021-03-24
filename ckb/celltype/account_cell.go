@@ -23,17 +23,12 @@ table DataEntity {
     entity: Bytes, // 代表具体的数据结构
 }
 */
-var TestNetAccountCell = func(depIndex, oldIndex, newIndex uint32, dep, old *AccountCellData, new *AccountCellFullData) *AccountCellParam {
+var TestNetAccountCell = func(param *AccountCellTxDataParam) *AccountCellParam {
 	acp := &AccountCellParam{
 		Version: 1,
-		Data: *buildDasCommonMoleculeDataObj(
-			depIndex, oldIndex, newIndex, dep, old, &new.AccountInfo),
-		CellCodeInfo: DasAccountCellScript,
-		AccountCellDatas: AccountCellDatas{
-			DepAccountCellData: dep,
-			OldAccountCellData: old,
-			NewAccountCellData: new,
-		},
+		// Data: *BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, &new.AccountInfo),
+		CellCodeInfo:              DasAccountCellScript,
+		TxDataParam:               param,
 		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
 	}
 	return acp
@@ -198,7 +193,7 @@ func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 	return append(append(holder, accountId.Bytes()...), nextAccountId.Bytes()...)
 }
 
-func accountCellOutputData(newData *AccountCellFullData) ([]byte, error) {
+func accountCellOutputData(newData *AccountCellTxDataParam) ([]byte, error) {
 	dataBytes := []byte{}
 	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
 
@@ -253,13 +248,9 @@ func AccountCellCap(account string) (uint64, error) {
 }
 
 func (c *AccountCell) Data() ([]byte, error) {
-	return accountCellOutputData(c.p.AccountCellDatas.NewAccountCellData)
+	return accountCellOutputData(c.p.TxDataParam)
 }
 
 func (c *AccountCell) TableType() TableType {
 	return TableType_ACCOUNT_CELL
-}
-
-func (c *AccountCell) TableData() []byte {
-	return c.p.Data.AsSlice()
 }

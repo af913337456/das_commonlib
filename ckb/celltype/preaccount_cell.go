@@ -13,15 +13,13 @@ import (
  * Description:
  */
 
-var TestNetPreAccountCell = func(account DasAccount, depIndex, oldIndex, newIndex uint32, dep, old, new *PreAccountCellData) *PreAccountCellParam {
+var TestNetPreAccountCell = func(account DasAccount, new *PreAccountCellData) *PreAccountCellParam {
 	return &PreAccountCellParam{
-		Version:      1,
-		Account:      account,
-		Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
+		Version: 1,
+		Account: account,
+		// Data:         *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
 		CellCodeInfo: DasPreAccountCellScript,
-		PreAccountCellDatas: PreAccountCellDatas{
-			DepAccountCellData: dep,
-			OldAccountCellData: old,
+		TxDataParam: PreAccountCellTxDataParam{
 			NewAccountCellData: new,
 		},
 		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
@@ -89,14 +87,10 @@ data:
   id // account ID，生成算法为 hash(account)，然后取前 10 bytes
 */
 func (c *PreAccountCell) Data() ([]byte, error) {
-	dataHash, err := blake2b.Blake256(c.p.PreAccountCellDatas.NewAccountCellData.AsSlice())
+	dataHash, err := blake2b.Blake256(c.p.TxDataParam.NewAccountCellData.AsSlice())
 	if err != nil {
 		return nil, err
 	}
 	accountId := c.p.Account.AccountId()
 	return append(dataHash, accountId.Bytes()...), nil
-}
-
-func (c *PreAccountCell) TableData() []byte {
-	return c.p.Data.AsSlice()
 }

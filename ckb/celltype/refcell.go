@@ -82,7 +82,3 @@ func (c *Refcell) Data() ([]byte, error) {
 func (c *Refcell) TableType() TableType {
 	return 0
 }
-
-func (c *Refcell) TableData() []byte {
-	return nil
-}
