@@ -156,35 +156,38 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 }
 
 // 自动计算需要的 input
-func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) error {
+func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) ([]*types.OutPoint, error) {
 	needCap := builder.NeedCapacityValue()
 	if needCap == 0 {
-		return nil
+		return nil, nil
 	}
+	usedOutPoints := []*types.OutPoint{}
 	// 添加 input，只取需要的那么多个
 	capCounter := uint64(0)
 	for _, cell := range liveCells {
 		if capCounter < needCap {
 			thisCellCap := cell.Output.Capacity
+			outPoint := &types.OutPoint{
+				TxHash: cell.OutPoint.TxHash,
+				Index:  cell.OutPoint.Index,
+			}
 			input := celltype.TypeInputCell{
 				Input: types.CellInput{
-					Since: 0,
-					PreviousOutput: &types.OutPoint{
-						TxHash: cell.OutPoint.TxHash,
-						Index:  cell.OutPoint.Index,
-					},
+					Since:          0,
+					PreviousOutput: outPoint,
 				},
 				LockType: lockType,
 				CellCap:  thisCellCap,
 			}
+			usedOutPoints = append(usedOutPoints, outPoint)
 			builder.AddInput(input)
 			capCounter = capCounter + thisCellCap
 		}
 	}
 	if capCounter < needCap {
-		return fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", capCounter, needCap)
+		return nil, fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", capCounter, needCap)
 	}
-	return nil
+	return nil, nil
 }
 
 func (builder *TransactionBuilder) AddOutput(cell *types.CellOutput, data []byte) *TransactionBuilder {
