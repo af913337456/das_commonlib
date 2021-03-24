@@ -17,9 +17,10 @@ import (
  */
 
 type TypeInputCell struct {
-	Input    types.CellInput `json:"input"`
-	LockType LockScriptType  `json:"lock_type"`
-	CellCap  uint64          `json:"cell_cap"`
+	InputIndex uint32          `json:"input_index"`
+	Input      types.CellInput `json:"input"`
+	LockType   LockScriptType  `json:"lock_type"`
+	CellCap    uint64          `json:"cell_cap"`
 }
 
 type BuildTransactionRet struct {
@@ -28,10 +29,10 @@ type BuildTransactionRet struct {
 	WitnessArg *types.WitnessArgs `json:"witness_arg"`
 }
 
-type InputWithWitness struct {
-	CellInput      TypeInputCell          `json:"cell_input"`
-	GetWitnessData CellDepWithWitnessFunc `json:"-"`
-}
+// type InputWithWitness struct {
+// 	CellInput      TypeInputCell          `json:"cell_input"`
+// 	GetWitnessData CellDepWithWitnessFunc `json:"-"`
+// }
 
 type AddDasOutputCallback func(cellCap uint64)
 
@@ -41,6 +42,8 @@ type CellDepWithWitness struct {
 	CellDep        *types.CellDep
 	GetWitnessData CellDepWithWitnessFunc
 }
+
+type CellWitnessFunc func(inputIndex uint32) ([]byte, error)
 
 // [das, type, table]
 type DASWitnessDataObj struct {

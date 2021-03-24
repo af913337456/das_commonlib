@@ -39,7 +39,7 @@ type TransactionBuilder struct {
 	totalInputCap     uint64
 	totalOutputCap    uint64
 	fee               uint64
-	inputList         []celltype.TypeInputCell
+	inputList         []*celltype.TypeInputCell
 	tx                *types.Transaction
 	customWitnessList [][]byte
 }
@@ -120,36 +120,24 @@ func (builder *TransactionBuilder) AddCellDeps(cellDeps []types.CellDep) *Transa
 	return builder
 }
 
-func (builder *TransactionBuilder) AddInput(typeInput celltype.TypeInputCell) *TransactionBuilder {
+func (builder *TransactionBuilder) AddInput(typeInput *celltype.TypeInputCell) *TransactionBuilder {
 	builder.totalInputCap = builder.totalInputCap + typeInput.CellCap
 	builder.inputList = append(builder.inputList, typeInput)
 	return builder
 }
 
-func (builder *TransactionBuilder) AddWitnessInputs(cellInputs []*celltype.InputWithWitness) (*TransactionBuilder, error) {
+func (builder *TransactionBuilder) AddInputs(cellInputs []*celltype.TypeInputCell) (*TransactionBuilder, error) {
 	size := len(cellInputs)
 	for i := 0; i < size; i++ {
-		input := cellInputs[i]
-		if _, err := builder.AddWitnessInput(input); err != nil {
-			return nil, fmt.Errorf("AddWitnessInputs %s", err.Error())
-		}
+		builder.AddInput(cellInputs[i])
 	}
 	return builder, nil
 }
 
-func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.InputWithWitness) (*TransactionBuilder, error) {
-	builder.AddInput(cellInput.CellInput)
-	if cellInput.GetWitnessData != nil {
-		inputIndex := uint32(len(builder.inputList) - 1)
-		witnessData, err := cellInput.GetWitnessData(inputIndex)
-		if err != nil {
-			return nil, fmt.Errorf("AddWitnessInput err: %s", err.Error())
-		} else if witnessData != nil {
-			builder.customWitnessList = append(builder.customWitnessList, witnessData)
-		}
-	}
-	return builder, nil
-}
+// func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.TypeInputCell) (*TransactionBuilder, error) {
+// 	builder.AddInput(cellInput)
+// 	return builder, nil
+// }
 
 func (builder *TransactionBuilder) OutputIndex() uint32 {
 	return uint32(len(builder.tx.Outputs) - 1)
@@ -180,7 +168,7 @@ func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.
 				CellCap:  thisCellCap,
 			}
 			usedOutPoints = append(usedOutPoints, outPoint)
-			builder.AddInput(input)
+			builder.AddInput(&input)
 			capCounter = capCounter + thisCellCap
 		}
 	}
@@ -217,8 +205,8 @@ func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, cal
 	builder.AddCellDep(cell.LockDepCell())
 	builder.AddCellDep(cell.TypeDepCell())
 	dataBys, _ := cell.Data()
-	witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
-	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, witnessBys, callback, custom, increment)
+	// witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
+	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, callback, custom, increment)
 	return builder
 }
 
@@ -235,7 +223,7 @@ func normalChargeOutputCellCap() uint64 {
 }
 
 func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script,
-	data, witnessData []byte, callback celltype.AddDasOutputCallback, customCellCap, incrementCellCap uint64) *TransactionBuilder {
+	data []byte, callback celltype.AddDasOutputCallback, customCellCap, incrementCellCap uint64) *TransactionBuilder {
 	output := &types.CellOutput{
 		Lock: lockScript,
 		Type: typeScript,
@@ -252,9 +240,6 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 		callback(output.Capacity)
 	}
 	builder.AddOutput(output, data)
-	if witnessData != nil {
-		builder.customWitnessList = append(builder.customWitnessList, witnessData)
-	}
 	return builder
 }
 
@@ -322,16 +307,16 @@ func (builder *TransactionBuilder) Tx() *types.Transaction {
 	return builder.tx
 }
 
-func (builder *TransactionBuilder) addInputsForTransaction(inputs []*types.CellInput) ([]int, *types.WitnessArgs, error) {
-	if len(inputs) == 0 {
+func (builder *TransactionBuilder) addInputsForTransaction(typeInputs []*celltype.TypeInputCell) ([]int, *types.WitnessArgs, error) {
+	if len(typeInputs) == 0 {
 		return nil, nil, errors.New("input cells empty")
 	}
-	group := make([]int, len(inputs))
+	group := make([]int, len(typeInputs))
 	preInputSize := len(builder.tx.Inputs)
 	start := preInputSize
-	for i := 0; i < len(inputs); i++ {
-		input := inputs[i]
-		builder.tx.Inputs = append(builder.tx.Inputs, input)
+	for i := 0; i < len(typeInputs); i++ {
+		typeInputs[i].InputIndex = uint32(i + start)
+		builder.tx.Inputs = append(builder.tx.Inputs, &typeInputs[i].Input)
 		builder.tx.Witnesses = append(builder.tx.Witnesses, []byte{})
 		group[i] = start + i
 	}
@@ -339,15 +324,37 @@ func (builder *TransactionBuilder) addInputsForTransaction(inputs []*types.CellI
 	return group, EmptyWitnessArg, nil
 }
 
-func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransactionRet, error) {
+func (builder *TransactionBuilder) AddWitness(witness []byte) *TransactionBuilder {
+	builder.customWitnessList = append(builder.customWitnessList, witness)
+	return builder
+}
+
+func (builder *TransactionBuilder) BuildWitness() *TransactionBuilder {
+	if builder.customWitnessList != nil && len(builder.customWitnessList) > 0 {
+		for _, witness := range builder.customWitnessList {
+			builder.tx.Witnesses = append(builder.tx.Witnesses, witness)
+		}
+	}
+	return builder
+}
+
+func (builder *TransactionBuilder) BuildTransaction() error {
+	if want := builder.totalOutputCap + builder.fee; builder.totalInputCap < want {
+		return fmt.Errorf("not enough capacity, input: %d, want: %d", builder.totalInputCap, want)
+	}
+	return nil
+}
+
+func (builder *TransactionBuilder) BuildInputs() ([]celltype.BuildTransactionRet, error) {
 	size := len(builder.inputList)
-	recordMap := map[celltype.LockScriptType][]*types.CellInput{}
+	recordMap := map[celltype.LockScriptType][]*celltype.TypeInputCell{}
 	for i := 0; i < size; i++ {
 		list := recordMap[builder.inputList[i].LockType]
 		if list == nil {
-			list = []*types.CellInput{}
+			list = []*celltype.TypeInputCell{}
 		}
-		list = append(list, &builder.inputList[i].Input)
+		builder.inputList[i].InputIndex = uint32(i)
+		list = append(list, builder.inputList[i])
 		recordMap[builder.inputList[i].LockType] = list // same lockType is one group
 	}
 	retList := make([]celltype.BuildTransactionRet, 0, len(recordMap))
@@ -361,14 +368,6 @@ func (builder *TransactionBuilder) BuildTransaction() ([]celltype.BuildTransacti
 			Group:      group,
 			WitnessArg: wArgs,
 		})
-	}
-	if builder.customWitnessList != nil && len(builder.customWitnessList) > 0 {
-		for _, witness := range builder.customWitnessList {
-			builder.tx.Witnesses = append(builder.tx.Witnesses, witness)
-		}
-	}
-	if want := builder.totalOutputCap + builder.fee; builder.totalInputCap < want {
-		return nil, fmt.Errorf("not enough capacity, input: %d, want: %d", builder.totalInputCap, want)
 	}
 	return retList, nil
 }
