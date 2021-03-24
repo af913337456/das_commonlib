@@ -237,7 +237,7 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 		output.Capacity = customCellCap
 	}
 	if callback != nil {
-		callback(output.Capacity)
+		callback(output.Capacity, uint32(len(builder.tx.Outputs)))
 	}
 	builder.AddOutput(output, data)
 	return builder

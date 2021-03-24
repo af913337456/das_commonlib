@@ -34,7 +34,7 @@ type BuildTransactionRet struct {
 // 	GetWitnessData CellDepWithWitnessFunc `json:"-"`
 // }
 
-type AddDasOutputCallback func(cellCap uint64)
+type AddDasOutputCallback func(cellCap uint64, outputIndex uint32)
 
 type CellDepWithWitnessFunc func(inputIndex uint32) ([]byte, error)
 
