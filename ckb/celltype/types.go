@@ -294,13 +294,14 @@ type ProposeCellParam struct {
 	AlwaysSpendableScriptInfo DASCellBaseInfo  `json:"always_spendable_script_info"`
 }
 
-type AccountCellDataPreObj_Old_New struct {
-	NewData *AccountCellTxDataParam
-}
-
-func (a *AccountCellDataPreObj_Old_New) ToAccountCell() *AccountCell {
-	return NewAccountCell(TestNetAccountCell(a.NewData))
-}
+// type UpdateAccountCellObj struct {
+// 	OldData *AccountCellData
+// 	NewData *AccountCellTxDataParam
+// }
+//
+// func (a *UpdateAccountCellObj) ToAccountCell() *AccountCell {
+// 	return NewAccountCell(TestNetAccountCell(a.NewData))
+// }
 
 type AccountCellTxDataParam struct {
 	NextAccountId DasAccountId `json:"next_account_id"`

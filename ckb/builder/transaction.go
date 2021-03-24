@@ -353,7 +353,6 @@ func (builder *TransactionBuilder) BuildInputs() ([]celltype.BuildTransactionRet
 		if list == nil {
 			list = []*celltype.TypeInputCell{}
 		}
-		builder.inputList[i].InputIndex = uint32(i)
 		list = append(list, builder.inputList[i])
 		recordMap[builder.inputList[i].LockType] = list // same lockType is one group
 	}
