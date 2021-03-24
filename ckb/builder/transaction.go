@@ -158,6 +158,9 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 // 自动计算需要的 input
 func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) error {
 	needCap := builder.NeedCapacityValue()
+	if needCap == 0 {
+		return nil
+	}
 	// 添加 input，只取需要的那么多个
 	capCounter := uint64(0)
 	for _, cell := range liveCells {
@@ -254,7 +257,10 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 
 func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 	if min := celltype.CkbTxMinOutputCKBValue + builder.fee; builder.totalOutputCap >= min {
-		return builder.totalOutputCap + builder.fee - builder.totalInputCap
+		if dis := builder.totalOutputCap + builder.fee; dis > builder.totalInputCap {
+			return dis
+		}
+		return 0
 	} else {
 		return min // 最少 61 kb + fee
 	}
