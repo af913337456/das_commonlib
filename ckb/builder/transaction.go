@@ -2,6 +2,7 @@ package builder
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
@@ -446,6 +447,7 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 
 func SignTransactionMessage(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) error {
 	signed, err := key.Sign(message)
+	fmt.Println(hex.EncodeToString(signed))
 	if err != nil {
 		return err
 	}
