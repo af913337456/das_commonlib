@@ -156,7 +156,7 @@ func Test_AccountChar(t *testing.T) {
 func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// registerAt:=
 	// 2021-01-28 18:02:50, 1611828171
-	accountCellCap, err := AccountCellCap("11111111.bit")
+	accountCellCap, err := AccountCellCap("tangzhihong.bit")
 	if err != nil {
 		panic(err)
 	}
@@ -166,14 +166,14 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 		Quote:             1000, // 1000 ckb = 1 usd
 		AccountCellCap:    accountCellCap,
 		PriceConfigNew:    5000000, // 10 usd
-		PreAccountCellCap: 5368 * OneCkb,
+		PreAccountCellCap: 5371 * OneCkb,
 		RefCellCap:        2 * RefCellBaseCap,
 	}
-	timeSec, err := CalAccountCellExpiredAt(param, time.Now().Unix())
+	timeSec, err := CalAccountCellExpiredAt(param, 1616659213)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Println(timeSec)
+		fmt.Println("expiredAt:", timeSec)
 		fmt.Println(time.Unix(int64(timeSec), 0).String())
 		bys, _ := json.Marshal(param)
 		t.Log(string(bys))

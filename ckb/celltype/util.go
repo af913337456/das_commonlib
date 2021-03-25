@@ -11,7 +11,6 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
-	"math"
 	"math/big"
 	"reflect"
 	"strings"
@@ -470,13 +469,15 @@ func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int6
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	} else {
 		storageFee := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
-		dis := storageFee * oneYearDays * oneDaySec
-		disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(dis))
+		disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(storageFee))
 		dra := new(big.Rat).Quo(disRat, divPerDayPrice)
 		duration, _ := dra.Float64()
-		fmt.Println("CalAccountCellExpiredAt duration ====>", duration, dra.FloatString(0))
+		durationInt := uint64(duration)
+		fmt.Println("CalAccountCellExpiredAt dayPrice   ===>", divPerDayPrice)
+		fmt.Println("CalAccountCellExpiredAt storageFee ====>", storageFee)
+		fmt.Println("CalAccountCellExpiredAt duration   ====>", durationInt)
 		fmt.Println("CalAccountCellExpiredAt registerAt ====>", registerAt)
-		return uint64(registerAt) + uint64(math.Floor(duration)), nil
+		return uint64(registerAt) + durationInt*oneYearDays*oneDaySec, nil // 1648195213
 	}
 }
 
