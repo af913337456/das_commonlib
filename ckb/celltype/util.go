@@ -487,7 +487,7 @@ func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *
 		return ScriptType_User, nil
 	case DasAnyOneCanSendCellInfo.Out.CodeHash:
 		return ScriptType_Any, nil
-	case DasETHLockCellInfo.CodeHash:
+	case DasETHLockCellInfo.Out.CodeHash:
 		return ScriptType_ETH, nil
 	case DasBTCLockCellInfo.CodeHash:
 		return ScriptType_BTC, nil
