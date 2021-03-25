@@ -101,7 +101,7 @@ var (
 	}
 	DasPreAccountCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xa6b852bfe6b9827c86a3d9d60f4f86374a15dbcb94f06147d33e5e330c1b8594"),
+			TxHash:  types.HexToHash("0x21b25ab337cbbc7aad691f0f767ec5a852bbb8f6b9ff53dd00e0505f72f1f89a"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},

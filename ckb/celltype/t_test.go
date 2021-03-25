@@ -43,19 +43,6 @@ func Test_Rat(t *testing.T) {
 type setIndex func()
 
 func index(f setIndex) {
-	f()
-}
-
-func read(p *AccountCellDataPreObj_Old_New) {
-	fmt.Println("-->", p.InputIndex)
-}
-
-func Test_AccountCellDataPreObj_Old_New(t *testing.T) {
-	v := &AccountCellDataPreObj_Old_New{}
-	index(func() {
-		v.InputIndex = 1001
-	})
-	read(v)
 }
 
 func Test_NewDasWitnessData(t *testing.T) {
