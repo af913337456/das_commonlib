@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"fmt"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -22,9 +23,6 @@ func ETH_ComputeTxHash(t *types.Transaction) (types.Hash, error) {
 }
 
 func ETH_ComputeHash(rawBytes []byte) ([]byte, error) {
-	// data, err := t.Serialize()
-	// if err != nil {
-	// 	return types.Hash{}, err
-	// }
-	return crypto.Keccak256(rawBytes), nil
+	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(rawBytes), rawBytes)
+	return crypto.Keccak256([]byte(msg)), nil
 }

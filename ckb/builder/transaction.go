@@ -391,18 +391,9 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	binary.LittleEndian.PutUint64(length, uint64(len(data)))
 
 	hash := types.Hash{}
-	switch chainType {
-	case celltype.ChainType_ETH:
-		hash, err = ETH_ComputeTxHash(tx)
-		if err != nil {
-			return nil, err
-		}
-		break
-	default:
-		hash, err = tx.ComputeHash()
-		if err != nil {
-			return nil, err
-		}
+	hash, err = tx.ComputeHash()
+	if err != nil {
+		return nil, err
 	}
 
 	message := append(hash.Bytes(), length...)
