@@ -2,10 +2,14 @@
 github.com/Shopify/sarama
 # github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6
 github.com/StackExchange/wmi
+# github.com/VictoriaMetrics/fastcache v1.5.7
+github.com/VictoriaMetrics/fastcache
 # github.com/aristanetworks/goarista v0.0.0-20170210015632-ea17b1a17847
 github.com/aristanetworks/goarista/monotime
 # github.com/btcsuite/btcd v0.0.0-20171128150713-2e60448ffcc6
 github.com/btcsuite/btcd/btcec
+# github.com/cespare/xxhash/v2 v2.1.1
+github.com/cespare/xxhash/v2
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/deckarep/golang-set v0.0.0-20180603214616-504e848d77ea
@@ -20,17 +24,25 @@ github.com/eapache/queue
 github.com/elastic/gosigar
 github.com/elastic/gosigar/sys/windows
 # github.com/ethereum/go-ethereum v1.9.14
+github.com/ethereum/go-ethereum
 github.com/ethereum/go-ethereum/common
 github.com/ethereum/go-ethereum/common/hexutil
 github.com/ethereum/go-ethereum/common/math
 github.com/ethereum/go-ethereum/common/mclock
+github.com/ethereum/go-ethereum/common/prque
+github.com/ethereum/go-ethereum/core/types
 github.com/ethereum/go-ethereum/crypto
 github.com/ethereum/go-ethereum/crypto/secp256k1
+github.com/ethereum/go-ethereum/ethclient
+github.com/ethereum/go-ethereum/ethdb
+github.com/ethereum/go-ethereum/ethdb/memorydb
 github.com/ethereum/go-ethereum/log
 github.com/ethereum/go-ethereum/metrics
 github.com/ethereum/go-ethereum/p2p/netutil
+github.com/ethereum/go-ethereum/params
 github.com/ethereum/go-ethereum/rlp
 github.com/ethereum/go-ethereum/rpc
+github.com/ethereum/go-ethereum/trie
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
 # github.com/go-ole/go-ole v1.2.1
@@ -73,7 +85,6 @@ github.com/klauspost/compress/zstd/internal/xxhash
 github.com/minio/blake2b-simd
 # github.com/nervosnetwork/ckb-sdk-go v0.2.1-0.20210225011905-363af48e75f1
 github.com/nervosnetwork/ckb-sdk-go/address
-github.com/nervosnetwork/ckb-sdk-go/collector
 github.com/nervosnetwork/ckb-sdk-go/crypto
 github.com/nervosnetwork/ckb-sdk-go/crypto/bech32
 github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b
@@ -94,6 +105,10 @@ github.com/rcrowley/go-metrics
 github.com/rs/cors
 # github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521
 github.com/rs/xhandler
+# github.com/steakknife/bloomfilter v0.0.0-20180922174646-6819c0d2a570
+github.com/steakknife/bloomfilter
+# github.com/steakknife/hamming v0.0.0-20180906055917-c99c65617cd3
+github.com/steakknife/hamming
 # github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c
 github.com/tecbot/gorocksdb
 # golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
