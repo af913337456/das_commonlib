@@ -2,6 +2,7 @@ package builder
 
 import (
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
 
 /**
@@ -11,6 +12,14 @@ import (
  * Date:     2021/3/25 6:11 下午
  * Description:
  */
+
+func ETH_ComputeTxHash(t *types.Transaction) (types.Hash, error) {
+	data, err := t.Serialize()
+	if err != nil {
+		return types.Hash{}, err
+	}
+	return types.BytesToHash(crypto.Keccak256(data)), nil
+}
 
 func ETH_ComputeHash(rawBytes []byte) ([]byte, error) {
 	// data, err := t.Serialize()
