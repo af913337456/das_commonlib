@@ -23,10 +23,17 @@ var (
 		DepType: types.DepTypeDepGroup,
 	}
 
-	DasETHLockCellInfo = DASCellBaseInfoOut{
-		CodeHash:     types.HexToHash(PwLockTestNetCodeHash), // default
-		CodeHashType: types.HashTypeType,
-		Args:         emptyHexToArgsBytes(),
+	DasETHLockCellInfo = DASCellBaseInfo{
+		Dep: DASCellBaseInfoDep{
+			TxHash:  types.HexToHash("0x57a62003daeab9d54aa29b944fc3b451213a5ebdf2e232216a3cfed0dde61b38"),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		},
+		Out: DASCellBaseInfoOut{
+			CodeHash:     types.HexToHash(PwLockTestNetCodeHash), // default
+			CodeHashType: types.HashTypeType,
+			Args:         emptyHexToArgsBytes(),
+		},
 	}
 	DasBTCLockCellInfo = DASCellBaseInfoOut{
 		CodeHash:     types.HexToHash(""),
