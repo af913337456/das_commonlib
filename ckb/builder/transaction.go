@@ -429,10 +429,6 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 }
 
 func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, otherChainLock bool, signed []byte) error {
-	if otherChainLock {
-		tx.Witnesses[group[0]] = signed
-		return nil
-	}
 	wa := &types.WitnessArgs{
 		Lock:       signed,
 		InputType:  witnessArgs.InputType,
