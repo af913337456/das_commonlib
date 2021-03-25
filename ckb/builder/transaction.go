@@ -382,7 +382,7 @@ func SingleCombineSignTransaction(tx *types.Transaction, list []celltype.BuildTr
 	return nil
 }
 
-func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs) ([]byte, error) {
+func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, chainType celltype.ChainType) ([]byte, error) {
 	data, err := witnessArgs.Serialize()
 	if err != nil {
 		return nil, err
@@ -415,7 +415,13 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		message = append(message, witness...)
 	}
 
-	message, err = blake2b.Blake256(message)
+	switch chainType {
+	case celltype.ChainType_ETH:
+		message, err = ETH_ComputeHash(message)
+		break
+	default:
+		message, err = blake2b.Blake256(message)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -441,7 +447,7 @@ func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.
 }
 
 func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
-	message, err := BuildTxMessageWithoutSign(tx, group, witnessArgs)
+	message, err := BuildTxMessageWithoutSign(tx, group, witnessArgs, celltype.ChainType_CKB)
 	if err != nil {
 		return err
 	}
