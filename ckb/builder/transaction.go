@@ -2,7 +2,6 @@ package builder
 
 import (
 	"encoding/binary"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
@@ -423,7 +422,11 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	return message, nil
 }
 
-func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, signed []byte) error {
+func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, otherChainLock bool, signed []byte) error {
+	if otherChainLock {
+		tx.Witnesses[group[0]] = signed
+		return nil
+	}
 	wa := &types.WitnessArgs{
 		Lock:       signed,
 		InputType:  witnessArgs.InputType,
@@ -447,11 +450,10 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 
 func SignTransactionMessage(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) error {
 	signed, err := key.Sign(message)
-	fmt.Println(hex.EncodeToString(signed))
 	if err != nil {
 		return err
 	}
-	if err = AppendSignedMsgToTx(tx, group, witnessArgs, signed); err != nil {
+	if err = AppendSignedMsgToTx(tx, group, witnessArgs, false, signed); err != nil {
 		return err
 	}
 	return nil
