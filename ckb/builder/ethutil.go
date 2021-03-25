@@ -23,6 +23,7 @@ func ETH_ComputeTxHash(t *types.Transaction) (types.Hash, error) {
 }
 
 func ETH_ComputeHash(rawBytes []byte) ([]byte, error) {
-	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", 32, rawBytes)
+	finalBytes := crypto.Keccak256(rawBytes)
+	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(finalBytes), finalBytes)
 	return crypto.Keccak256([]byte(msg)), nil
 }
