@@ -2,6 +2,7 @@ package builder
 
 import (
 	"errors"
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"testing"
@@ -16,23 +17,40 @@ import (
  */
 
 func Test_ETH_ComputeHash(t *testing.T) {
-	msg := []byte("hello")
-	private, err := crypto.HexToECDSA("9111ecca8bd827f3568eca5a29433d27b9949dfdff7b956eb1b2a2657386a339")
+	testPrivHex := "9111ecca8bd827f3568eca5a29433d27b9949dfdff7b956eb1b2a2657386a339"
+	testAddrHex := "a0324794ff56ecb258220046034a363d0da98f51"
+	key, _ := crypto.HexToECDSA(testPrivHex)
+	addr := common.HexToAddress(testAddrHex)
+
+	xx := crypto.Keccak256([]byte("foo"))
+	fmt.Println(len(xx))
+	msg, err := ETH_ComputeHash(xx)
 	if err != nil {
-		panic(err)
+		t.Errorf("Sign error: %s", err)
 	}
-	cmpMsgBytes, err := ETH_ComputeHash(msg)
+	sig, err := crypto.Sign(msg, key)
 	if err != nil {
-		panic(err)
+		t.Errorf("Sign error: %s", err)
 	}
-	sig, err := crypto.Sign(cmpMsgBytes, private)
+	recoveredPub, err := crypto.Ecrecover(msg, sig)
 	if err != nil {
-		panic(err)
+		t.Errorf("ECRecover error: %s", err)
 	}
-	if err := checkSign("0xa0324794ff56ecb258220046034a363d0da98f51", "hello", sig); err != nil {
-		panic(err)
+	pubKey, _ := crypto.UnmarshalPubkey(recoveredPub)
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
+	if addr != recoveredAddr {
+		t.Errorf("Address mismatch: want: %x have: %x", addr, recoveredAddr)
 	}
-	t.Log("success")
+
+	// should be equal to SigToPub
+	recoveredPub2, err := crypto.SigToPub(msg, sig)
+	if err != nil {
+		t.Errorf("ECRecover error: %s", err)
+	}
+	recoveredAddr2 := crypto.PubkeyToAddress(*recoveredPub2)
+	if addr != recoveredAddr2 {
+		t.Errorf("Address mismatch: want: %x have: %x", addr, recoveredAddr2)
+	}
 }
 
 func checkSign(address, data string, signBytes []byte) error {
