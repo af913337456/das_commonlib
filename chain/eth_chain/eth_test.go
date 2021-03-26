@@ -31,7 +31,7 @@ func TestNewTransaction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	private := "bfb23b0d4cbcc78b3849c04b551bcc88910f47338ee223beebbfb72856e25efa" //
+	private := "" //
 	to := "0xc9f53b1d85356B60453F867610888D89a0B667Ad"
 	amount := new(big.Int).SetUint64(5670000000000)
 	tx, err := NewTransaction(context.Background(), client, rpcAddr, private, to, amount, []byte("123456abcdef"))
