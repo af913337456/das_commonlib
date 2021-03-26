@@ -395,14 +395,14 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	if err != nil {
 		return nil, err
 	}
-
-	message := append(hash.Bytes(), length...)
+	message := append(hash.Bytes())
+	message = append(message, length...)
 	message = append(message, data...)
 
 	// hash the other witnesses in the group
 	if len(group) > 1 {
 		for i := 1; i < len(group); i++ {
-			data := tx.Witnesses[i]
+			data = tx.Witnesses[group[i]]
 			length := make([]byte, 8)
 			binary.LittleEndian.PutUint64(length, uint64(len(data)))
 			message = append(message, length...)
@@ -419,7 +419,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 
 	switch chainType {
 	case celltype.ChainType_ETH:
-		message, err = ETH_ComputeHash(message)
+		message, err = ETHMessageDigest(message)
 		break
 	default:
 		message, err = blake2b.Blake256(message)
@@ -430,7 +430,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	return message, nil
 }
 
-func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, otherChainLock bool, signed []byte) error {
+func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, signed []byte) error {
 	wa := &types.WitnessArgs{
 		Lock:       signed,
 		InputType:  witnessArgs.InputType,
@@ -444,6 +444,14 @@ func AppendSignedMsgToTx(tx *types.Transaction, group []int, witnessArgs *types.
 	return nil
 }
 
+func SignTransactionMessageWithoutAppend(message []byte, key crypto.Key) ([]byte, error) {
+	signed, err := key.Sign(message)
+	if err != nil {
+		return nil, err
+	}
+	return signed, nil
+}
+
 func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, key crypto.Key) error {
 	message, err := BuildTxMessageWithoutSign(tx, group, witnessArgs, celltype.ChainType_CKB)
 	if err != nil {
@@ -452,20 +460,12 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 	return SignTransactionMessage(tx, group, witnessArgs, message, key)
 }
 
-func SignTransactionMessageWithoutAppend(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) ([]byte, error) {
-	signed, err := key.Sign(message)
-	if err != nil {
-		return nil, err
-	}
-	return signed, nil
-}
-
 func SignTransactionMessage(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) error {
 	signed, err := key.Sign(message)
 	if err != nil {
 		return err
 	}
-	if err = AppendSignedMsgToTx(tx, group, witnessArgs, false, signed); err != nil {
+	if err = AppendSignedMsgToTx(tx, group, witnessArgs, signed); err != nil {
 		return err
 	}
 	return nil
