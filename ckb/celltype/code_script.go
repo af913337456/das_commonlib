@@ -72,7 +72,7 @@ var (
 	}
 	DasWalletCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x94cddbfa870ec330f27813c28804c53b6fe3333e13cde2f30d147da52a30fd3c"),
+			TxHash:  types.HexToHash("0x440b323f2821aa808c1bad365c10ffb451058864a11f63b5669a5597ac0e8e0f"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
