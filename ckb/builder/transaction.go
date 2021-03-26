@@ -452,6 +452,14 @@ func SingleSignTransaction(tx *types.Transaction, group []int, witnessArgs *type
 	return SignTransactionMessage(tx, group, witnessArgs, message, key)
 }
 
+func SignTransactionMessageWithoutAppend(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) ([]byte, error) {
+	signed, err := key.Sign(message)
+	if err != nil {
+		return nil, err
+	}
+	return signed, nil
+}
+
 func SignTransactionMessage(tx *types.Transaction, group []int, witnessArgs *types.WitnessArgs, message []byte, key crypto.Key) error {
 	signed, err := key.Sign(message)
 	if err != nil {
