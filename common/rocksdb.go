@@ -117,7 +117,7 @@ func SafeHandleReaderKV(key, value *gorocksdb.Slice, handleBytes func(keyBytes, 
 	}
 }
 
-func RocksDbLoadOneByPrefix(rocksdb *gorocksdb.DB, keyPrefix []byte, handleBytes func(dataBytes []byte) (interface{}, error)) (interface{}, error) {
+func RocksDbLoadOneByPrefix(rocksdb *gorocksdb.DB, keyPrefix []byte, handleBytes func(keyBytes,dataBytes []byte) (interface{}, error)) (interface{}, error) {
 	opts := gorocksdb.NewDefaultReadOptions()
 	opts.SetFillCache(false)
 	reader := rocksdb.NewIterator(opts)
@@ -130,15 +130,19 @@ func RocksDbLoadOneByPrefix(rocksdb *gorocksdb.DB, keyPrefix []byte, handleBytes
 		free()
 		return nil, nil
 	}
+	_key_ := reader.Key()
 	value := reader.Value()
 	defer func() {
 		value.Free()
 		free()
 	}()
 	if bys := value.Data(); len(bys) > 0 {
+		keyRawDataBytes := _key_.Data()
+		keyTmpData := make([]byte, len(keyRawDataBytes))
+		copy(keyTmpData, keyRawDataBytes)
 		tmpData := make([]byte, len(bys))
 		copy(tmpData, bys)
-		if val, err := handleBytes(tmpData); err != nil {
+		if val, err := handleBytes(keyTmpData,tmpData); err != nil {
 			return nil, fmt.Errorf("RocksDbLoadOneByPrefix handleBytes failed: %s", err.Error())
 		} else {
 			return val, nil
