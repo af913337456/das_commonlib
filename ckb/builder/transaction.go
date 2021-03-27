@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
+	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/address"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
@@ -419,7 +420,8 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 
 	switch chainType {
 	case celltype.ChainType_ETH:
-		message, err = ETHMessageDigest(message)
+		message = ethcrypto.Keccak256(message)
+		//message, err = ETHMessageDigest(message)
 		break
 	default:
 		message, err = blake2b.Blake256(message)
