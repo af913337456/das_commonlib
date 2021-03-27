@@ -15,6 +15,10 @@ import (
  * Description:
  */
 
+func LoadOneLiveCell(client rpc.Client, key *indexer.SearchKey, capLimit uint64, latest, normal bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
+	return LoadLiveCellsWithSize(client, key, capLimit, 1, latest, normal, filter)
+}
+
 func LoadLiveCells(client rpc.Client, key *indexer.SearchKey, capLimit uint64, latest, normal bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
 	return LoadLiveCellsWithSize(client, key, capLimit, 100, latest, normal, filter)
 }
