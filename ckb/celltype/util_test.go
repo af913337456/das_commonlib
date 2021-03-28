@@ -1,9 +1,11 @@
 package celltype
 
 import (
+	"context"
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
 	"testing"
@@ -17,6 +19,53 @@ import (
  * Date:     2020/12/27 12:09 下午
  * Description:
  */
+
+func rpcClient() rpc.Client {
+	rpcClient, err := rpc.DialWithIndexerContext(
+		context.TODO(),
+		"http://:8114", // :8114
+		"http://:8116")
+	if err != nil {
+		panic(fmt.Errorf("init rpcClient failed: %s", err.Error()))
+	}
+	return rpcClient
+}
+
+func Test_FindTargetTypeScriptByInputList(t *testing.T) {
+	inputList := []*types.CellInput{
+		{
+			Since: 0,
+			PreviousOutput: &types.OutPoint{
+				TxHash: types.HexToHash("0x064ea7d43318faaad70cb5acd33d75114a53d98a4819cd309e7816052694f185"),
+				Index:  0,
+			},
+		},
+	}
+	ret,err := FindTargetTypeScriptByInputList(&ReqFindTargetTypeScriptParam{
+		Ctx:       context.TODO(),
+		RpcClient: rpcClient(),
+		InputList: inputList,
+		IsLock:    false,
+		CodeHash:  DasProposeCellScript.Out.CodeHash,
+	})
+	if err != nil {
+		panic(err)
+	}
+	err = GetTargetCellFromWitness(ret.Tx, func(rawWitnessData []byte, witnessParseObj *ParseDasWitnessBysDataObj) (bool, error) {
+		witnessDataObj := witnessParseObj.WitnessObj
+		switch witnessDataObj.TableType {
+		case TableType_PROPOSE_CELL:
+			t.Log("found!",hex.EncodeToString(rawWitnessData))
+			return true, nil
+		}
+		return false, nil
+	}, func(err error) {
+		t.Log(err.Error())
+	})
+	if err != nil {
+		panic(err)
+	}
+}
 
 func Test_ParseProposeCellData(t *testing.T) {
 	cellData := "0x64617302000000d100000010000000d1000000d1000000c10000001000000014000000180000000600000001000000a5000000a5000000200000002a0000005f0000009400000098000000a0000000a100000000000000000000000000350000001000000030000000310000000000000000000000000000000000000000000000000000000000000000000000000000000035000000100000003000000031000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000004000000"

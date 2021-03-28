@@ -26,7 +26,7 @@ package ckb
 //
 // func Test_TxBuilder(t *testing.T) {
 // 	client, err := rpc.DialWithIndexer("http://127.0.0.1:8114", "http://127.0.0.1:8116")
-// 	//client,err := rpc.DialWithIndexer("http://47.242.53.82:8114","http://47.242.53.82:8116")
+// 	//client,err := rpc.DialWithIndexer("http://:8114","http://:8116")
 // 	if err != nil {
 // 		panic(err)
 // 	}
@@ -79,7 +79,7 @@ package ckb
 //
 // func Test_StateCellTx(t *testing.T) {
 // 	// client,err := rpc.DialWithIndexer("http://127.0.0.1:8114","http://127.0.0.1:8116")
-// 	client, err := rpc.DialWithIndexer("http://47.242.53.82:8114", "http://47.242.53.82:8116")
+// 	client, err := rpc.DialWithIndexer("http://:8114", "http://:8116")
 // 	if err != nil {
 // 		panic(err)
 // 	}

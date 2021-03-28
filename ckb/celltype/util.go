@@ -347,9 +347,9 @@ type ReqFindTargetTypeScriptParam struct {
 type FindTargetTypeScriptRet struct {
 	Output  *types.CellOutput
 	Data    []byte
-	WitnessList [][]byte
+	Tx      *types.Transaction
 }
-func FindTargetTypeScriptByInputList(p ReqFindTargetTypeScriptParam) (*FindTargetTypeScriptRet, error) {
+func FindTargetTypeScriptByInputList(p *ReqFindTargetTypeScriptParam) (*FindTargetTypeScriptRet, error) {
 	codeHash := p.CodeHash
 	for _, item := range p.InputList {
 		tx, err := p.RpcClient.GetTransaction(p.Ctx, item.PreviousOutput.TxHash)
@@ -365,7 +365,7 @@ func FindTargetTypeScriptByInputList(p ReqFindTargetTypeScriptParam) (*FindTarge
 					return &FindTargetTypeScriptRet{
 						Output: output,
 						Data:    tx.Transaction.OutputsData[i],
-						WitnessList: tx.Transaction.Witnesses,
+						Tx: tx.Transaction,
 					}, nil
 				}
 			} else {
@@ -376,7 +376,7 @@ func FindTargetTypeScriptByInputList(p ReqFindTargetTypeScriptParam) (*FindTarge
 					return &FindTargetTypeScriptRet{
 						Output: output,
 						Data:    tx.Transaction.OutputsData[i],
-						WitnessList: tx.Transaction.Witnesses,
+						Tx: tx.Transaction,
 					}, nil
 				}
 			}
@@ -535,7 +535,7 @@ func GetTargetCellFromWitness(tx *types.Transaction, handle ValidHandle, skipHan
 	for i := inputSize + 1; i < witnessSize; i++ { // (inputSize + 1) skip action cell
 		rawWitnessBytes := tx.Witnesses[i]
 		if dasObj, err := ParseTxWitnessToDasWitnessObj(rawWitnessBytes); err != nil {
-			skipHandle(fmt.Errorf("getTargetCellFromWitness ParseTxWitnessToDasWitnessObj err: %s, skip this one", err.Error()))
+			skipHandle(fmt.Errorf("GetTargetCellFromTx ParseTxWitnessToDasWitnessObj err: %s, skip this one", err.Error()))
 		} else {
 			if stop, resp := handle(rawWitnessBytes, dasObj); resp != nil {
 				return resp
