@@ -337,33 +337,46 @@ func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 	return &d
 }
 
-func FindTargetTypeScriptByInputList(ctx context.Context, rpcClient rpc.Client, inputList []*types.CellInput, isLock bool, CodeHash types.Hash) (*types.Script, error) {
-	for _, item := range inputList {
-		tx, err := rpcClient.GetTransaction(ctx, item.PreviousOutput.TxHash)
+type ReqFindTargetTypeScriptParam struct {
+	Ctx context.Context
+	RpcClient rpc.Client
+	InputList []*types.CellInput
+	IsLock bool
+	CodeHash types.Hash
+}
+type FindTargetTypeScriptRet struct {
+	Output  *types.CellOutput
+	Data    []byte
+	WitnessList [][]byte
+}
+func FindTargetTypeScriptByInputList(p ReqFindTargetTypeScriptParam) (*FindTargetTypeScriptRet, error) {
+	codeHash := p.CodeHash
+	for _, item := range p.InputList {
+		tx, err := p.RpcClient.GetTransaction(p.Ctx, item.PreviousOutput.TxHash)
 		if err != nil {
 			return nil, fmt.Errorf("FindSenderLockScriptByInputList err: %s", err.Error())
 		}
 		size := len(tx.Transaction.Outputs)
 		for i := 0; i < size; i++ {
 			output := tx.Transaction.Outputs[i]
-			if isLock {
-				if output.Lock != nil && output.Lock.CodeHash == CodeHash &&
+			if p.IsLock {
+				if output.Lock != nil && output.Lock.CodeHash == codeHash &&
 					output.Lock.HashType == types.HashTypeType && item.PreviousOutput.Index == uint(i) {
-					return &types.Script{
-						CodeHash: CodeHash,
-						HashType: types.HashTypeType,
-						Args:     output.Lock.Args,
+					return &FindTargetTypeScriptRet{
+						Output: output,
+						Data:    tx.Transaction.OutputsData[i],
+						WitnessList: tx.Transaction.Witnesses,
 					}, nil
 				}
 			} else {
 				if output.Type != nil &&
-					output.Type.CodeHash == CodeHash &&
+					output.Type.CodeHash == codeHash &&
 					output.Type.HashType == types.HashTypeType &&
 					item.PreviousOutput.Index == uint(i) {
-					return &types.Script{
-						CodeHash: CodeHash,
-						HashType: types.HashTypeType,
-						Args:     output.Type.Args,
+					return &FindTargetTypeScriptRet{
+						Output: output,
+						Data:    tx.Transaction.OutputsData[i],
+						WitnessList: tx.Transaction.Witnesses,
 					}, nil
 				}
 			}
