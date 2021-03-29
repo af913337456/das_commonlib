@@ -53,26 +53,37 @@ func GetShortAddressFromLockScriptArgs(args string) {
 
 }
 
-func CreateCKBWallet(isTestNet bool) (string,string,string) {
+type NewWalletObj struct {
+	PriKeyHex  string
+	PubKeyHex  string
+	AddressHex string
+}
+func CreateCKBWallet(isTestNet bool) (*NewWalletObj,error) {
 	seed := rand.Reader
 	keyPair, err := GenerateKey(seed)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("GenerateKey err:%s",err.Error())
 	}
-
 	rawPubKey := keyPair.PublicKey
-
 	privBytes := keyPair.ToBytes()
 	privKey := byteString(privBytes)
-
 	compressionPubKey := rawPubKey.ToBytes()
 	pubKey := byteString(compressionPubKey)
-
 	blake160 := genBlake160(compressionPubKey)
 	if isTestNet {
-		return privKey,pubKey,genCkbAddr(PREFIX_TESTNET, blake160)
+		addr,err := genCkbAddr(PREFIX_TESTNET, blake160)
+		return &NewWalletObj{
+			PriKeyHex:  privKey,
+			PubKeyHex:  pubKey,
+			AddressHex: addr,
+		}, err
 	} else {
-		return privKey,pubKey,genCkbAddr(PREFIX_MAINNET, blake160)
+		addr,err := genCkbAddr(PREFIX_MAINNET, blake160)
+		return &NewWalletObj{
+			PriKeyHex:  privKey,
+			PubKeyHex:  pubKey,
+			AddressHex: addr,
+		}, err
 	}
 }
 
@@ -117,7 +128,7 @@ func genBlake160(pubKeyBin []byte) []byte {
 	return sum[:20]
 }
 
-func genCkbAddr(prefix string, blake160Addr []byte) string {
+func genCkbAddr(prefix string, blake160Addr []byte) (string,error) {
 	pType, _ := hex.DecodeString("01")
 	flag, _ := hex.DecodeString("00")
 	payload := append(pType, flag...)
@@ -125,11 +136,11 @@ func genCkbAddr(prefix string, blake160Addr []byte) string {
 
 	converted, err := bech32.ConvertBits(payload, 8, 5, true)
 	if err != nil {
-		panic(err)
+		return "", fmt.Errorf("ConvertBits err:%s",err.Error())
 	}
-	addr, err := bech32.Encode(prefix, converted)
-	if err != nil {
-		panic(err)
+	if addr, err := bech32.Encode(prefix, converted); err != nil {
+		return "", fmt.Errorf("bech32.Encode err:%s",err.Error())
+	} else {
+		return addr, nil
 	}
-	return addr
 }
