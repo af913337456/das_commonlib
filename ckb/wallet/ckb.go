@@ -1,11 +1,13 @@
 package wallet
 
 import (
+	"crypto/rand"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/crypto"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
+	"github.com/minio/blake2b-simd"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/bech32"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
@@ -19,6 +21,11 @@ import (
  * Date:     2020/12/21 10:10 下午
  * Description:
  */
+
+const (
+	PREFIX_MAINNET = "ckb"
+	PREFIX_TESTNET = "ckt"
+)
 
 type CkbWalletObj struct {
 	SystemScripts *utils.SystemScripts
@@ -44,6 +51,29 @@ func InitCkbWallet(privateKeyHex string, systemScript *utils.SystemScripts) (*Ck
 
 func GetShortAddressFromLockScriptArgs(args string) {
 
+}
+
+func CreateCKBWallet(isTestNet bool) (string,string,string) {
+	seed := rand.Reader
+	keyPair, err := GenerateKey(seed)
+	if err != nil {
+		panic(err)
+	}
+
+	rawPubKey := keyPair.PublicKey
+
+	privBytes := keyPair.ToBytes()
+	privKey := byteString(privBytes)
+
+	compressionPubKey := rawPubKey.ToBytes()
+	pubKey := byteString(compressionPubKey)
+
+	blake160 := genBlake160(compressionPubKey)
+	if isTestNet {
+		return privKey,pubKey,genCkbAddr(PREFIX_TESTNET, blake160)
+	} else {
+		return privKey,pubKey,genCkbAddr(PREFIX_MAINNET, blake160)
+	}
 }
 
 func GetLockScriptArgsFromShortAddress(address string) (string, error) {
@@ -72,4 +102,34 @@ func VerifySign(msg []byte, sign []byte, ckbPubkeyHex string) (bool, error) {
 		return false, err
 	}
 	return hex.EncodeToString(ethSecp256k1.CompressPubkey(pubKey.X, pubKey.Y)) == ckbPubkeyHex, nil
+}
+
+func byteString(b []byte) (s string) {
+	s = ""
+	for i := 0; i < len(b); i++ {
+		s += fmt.Sprintf("%02x", b[i])
+	}
+	return s
+}
+
+func genBlake160(pubKeyBin []byte) []byte {
+	sum := blake2b.Sum256(pubKeyBin)
+	return sum[:20]
+}
+
+func genCkbAddr(prefix string, blake160Addr []byte) string {
+	pType, _ := hex.DecodeString("01")
+	flag, _ := hex.DecodeString("00")
+	payload := append(pType, flag...)
+	payload = append(payload, blake160Addr...)
+
+	converted, err := bech32.ConvertBits(payload, 8, 5, true)
+	if err != nil {
+		panic(err)
+	}
+	addr, err := bech32.Encode(prefix, converted)
+	if err != nil {
+		panic(err)
+	}
+	return addr
 }

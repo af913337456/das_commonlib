@@ -23,8 +23,8 @@ import (
 func rpcClient() rpc.Client {
 	rpcClient, err := rpc.DialWithIndexerContext(
 		context.TODO(),
-		"http://:8114", // :8114
-		"http://:8116")
+		"http://47.242.53.82:8114", // :8114
+		"http://47.242.53.82:8116")
 	if err != nil {
 		panic(fmt.Errorf("init rpcClient failed: %s", err.Error()))
 	}
@@ -36,7 +36,7 @@ func Test_FindTargetTypeScriptByInputList(t *testing.T) {
 		{
 			Since: 0,
 			PreviousOutput: &types.OutPoint{
-				TxHash: types.HexToHash("0x064ea7d43318faaad70cb5acd33d75114a53d98a4819cd309e7816052694f185"),
+				TxHash: types.HexToHash("0xd6590562d4b6ac365399575611e83c8ab86e09429d6fb36846ee15d8febcc8c4"),
 				Index:  0,
 			},
 		},
@@ -68,7 +68,7 @@ func Test_FindTargetTypeScriptByInputList(t *testing.T) {
 }
 
 func Test_ParseProposeCellData(t *testing.T) {
-	cellData := "0x64617302000000d100000010000000d1000000d1000000c10000001000000014000000180000000600000001000000a5000000a5000000200000002a0000005f0000009400000098000000a0000000a100000000000000000000000000350000001000000030000000310000000000000000000000000000000000000000000000000000000000000000000000000000000035000000100000003000000031000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000004000000"
+	cellData := "0x64617305000000fd000000100000001000000010000000ed0000001000000014000000180000000000000001000000d1000000d1000000140000005d0000006b00000073000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f0a000000b7526803f67ebe70aba600000000000000005e00000008000000560000000c0000003100000025000000100000001a0000001b0000008fa27d1c1f2722c0ba7900934159402b585f73e51125000000100000001a0000001b000000934159402b585f73e5110298267780c14bd317be03"
 	cellData = cellData[2:]
 	cellDataBytes, err := hex.DecodeString(cellData)
 	if err != nil {
@@ -78,39 +78,37 @@ func Test_ParseProposeCellData(t *testing.T) {
 		panic(err)
 	} else {
 		t.Log(das.WitnessObj.TableType)
-		if len(das.MoleculeDepDataEntity.AsSlice()) > 0 {
-			panic("dep not empty")
-		}
 		if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
 			panic("empty")
 		}
 		if das.MoleculeNewDataEntity.Entity().IsEmpty() {
 			panic("empty")
 		}
-		accountCellData, err := AccountCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
-		if err != nil {
-			panic(err)
-		}
-		t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
-		_, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
-		if err != nil {
-			panic(err)
-		} else {
-			t.Log("success")
-			// newEntity := das.MoleculeNewDataEntity
-			// depEntity := das.MoleculeDepDataEntity
-			// if !newEntity.IsEmpty() && (depEntity == nil || depEntity.IsEmpty()) {
-			// 	proposeCellData, err := ProposalCellDataFromSlice(newEntity.Entity().RawData(), false)
-			// 	if err != nil {
-			// 		panic(err)
-			// 	}
-			// 	lock, err := MoleculeScriptToGo(*proposeCellData.ProposerLock())
-			// 	if err != nil {
-			// 		panic(err)
-			// 	}
-			// 	t.Log(lock.CodeHash.String())
-			// }
-		}
+		fmt.Println(MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData()))
+		// proposeData, err := ProposalCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
+		// _, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
+		// if err != nil {
+		// 	panic(err)
+		// } else {
+		// 	t.Log("success")
+		// 	// newEntity := das.MoleculeNewDataEntity
+		// 	// depEntity := das.MoleculeDepDataEntity
+		// 	// if !newEntity.IsEmpty() && (depEntity == nil || depEntity.IsEmpty()) {
+		// 	// 	proposeCellData, err := ProposalCellDataFromSlice(newEntity.Entity().RawData(), false)
+		// 	// 	if err != nil {
+		// 	// 		panic(err)
+		// 	// 	}
+		// 	// 	lock, err := MoleculeScriptToGo(*proposeCellData.ProposerLock())
+		// 	// 	if err != nil {
+		// 	// 		panic(err)
+		// 	// 	}
+		// 	// 	t.Log(lock.CodeHash.String())
+		// 	// }
+		// }
 	}
 }
 

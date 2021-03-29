@@ -19,6 +19,11 @@ import (
  * Description:
  */
 
+func Test_CreateCKBWallet(t *testing.T) {
+	pri,pub,add := CreateCKBWallet(false)
+	t.Log(pri,pub,add)
+}
+
 func Test_InitWallet2(t *testing.T) {
 	systemScript := &utils.SystemScripts{
 		SecpSingleSigCell: &utils.SystemScriptCell{
