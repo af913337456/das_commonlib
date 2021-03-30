@@ -20,8 +20,8 @@ import (
  */
 
 func Test_CreateCKBWallet(t *testing.T) {
-	pri,pub,add := CreateCKBWallet(false)
-	t.Log(pri,pub,add)
+	ret,err := CreateCKBWallet(false)
+	t.Log(ret,err)
 }
 
 func Test_InitWallet2(t *testing.T) {

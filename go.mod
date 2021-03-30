@@ -15,7 +15,7 @@ require (
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/jinzhu/gorm v1.9.16
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
-	github.com/nervosnetwork/ckb-sdk-go v0.2.1-0.20210225011905-363af48e75f1
+	github.com/nervosnetwork/ckb-sdk-go v0.3.1-0.20210329091145-f093d7a94d14
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.8.1
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
