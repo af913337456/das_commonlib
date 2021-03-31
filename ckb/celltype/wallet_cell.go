@@ -75,7 +75,7 @@ func (c *WalletCell) TableType() TableType {
 }
 
 func (c *WalletCell) Data() ([]byte, error) {
-	return nil, nil
+	return c.p.AccountId.Bytes(), nil
 }
 
 func (c *WalletCell) TableData() []byte {
