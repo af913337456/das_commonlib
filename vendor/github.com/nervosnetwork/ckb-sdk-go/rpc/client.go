@@ -132,7 +132,7 @@ type client struct {
 }
 
 func (cli *client) CallContext(ctx context.Context, result interface{}, method string, args ...interface{}) error {
-	err := cli.c.CallContext(ctx, result, method, args)
+	err := cli.c.CallContext(ctx, result, method, args...)
 	if err != nil {
 		return err
 	}
