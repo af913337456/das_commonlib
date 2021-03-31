@@ -28,9 +28,10 @@ func LoadLiveNormalCells(client rpc.Client, key *indexer.SearchKey, capLimit uin
 }
 
 func LoadLiveCellsWithSize(client rpc.Client, key *indexer.SearchKey, capLimit, size uint64, latest, normal bool, filter func(cell *indexer.LiveCell) bool) ([]indexer.LiveCell, uint64, error) {
-	order := indexer.SearchOrderDesc
+	order := indexer.SearchOrderAsc
+	// note: different args, wont work
 	if latest {
-		order = indexer.SearchOrderAsc
+		order = indexer.SearchOrderDesc
 	}
 	c := collector.NewLiveCellCollector(
 		client, key, order, size, "", normal)
