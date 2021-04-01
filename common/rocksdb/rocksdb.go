@@ -1,4 +1,4 @@
-package common
+package rocksdb
 
 import (
 	"fmt"
