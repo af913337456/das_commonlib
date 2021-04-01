@@ -150,6 +150,24 @@ func MoleculeScriptToGo(s Script) (*types.Script, error) {
 	}, nil
 }
 
+func MoleculeRecordsToGo(records Records) EditRecordItemList {
+	index := uint(0)
+	recordSize := records.ItemCount()
+	retList := make([]EditRecordItem, 0, recordSize)
+	for ; index < recordSize; index++ {
+		record := records.Get(index)
+		ttlU32,_ := MoleculeU32ToGo(record.RecordTtl().RawData())
+		retList = append(retList, EditRecordItem{
+			Key:   string(record.RecordKey().RawData()),
+			Type:  string(record.RecordType().RawData()),
+			Label: string(record.RecordLabel().RawData()),
+			Value: string(record.RecordValue().RawData()),
+			TTL:   fmt.Sprintf("%d",ttlU32),
+		})
+	}
+	return retList
+}
+
 func AccountCharsToAccount(accountChars AccountChars) DasAccount {
 	index := uint(0)
 	accountRawBytes := []byte{}

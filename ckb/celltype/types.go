@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
+	"strconv"
 )
 
 /**
@@ -449,4 +451,41 @@ type CalAccountCellExpiredAtParam struct {
 func (c CalAccountCellExpiredAtParam) Json() string {
 	bys, _ := json.Marshal(c)
 	return string(bys)
+}
+
+type EditRecordItem struct {
+	Key   string `json:"key"`
+	Type  string `json:"type"`
+	Label string `json:"label"`
+	Value string `json:"value"`
+	TTL   string `json:"ttl"`
+}
+type EditRecordItemList []EditRecordItem
+
+func (l EditRecordItemList) ToMoleculeRecords() (*Records, error) {
+	if len(l) == 0 {
+		return nil, nil
+	}
+	records := NewRecordsBuilder()
+	for _, item := range l {
+		if item.Label == "" || item.Type == "" || item.Value == "" { 
+			return nil, errors.New("invalid records, label, value, type cant empty")
+		}
+		ttl, _ := strconv.ParseInt(item.TTL, 10, 64)
+
+		record := NewRecordBuilder().
+			RecordKey(GoStrToMoleculeBytes(item.Key)).
+			RecordValue(GoStrToMoleculeBytes(item.Value)).
+			RecordLabel(GoStrToMoleculeBytes(item.Label)).
+			RecordTtl(GoUint32ToMoleculeU32(uint32(ttl))).
+			RecordType(GoStrToMoleculeBytes(item.Type)).
+			Build()
+		records.Push(record)
+	}
+	recordsBuild := records.Build()
+	return &recordsBuild, nil
+}
+
+type ReqSendEditRecordsTx struct {
+	Records EditRecordItemList `json:"records"`
 }
