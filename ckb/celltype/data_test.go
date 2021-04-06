@@ -46,10 +46,12 @@ func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
 	}, func(err error) {
 		fmt.Println("err:",err.Error())
 	}, func() {
-		for _, item := range SystemCodeScriptMap {
+		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
+			item := value.(*DASCellBaseInfo)
 			fmt.Println("成功:",item.Name,item.Dep.TxHash.String())
-		}
-		fmt.Println("=====")
+			return true
+		})
+		fmt.Println("=====",DasAccountCellScript.Dep.TxHash.String())
 	})
 	select {}
 }
@@ -92,7 +94,9 @@ func Test_InitSystemScript(t *testing.T) {
 	SetSystemCodeScriptOutPoint(DasProposeCellScript.Out.CodeHash, types.OutPoint{
 		TxHash: types.HexToHash("111"),
 	})
-	fmt.Println(SystemCodeScriptMap[DasProposeCellScript.Out.CodeHash].Dep.TxHash.String())
+	obj,_ := SystemCodeScriptMap.Load(DasProposeCellScript.Out.CodeHash)
+	item := obj.(*DASCellBaseInfo)
+	fmt.Println(item.Dep.TxHash.String())
 	fmt.Println(DasProposeCellScript.Dep.ToDepCell().OutPoint.TxHash.String())
 	bys, err := SystemCodeScriptBytes()
 	if err != nil {

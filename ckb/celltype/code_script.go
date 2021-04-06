@@ -9,6 +9,7 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/nervosnetwork/ckb-sdk-go/utils"
+	"golang.org/x/sync/syncmap"
 	"strings"
 	"time"
 )
@@ -267,25 +268,26 @@ var (
 			Args:         hexToArgsBytes("0xd0c1c7156f2e310a12822e2cc336398ec4ef194abc1f96023b743f3249f09e2102000000"),
 		},
 	}
-	SystemCodeScriptMap = map[types.Hash]*DASCellBaseInfo{}
+	SystemCodeScriptMap = syncmap.Map{} // map[types.Hash]*DASCellBaseInfo{}
 )
 
 func init() {
-	SystemCodeScriptMap[DasApplyRegisterCellScript.Out.CodeHash] = &DasApplyRegisterCellScript
-	SystemCodeScriptMap[DasPreAccountCellScript.Out.CodeHash] = &DasPreAccountCellScript
-	SystemCodeScriptMap[DasBiddingCellScript.Out.CodeHash] = &DasBiddingCellScript
-	SystemCodeScriptMap[DasAccountCellScript.Out.CodeHash] = &DasAccountCellScript
-	SystemCodeScriptMap[DasOnSaleCellScript.Out.CodeHash] = &DasOnSaleCellScript
-	SystemCodeScriptMap[DasProposeCellScript.Out.CodeHash] = &DasProposeCellScript
-	SystemCodeScriptMap[DasWalletCellScript.Out.CodeHash] = &DasWalletCellScript
-	SystemCodeScriptMap[DasRefCellScript.Out.CodeHash] = &DasRefCellScript
+	SystemCodeScriptMap.Store(DasApplyRegisterCellScript.Out.CodeHash,&DasApplyRegisterCellScript)
+	SystemCodeScriptMap.Store(DasPreAccountCellScript.Out.CodeHash,&DasPreAccountCellScript)
+	SystemCodeScriptMap.Store(DasAccountCellScript.Out.CodeHash,&DasAccountCellScript)
+	SystemCodeScriptMap.Store(DasBiddingCellScript.Out.CodeHash,&DasBiddingCellScript)
+	SystemCodeScriptMap.Store(DasOnSaleCellScript.Out.CodeHash,&DasOnSaleCellScript)
+	SystemCodeScriptMap.Store(DasProposeCellScript.Out.CodeHash,&DasProposeCellScript)
+	SystemCodeScriptMap.Store(DasWalletCellScript.Out.CodeHash,&DasWalletCellScript)
+	SystemCodeScriptMap.Store(DasRefCellScript.Out.CodeHash,&DasRefCellScript)
 }
 
 func TimingSyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Script,errHandle func(err error),successHandle func())  {
 	sync := func() {
-		for _, item := range SystemCodeScriptMap {
+		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
+			item := value.(*DASCellBaseInfo)
 			if item.ContractTypeScript.Args == nil {
-				continue
+				return true
 			}
 			searchKey := &indexer.SearchKey{
 				Script:     &item.ContractTypeScript,
@@ -299,7 +301,7 @@ func TimingSyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Sc
 			})
 			if err != nil && errHandle != nil {
 				errHandle(fmt.Errorf("LoadAllScriptCodeCell err: %s", err.Error()))
-				return
+				return false
 			}
 			for _, liveCell := range liveCells {
 				scriptCodeOutput := liveCell.Output
@@ -309,7 +311,8 @@ func TimingSyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Sc
 					Index:  liveCell.OutPoint.Index,
 				})
 			}
-		}
+			return true
+		})
 		if successHandle != nil {
 			successHandle()
 		}
@@ -326,12 +329,15 @@ func TimingSyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Sc
 }
 
 func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) *DASCellBaseInfo {
-	if _, ok := SystemCodeScriptMap[typeId]; !ok {
+	if item, ok := SystemCodeScriptMap.Load(typeId); !ok {
 		return nil
+	} else {
+		obj := item.(*DASCellBaseInfo)
+		obj.Dep.TxHash = point.TxHash
+		obj.Dep.TxIndex = point.Index
+		// SystemCodeScriptMap.Store(typeId,obj)
+		return obj
 	}
-	SystemCodeScriptMap[typeId].Dep.TxHash = point.TxHash
-	SystemCodeScriptMap[typeId].Dep.TxIndex = point.Index
-	return SystemCodeScriptMap[typeId]
 }
 
 func emptyHexToArgsBytes() []byte {
@@ -347,12 +353,16 @@ func hexToArgsBytes(hexStr string) []byte {
 }
 
 func IsSystemCodeScriptReady() bool {
-	for _, item := range SystemCodeScriptMap {
+	ready := true
+	SystemCodeScriptMap.Range(func(key, value interface{}) bool {
+		item := value.(*DASCellBaseInfo)
 		if item.Out.CodeHash.Hex() == "0x" {
+			ready = false
 			return false
 		}
-	}
-	return true
+		return true
+	})
+	return ready
 }
 
 func SystemCodeScriptBytes() ([]byte, error) {

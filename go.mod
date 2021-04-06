@@ -21,5 +21,6 @@ require (
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c
+	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 	moul.io/http2curl v1.0.0 // indirect
 )
