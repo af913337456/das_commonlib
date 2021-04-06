@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
 	"testing"
@@ -19,17 +18,6 @@ import (
  * Date:     2020/12/27 12:09 下午
  * Description:
  */
-
-func rpcClient() rpc.Client {
-	rpcClient, err := rpc.DialWithIndexerContext(
-		context.TODO(),
-		"http://47.242.53.82:8114", // :8114
-		"http://47.242.53.82:8116")
-	if err != nil {
-		panic(fmt.Errorf("init rpcClient failed: %s", err.Error()))
-	}
-	return rpcClient
-}
 
 func Test_FindTargetTypeScriptByInputList(t *testing.T) {
 	inputList := []*types.CellInput{

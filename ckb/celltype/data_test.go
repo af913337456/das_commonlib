@@ -1,11 +1,14 @@
 package celltype
 
 import (
+	"context"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
+	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
+	"github.com/nervosnetwork/ckb-sdk-go/utils"
 	"testing"
 	"time"
 )
@@ -17,6 +20,39 @@ import (
  * Date:     2020/12/20 2:57 下午
  * Description:
  */
+
+func rpcClient() rpc.Client {
+	rpcClient, err := rpc.DialWithIndexerContext(
+		context.TODO(),
+		"http://192.168.199.120:8114",
+		"http://192.168.199.120:8116")
+	if err != nil {
+		panic(fmt.Errorf("init rpcClient failed: %s", err.Error()))
+	}
+	return rpcClient
+}
+func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
+	rpcClient := rpcClient()
+	systemScripts, err := utils.NewSystemScripts(rpcClient)
+	if err != nil {
+		fmt.Println(fmt.Errorf("NewSystemScripts failed: %s", err.Error()))
+		return
+	}
+	argsBytes, _ := hex.DecodeString("5eb00c0e51afb537fc8071810034ce92f98c3259")
+	go TimingSyncSystemCodeScriptOutPoint(rpcClient,&types.Script{
+		CodeHash: systemScripts.SecpSingleSigCell.CellHash,
+		HashType: types.HashTypeType,
+		Args:     argsBytes,
+	}, func(err error) {
+		fmt.Println("err:",err.Error())
+	}, func() {
+		for _, item := range SystemCodeScriptMap {
+			fmt.Println("成功:",item.Name,item.Dep.TxHash.String())
+		}
+		fmt.Println("=====")
+	})
+	select {}
+}
 
 func Test_ExpiredAtFromOutputData(t *testing.T) {
 	dataHex := "c4de24c38f1a22e65b9a1a24aaae7d4db37e7ae138e9d44651d76f1d179f95e8ee06f79afc0af40e7198faf1611a8fa5324263b3f2dd3b620000000062616161616161612e626974"
