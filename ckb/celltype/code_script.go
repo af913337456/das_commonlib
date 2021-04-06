@@ -282,7 +282,7 @@ func init() {
 	SystemCodeScriptMap.Store(DasRefCellScript.Out.CodeHash,&DasRefCellScript)
 }
 
-func TimingSyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Script,errHandle func(err error),successHandle func())  {
+func TimingAsyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Script,errHandle func(err error),successHandle func())  {
 	sync := func() {
 		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
 			item := value.(*DASCellBaseInfo)
@@ -318,14 +318,16 @@ func TimingSyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Sc
 		}
 	}
 	sync()
-	ticker := time.NewTicker(time.Second * 10)
-	defer ticker.Stop()
-	for {
-		select {
-		case <-ticker.C:
-			sync()
+	go func() {
+		ticker := time.NewTicker(time.Second * 10)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				sync()
+			}
 		}
-	}
+	}()
 }
 
 func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) *DASCellBaseInfo {

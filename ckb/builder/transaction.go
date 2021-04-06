@@ -264,6 +264,10 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 
 // 在加完 input 和 output 后调用
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
+	builder.AddCellDep(&types.CellDep{
+		OutPoint: signCell.OutPoint,
+		DepType:  types.DepTypeDepGroup,
+	})
 	if builder.totalInputCap < builder.totalOutputCap+builder.fee {
 		return builder
 	}
@@ -271,10 +275,6 @@ func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signC
 	if chargeCap < celltype.CkbTxMinOutputCKBValue {
 		return builder // 剩下的，不满足最小值，那么全部给矿工
 	}
-	builder.AddCellDep(&types.CellDep{
-		OutPoint: signCell.OutPoint,
-		DepType:  types.DepTypeDepGroup,
-	})
 	builder.tx.Outputs = append(builder.tx.Outputs, &types.CellOutput{
 		Capacity: chargeCap,
 		Lock:     receiver,
