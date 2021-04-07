@@ -23,7 +23,9 @@ type IHashListBatchWrite interface {
 }
 
 func RocksDbSafeGet(rocksdb *gorocksdb.DB, key []byte) ([]byte, error) {
-	return RocksDbSafeGetWithReadOpt(rocksdb, gorocksdb.NewDefaultReadOptions(), key)
+	readOpt := gorocksdb.NewDefaultReadOptions()
+	defer readOpt.Destroy()
+	return RocksDbSafeGetWithReadOpt(rocksdb, readOpt, key)
 }
 
 func RocksDbSafeGetWithReadOpt(rocksdb *gorocksdb.DB, rOpts *gorocksdb.ReadOptions, key []byte) ([]byte, error) {
