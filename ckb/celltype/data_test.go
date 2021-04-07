@@ -39,7 +39,7 @@ func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
 		return
 	}
 	argsBytes, _ := hex.DecodeString("5eb00c0e51afb537fc8071810034ce92f98c3259")
-	go TimingSyncSystemCodeScriptOutPoint(rpcClient,&types.Script{
+	TimingAsyncSystemCodeScriptOutPoint(rpcClient,&types.Script{
 		CodeHash: systemScripts.SecpSingleSigCell.CellHash,
 		HashType: types.HashTypeType,
 		Args:     argsBytes,
@@ -196,20 +196,22 @@ func Test_AccountChar(t *testing.T) {
 func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// registerAt:=
 	// 2021-01-28 18:02:50, 1611828171
-	accountCellCap, err := AccountCellCap("tangzhihong.bit")
+	accountCellCap, err := AccountCellCap("00000000.bit")
 	if err != nil {
 		panic(err)
 	}
 	// CalAccountCellExpiredAt ====>
+	// 1617782601 + (585600000000 / (5000000 / 1000 * 100000000)) * 365 * 86400
+	// {"quote":1000,"account_cell_cap":14600000000,"price_config_new":5000000,"account_bytes_len":0,"pre_account_cell_cap":621200000000,"ref_cell_cap":21000000000}
 	// {"quote":1000,"account_cell_cap":14600000000,"price_config_new":5000000,"pre_account_cell_cap":536800000000,"ref_cell_cap":21000000000}
 	param := CalAccountCellExpiredAtParam{
 		Quote:             1000, // 1000 ckb = 1 usd
 		AccountCellCap:    accountCellCap,
 		PriceConfigNew:    5000000, // 10 usd
-		PreAccountCellCap: 5371 * OneCkb,
+		PreAccountCellCap: 5368 * OneCkb,
 		RefCellCap:        2 * RefCellBaseCap,
 	}
-	timeSec, err := CalAccountCellExpiredAt(param, 1616659213)
+	timeSec, err := CalAccountCellExpiredAt(param, 1617782601)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
@@ -217,6 +219,7 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 		fmt.Println(time.Unix(int64(timeSec), 0).String())
 		bys, _ := json.Marshal(param)
 		t.Log(string(bys))
+		// current(1617782601) + (profit(585600000000) / (price(5000000) / quote(1000) * 100_000_000)) * 365 * 86400
 	}
 }
 
