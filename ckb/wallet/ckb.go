@@ -3,7 +3,6 @@ package wallet
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/crypto"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
@@ -97,8 +96,9 @@ func GetLockScriptArgsFromShortAddress(address string) (string, error) {
 		return "", fmt.Errorf("bech32.ConvertBits err: %s", err.Error())
 	}
 	ret := hex.EncodeToString(converted)[4:]
-	if len(ret) != 20 {
-		return "", errors.New("invalid args len")
+	const bysSize = 40
+	if size := len(ret); size != bysSize {
+		return "", fmt.Errorf("invalid args bytes len, want: %d, your: %d",bysSize, size)
 	}
 	return ret, nil
 }
