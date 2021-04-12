@@ -176,7 +176,7 @@ func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.
 	if capCounter < needCap {
 		return nil, fmt.Errorf("AddInputAutoComputeItems:not enough capacity, input: %d, want: %d", capCounter, needCap)
 	}
-	return nil, nil
+	return usedOutPoints, nil
 }
 
 func (builder *TransactionBuilder) AddOutput(cell *types.CellOutput, data []byte) *TransactionBuilder {
