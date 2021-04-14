@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/binary"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
@@ -100,6 +101,38 @@ func Test_ParseProposeCellData(t *testing.T) {
 	}
 }
 
+func Test_PrintProposeCellLink(t *testing.T) {
+	cellData := "0x64617305000000b1010000100000001000000010000000a101000010000000140000001800000000000000010000008501000085010000140000005d0000006b00000073000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f0a000000b7526803f67ebe70aba60000000000000000120100001000000066000000bc000000560000000c0000003100000025000000100000001a0000001b0000001ceba7416f1392fc15d6001da30727b69b2db9126025000000100000001a0000001b0000001da30727b69b2db912600224f7e86151c0b593c23e560000000c0000003100000025000000100000001a0000001b00000064e8380633ef848ec86a00717ce4f160d8ec367e3f25000000100000001a0000001b000000717ce4f160d8ec367e3f02717ce4f160d8ec367e3f560000000c0000003100000025000000100000001a0000001b000000717ce4f160d8ec367e3f0080b35d34622e0d49a9b825000000100000001a0000001b00000080b35d34622e0d49a9b8028413d752ccbfeb88e0e6"
+	cellData = cellData[2:]
+	cellDataBytes, err := hex.DecodeString(cellData)
+	if err != nil {
+		panic(err)
+	}
+	if das, err := ParseTxWitnessToDasWitnessObj(cellDataBytes); err != nil {
+		panic(err)
+	} else {
+		t.Log(das.WitnessObj.TableType)
+		if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
+			panic("empty")
+		}
+		if das.MoleculeNewDataEntity.Entity().IsEmpty() {
+			panic("empty")
+		}
+		fmt.Println(MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData()))
+		proposeData, err := ProposalCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
+		if err != nil {
+			panic(err)
+		}
+		list,err := ProposeWitnessSliceDataObjectListFromBytes(proposeData.AsSlice())
+		bys, err := json.MarshalIndent(list, " ", " ")
+		if err != nil {
+			fmt.Println("ProposeTxWitnessDataList json err: ", err.Error())
+		} else {
+			fmt.Println(string(bys))
+		}
+	}
+}
+
 func Test_ParseAccountData(t *testing.T) {
 	printf := func(hexStr string) {
 		hexStr = hexStr[2:]
@@ -115,7 +148,7 @@ func Test_ParseAccountData(t *testing.T) {
 		}
 		t.Log("next:", nextId.HexStr())
 	}
-	printf("0xf44c70c8921227458a62fe683d84a90baa0386877d3f87b385d7cd3b872e3dfb717ce4f160d8ec367e3fffffffffffffffffffff40fb37620000000031313131313131312e626974")
+	printf("0xf44c70c8921227458a62fe683d84a90baa0386877d3f87b385d7cd3b872e3dfb717ce4f160d8ec367e3f80b35d34622e0d49a9b840fb37620000000031313131313131312e626974")
 }
 
 type accountChar struct {
