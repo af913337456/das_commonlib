@@ -25,8 +25,8 @@ func TestSign(t *testing.T) {
 }
 
 func TestNewTransaction(t *testing.T) {
-	rpcAddr := "http://47.52.147.232:8585"
-	wsAddr := "ws://47.52.147.232:8586"
+	rpcAddr := "http://localhost:8585"
+	wsAddr := "ws://localhost:8586"
 	client, err := ethclient.Dial(wsAddr)
 	if err != nil {
 		t.Fatal(err)

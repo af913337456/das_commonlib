@@ -38,7 +38,7 @@ func Test_InitWallet2(t *testing.T) {
 		SUDTCell:         nil,
 		ChequeCell:       nil,
 	}
-	key, err := InitCkbWallet("1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168", systemScript)
+	key, err := InitCkbWallet("", systemScript)
 	if err != nil {
 		panic(err)
 	}
@@ -59,7 +59,7 @@ func Test_InitWallet(t *testing.T) {
 		SUDTCell:         nil,
 		ChequeCell:       nil,
 	}
-	key, err := InitCkbWallet("1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168", systemScript)
+	key, err := InitCkbWallet("", systemScript)
 	if err != nil {
 		panic(err)
 	}
@@ -107,7 +107,7 @@ func Test_AddrToArgs(t *testing.T) {
 
 func Test_VerifySign(t *testing.T) {
 	key, err := InitCkbWallet(
-		"1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168",
+		"",
 		&utils.SystemScripts{
 			SecpSingleSigCell: &utils.SystemScriptCell{
 				CellHash: types.HexToHash("123"),
