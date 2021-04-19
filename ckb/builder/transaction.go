@@ -96,6 +96,9 @@ func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWi
 }
 
 func (builder *TransactionBuilder) AddCellDep(cell *types.CellDep) *TransactionBuilder {
+	if cell == nil {
+		return builder
+	}
 	_, _ = builder.AddWitnessCellDep(&celltype.CellDepWithWitness{
 		CellDep:        cell,
 		GetWitnessData: nil,
