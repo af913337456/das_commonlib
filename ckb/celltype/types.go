@@ -186,6 +186,11 @@ type RefcellParam struct {
 	UserLockScript DASCellBaseInfo `json:"user_lock_script"`
 }
 
+type QuoteCellParam struct {
+	Price uint64 `json:"price"`
+	CellCodeInfo              DASCellBaseInfo         `json:"cell_code_info"`
+}
+
 /**
 lock: <always_success>
 type:
