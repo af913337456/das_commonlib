@@ -277,8 +277,8 @@ func CalAccountSpend(account DasAccount) uint64 {
 
 func registerFee(price,quote,discount uint64) uint64 {
 	// CKB 年费 = CKB 年费 - (CKB 年费 * 折扣率 / 10000)
-	if discount >= discountRateBase {
-		discount = discountRateBase - 1
+	if discount >= DiscountRateBase {
+		discount = DiscountRateBase - 1
 	}
 	var retVal uint64
 	if price < quote {
@@ -289,7 +289,7 @@ func registerFee(price,quote,discount uint64) uint64 {
 	if discount == 0 {
 		return retVal
 	}
-	retVal = retVal - ((retVal * discount) / discountRateBase)
+	retVal = retVal - ((retVal * discount) / DiscountRateBase)
 	return retVal
 }
 
