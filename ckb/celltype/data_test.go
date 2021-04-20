@@ -210,6 +210,7 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 		PriceConfigNew:    5000000, // 10 usd
 		PreAccountCellCap: 5368 * OneCkb,
 		RefCellCap:        2 * RefCellBaseCap,
+		DiscountRate:      0,
 	}
 	timeSec, err := CalAccountCellExpiredAt(param, 1617782601)
 	if err != nil {

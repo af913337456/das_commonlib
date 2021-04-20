@@ -24,7 +24,7 @@ func Test_AccountId(t *testing.T) {
 }
 
 func Test_CalPreAccountCellCap(t *testing.T) {
-	t.Log(CalPreAccountCellCap(1, 5000000, 1000, "12345678.bit"))
+	t.Log(CalPreAccountCellCap(1, 5000000, 1000, 0,"12345678.bit"))
 }
 
 func Test_Rat(t *testing.T) {
