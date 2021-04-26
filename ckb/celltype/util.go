@@ -289,7 +289,7 @@ func registerFee(price,quote,discount uint64) uint64 {
 	if discount == 0 {
 		return retVal
 	}
-	retVal = retVal - ((retVal * discount) / DiscountRateBase)
+	retVal = retVal - (retVal * discount) / DiscountRateBase
 	return retVal
 }
 
@@ -513,23 +513,15 @@ singlePrice = ConfigCell.price / quote * 10^8 / 365 * 86400
 expiredAt = ((PreAccountCell.capacity - AccountCell.capacity - RefCell.capacity) / singlePrice
 */
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {
-	fmt.Println("CalAccountCellExpiredAt ====>", param.Json())
+	fmt.Println("CalAccountCellExpiredAt Param ====>", param.Json())
 	if param.PreAccountCellCap < param.AccountCellCap+param.RefCellCap {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	} else {
 		paid := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
 		registerFee := registerFee(param.PriceConfigNew,param.Quote,param.DiscountRate)
-		// divPerDayPrice := new(big.Rat).SetFrac(
-		// 	new(big.Int).SetUint64(param.PriceConfigNew*OneCkb),
-		// 	new(big.Int).SetInt64(int64(param.Quote)))
-		// disRat := new(big.Rat).SetInt(new(big.Int).SetUint64(storageFee))
-		// dra := new(big.Rat).Quo(disRat, divPerDayPrice)
-		// duration, _ = dra.Float64()
 		durationInt := paid * oneYearDays / registerFee * oneDaySec
-		// fmt.Println("CalAccountCellExpiredAt dayPrice   ===>", divPerDayPrice)
 		fmt.Println("CalAccountCellExpiredAt storageFee ====>", paid)
 		fmt.Println("CalAccountCellExpiredAt duration   ====>", durationInt)
-		// fmt.Println("CalAccountCellExpiredAt registerAt ====>", registerAt)
 		return uint64(registerAt) + durationInt, nil // 1648195213
 	}
 }

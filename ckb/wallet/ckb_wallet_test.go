@@ -59,7 +59,7 @@ func Test_InitWallet(t *testing.T) {
 		SUDTCell:         nil,
 		ChequeCell:       nil,
 	}
-	key, err := InitCkbWallet("", systemScript)
+	key, err := InitCkbWallet("1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168", systemScript)
 	if err != nil {
 		panic(err)
 	}
@@ -67,6 +67,7 @@ func Test_InitWallet(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(hex.EncodeToString(lockScript.Args))
 	bys, err := lockScript.Serialize()
 	if err != nil {
 		panic(err)
