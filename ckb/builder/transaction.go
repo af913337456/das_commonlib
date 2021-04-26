@@ -46,11 +46,7 @@ type TransactionBuilder struct {
 }
 
 func NewTransactionBuilder0(action string, fromScript *types.Script, fee uint64) *TransactionBuilder {
-	builder := NewTransactionBuilder2(fromScript, fee)
-	actionData := celltype.NewActionDataBuilder().Action(celltype.GoStrToMoleculeBytes(action)).Build()
-	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
-	builder.customWitnessList = append(builder.customWitnessList, witnessBys)
-	return builder
+	return NewTransactionBuilder3(action,nil,fromScript,fee)
 }
 
 func NewTransactionBuilder1(from string, fee uint64) (*TransactionBuilder, error) {
@@ -71,6 +67,18 @@ func NewTransactionBuilder2(fromScript *types.Script, fee uint64) *TransactionBu
 		},
 		fee: fee,
 	}
+}
+
+func NewTransactionBuilder3(action string,params []byte, fromScript *types.Script, fee uint64) *TransactionBuilder {
+	builder := NewTransactionBuilder2(fromScript, fee)
+	actionBuilder := celltype.NewActionDataBuilder().Action(celltype.GoStrToMoleculeBytes(action))
+	if params != nil {
+		actionBuilder.Params(celltype.GoBytesToMoleculeBytes(params))
+	}
+	actionData := actionBuilder.Build()
+	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
+	builder.customWitnessList = append(builder.customWitnessList, witnessBys)
+	return builder
 }
 
 func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWithWitness) (*TransactionBuilder, error) {
