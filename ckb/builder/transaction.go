@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
-	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/address"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
@@ -214,6 +213,11 @@ func (builder *TransactionBuilder) AddDasSpecOutputWithCustomCellCap(cell cellty
 }
 
 func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback, custom, increment uint64) *TransactionBuilder {
+	if soDeps := cell.SoDeps(); len(soDeps) > 0 {
+		for i :=0; i< len(soDeps); i++ {
+			builder.AddCellDep(&soDeps[i])
+		}
+	}
 	builder.AddCellDep(cell.LockDepCell())
 	builder.AddCellDep(cell.TypeDepCell())
 	dataBys, _ := cell.Data()
@@ -431,8 +435,8 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 
 	switch chainType {
 	case celltype.ChainType_ETH:
-		// message, err = blake2b.Blake256(message
-		message = ethcrypto.Keccak256(message)
+		message, err = blake2b.Blake256(message)
+		// message = ethcrypto.Keccak256(message)
 		break
 	default:
 		message, err = blake2b.Blake256(message)

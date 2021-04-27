@@ -34,6 +34,8 @@ const (
 // type cell's args
 const (
 	ContractCodeHash = "00000000000000000000000000000000000000000000000000545950455f4944"
+	DasPwLockCellCodeArgs = "d5eee5a3ac9d65658535b4bdad25e22a81c032f5bbdf5ace45605a33482eeb45"
+	DasLockCellCodeArgs   = "81f60a6a28add9f0df59d6448b13e89ac530829af3f1e45dff3930e216a3cf81"
 	ConfigCellCodeArgs    = "05a2994f75ecbcdf871b719c5a2902b285649a541b10f3b1e3040b4c03f2179e"
 	WalletCellCodeArgs    = "c591ed61e58538d81361c76a19af20d5a4d787b2e1fdf24622d52cbd903833d6"
 	ApplyRegisterCellCodeArgs = "81f60a6a28add9f0df59d6448b13e89ac530829af3f1e45dff3930e216a3cf81"

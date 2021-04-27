@@ -318,6 +318,26 @@ type AccountCellTxDataParam struct {
 	AccountInfo AccountCellData `json:"-"`
 }
 
+/**
+args: [
+    owner_code_hash_index,
+    owner_pubkey_hash,
+    manager_code_hash_index,
+    manager_pubkey_hash,
+  ]
+*/
+type DasLockParam struct {
+	OwnerCodeHashIndexByte []byte
+	OwnerPubkeyHashByte  []byte
+	ManagerCodeHashIndex []byte
+	ManagerPubkeyHash []byte
+}
+
+func (d *DasLockParam) Bytes() []byte {
+	ownerBytes := append(d.OwnerCodeHashIndexByte,d.OwnerPubkeyHashByte...)
+	return append(append(ownerBytes,d.ManagerCodeHashIndex...),d.ManagerPubkeyHash...)
+}
+
 type AccountCellDatas struct {
 	NewAccountCellData *AccountCellTxDataParam `json:"-"`
 }
@@ -325,7 +345,8 @@ type AccountCellParam struct {
 	TxDataParam               *AccountCellTxDataParam `json:"-"`
 	Version                   uint32                  `json:"version"`
 	CellCodeInfo              DASCellBaseInfo         `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo         `json:"always_spendable_script_info"`
+	DasLock                   DASCellBaseInfo `json:"das_lock"`
+	DasLockParam *DasLockParam `json:"das_lock_param"`
 }
 
 type ParseDasWitnessBysDataObj struct {

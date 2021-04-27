@@ -23,13 +23,14 @@ table DataEntity {
     entity: Bytes, // 代表具体的数据结构
 }
 */
-var TestNetAccountCell = func(param *AccountCellTxDataParam) *AccountCellParam {
+var TestNetAccountCell = func(param *AccountCellTxDataParam,dasLockParam *DasLockParam) *AccountCellParam {
 	acp := &AccountCellParam{
 		Version: 1,
 		// Data: *BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, &new.AccountInfo),
-		CellCodeInfo:              DasAccountCellScript,
-		TxDataParam:               param,
-		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
+		CellCodeInfo: DasAccountCellScript,
+		TxDataParam:  param,
+		DasLock:      DasLockCellScript,
+		DasLockParam: dasLockParam,
 	}
 	return acp
 }
@@ -97,29 +98,44 @@ func NewAccountCell(p *AccountCellParam) *AccountCell {
 	return &AccountCell{p: p}
 }
 
+func (c *AccountCell) SoDeps() []types.CellDep {
+	return []types.CellDep{
+		*TestNetETHSoScriptDep.ToDepCell(),
+	}
+}
+
 func (c *AccountCell) LockDepCell() *types.CellDep {
 	return &types.CellDep{
 		OutPoint: &types.OutPoint{
-			TxHash: c.p.AlwaysSpendableScriptInfo.Dep.TxHash,
-			Index:  c.p.AlwaysSpendableScriptInfo.Dep.TxIndex,
+			TxHash: c.p.DasLock.Dep.TxHash,
+			Index:  c.p.DasLock.Dep.TxIndex,
 		},
-		DepType: c.p.AlwaysSpendableScriptInfo.Dep.DepType,
+		DepType: c.p.DasLock.Dep.DepType,
 	}
 }
 func (c *AccountCell) TypeDepCell() *types.CellDep {
 	return &types.CellDep{ // state_cell
 		OutPoint: &types.OutPoint{
 			TxHash: c.p.CellCodeInfo.Dep.TxHash,
-			Index:  c.p.CellCodeInfo.Dep.TxIndex, // state_script_tx_index
+			Index:  c.p.CellCodeInfo.Dep.TxIndex,
 		},
 		DepType: c.p.CellCodeInfo.Dep.DepType,
 	}
 }
+
+/**
+args: [
+    owner_code_hash_index,
+    owner_pubkey_hash,
+    manager_code_hash_index,
+    manager_pubkey_hash,
+  ]
+*/
 func (c *AccountCell) LockScript() *types.Script {
 	return &types.Script{
-		CodeHash: c.p.AlwaysSpendableScriptInfo.Out.CodeHash,
-		HashType: c.p.AlwaysSpendableScriptInfo.Out.CodeHashType,
-		Args:     c.p.AlwaysSpendableScriptInfo.Out.Args,
+		CodeHash: c.p.DasLock.Out.CodeHash,
+		HashType: c.p.DasLock.Out.CodeHashType,
+		Args:     c.p.DasLockParam.Bytes(),
 	}
 }
 func (c *AccountCell) TypeScript() *types.Script {
