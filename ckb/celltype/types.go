@@ -326,6 +326,16 @@ args: [
     manager_pubkey_hash,
   ]
 */
+
+type DasLockArgsPairParam struct {
+	HashIndexType DasLockCodeHashIndexType
+	Script types.Script
+}
+
+func (d DasLockArgsPairParam) Bytes() []byte {
+	return append(d.HashIndexType.Bytes(),d.Script.Args...)
+}
+
 type DasLockParam struct {
 	OwnerCodeHashIndexByte []byte
 	OwnerPubkeyHashByte  []byte
