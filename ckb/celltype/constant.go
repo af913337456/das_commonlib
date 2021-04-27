@@ -116,6 +116,19 @@ const (
 	ScriptType_BTC  LockScriptType = 3
 )
 
+func (l LockScriptType) ToDasLockCodeHashIndexType() DasLockCodeHashIndexType {
+	switch l {
+	case ScriptType_User:
+		return DasLockCodeHashIndexType_CKB_Normal
+	case ScriptType_Any:
+		return DasLockCodeHashIndexType_CKB_AnyOne
+	case ScriptType_ETH:
+		return DasLockCodeHashIndexType_ETH_Normal
+	default:
+		return DasLockCodeHashIndexType_CKB_Normal
+	}
+}
+
 type DasAccountSearchStatus int
 
 const (
@@ -169,6 +182,19 @@ const (
 
 func (t DasLockCodeHashIndexType) Bytes() []byte {
 	return common.Uint8ToBytes(uint8(t))
+}
+
+func (t DasLockCodeHashIndexType) ToScriptType() LockScriptType {
+	switch t {
+	case DasLockCodeHashIndexType_CKB_Normal:
+		return ScriptType_User
+	case DasLockCodeHashIndexType_CKB_AnyOne:
+		return ScriptType_Any
+	case DasLockCodeHashIndexType_ETH_Normal:
+		return ScriptType_ETH
+	default:
+		return ScriptType_User
+	}
 }
 
 const (
