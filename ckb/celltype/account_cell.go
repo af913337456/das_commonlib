@@ -132,11 +132,14 @@ args: [
   ]
 */
 func (c *AccountCell) LockScript() *types.Script {
-	return &types.Script{
+	lockScript := &types.Script{
 		CodeHash: c.p.DasLock.Out.CodeHash,
 		HashType: c.p.DasLock.Out.CodeHashType,
-		Args:     c.p.DasLockParam.Bytes(),
 	}
+	if c.p.DasLockParam != nil {
+		lockScript.Args = c.p.DasLockParam.Bytes()
+	}
+	return lockScript
 }
 func (c *AccountCell) TypeScript() *types.Script {
 	return &types.Script{
