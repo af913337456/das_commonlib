@@ -48,6 +48,11 @@ const (
 	AccountCellCodeArgs = "b96273084d063d9c1f1b8a7b165dea65a8eeb23712f45fbcb25023b73799b57a"
 )
 
+var (
+	ActionParam_Owner   = []byte{0}
+	ActionParam_Manager = []byte{1}
+)
+
 type PwCoreLockScriptType uint8
 
 const (

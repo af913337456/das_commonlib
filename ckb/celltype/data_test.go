@@ -254,6 +254,33 @@ func Test_ParseActionCell(t *testing.T) {
 	}
 }
 
+type tempCell struct {
+	DasLockArgs []byte
+}
+func (a *tempCell) SetOwner(indexType DasLockCodeHashIndexType,args []byte)  {
+	tempBytes := make([]byte,0,DasLockArgsMinBytesLen)
+	tempBytes = append(tempBytes,indexType.Bytes()...)
+	tempBytes = append(tempBytes,args...)
+	tempBytes = append(tempBytes,a.DasLockArgs[DasLockArgsMinBytesLen/2:]...)
+	a.DasLockArgs = tempBytes
+}
+
+func Test_SetOwner(t *testing.T) {
+	owner := []byte{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	param := DasLockParam{
+		OwnerCodeHashIndexByte: []byte{1},
+		OwnerPubkeyHashByte:    owner,
+		ManagerCodeHashIndex:   []byte{2},
+		ManagerPubkeyHash:      owner,
+	}
+	tempCell := &tempCell{
+		DasLockArgs: param.Bytes(),
+	}
+	repla := []byte{0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	tempCell.SetOwner(DasLockCodeHashIndexType_ETH_Normal,repla)
+	fmt.Println(tempCell.DasLockArgs)
+}
+
 // func Test_StateCellData(t *testing.T) {
 // 	stateCell := NewStateCellDataBuilder()
 // 	rootHash := HashFromSliceUnchecked([]byte("hello world!h"))
