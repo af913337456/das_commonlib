@@ -165,11 +165,12 @@ func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 }
 
 func NextAccountIdFromOutputData(data []byte) (DasAccountId, error) {
-	minLen := dasAccountIdLen + HashBytesLen
-	if size := len(data); size < minLen {
+	start := dasAccountIdLen + HashBytesLen
+	end := start+dasAccountIdLen
+	if size := len(data); size < end {
 		return EmptyAccountId, fmt.Errorf("invalid data, len not enough: %d", size)
 	}
-	return DasAccountIdFromBytes(data[minLen : minLen+dasAccountIdLen]), nil
+	return DasAccountIdFromBytes(data[start : end]), nil
 }
 
 func ExpiredAtFromOutputData(data []byte) (int64, error) {
