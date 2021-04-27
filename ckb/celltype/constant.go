@@ -1,5 +1,7 @@
 package celltype
 
+import "github.com/DA-Services/das_commonlib/common"
+
 /**
  * Copyright (C), 2019-2020
  * FileName: value
@@ -151,6 +153,18 @@ const (
 	TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 9
 	TableTyte_CONFIG_CELL_MARKET       TableType = 10
 )
+
+type DasLockCodeHashIndexType uint8
+const (
+	DasLockCodeHashIndexType_CKB_Normal DasLockCodeHashIndexType = 0
+	DasLockCodeHashIndexType_CKB_MultiS DasLockCodeHashIndexType = 1
+	DasLockCodeHashIndexType_CKB_AnyOne DasLockCodeHashIndexType = 2
+	DasLockCodeHashIndexType_ETH_Normal DasLockCodeHashIndexType = 3
+)
+
+func (t DasLockCodeHashIndexType) Bytes() []byte {
+	return common.Uint8ToBytes(uint8(t))
+}
 
 const (
 	/**
