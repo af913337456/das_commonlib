@@ -520,6 +520,7 @@ func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int6
 		paid := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
 		registerFee := registerFee(param.PriceConfigNew,param.Quote,param.DiscountRate)
 		durationInt := paid * oneYearDays / registerFee * oneDaySec
+		fmt.Println("CalAccountCellExpiredAt registerFee ====>", registerFee)
 		fmt.Println("CalAccountCellExpiredAt storageFee ====>", paid)
 		fmt.Println("CalAccountCellExpiredAt duration   ====>", durationInt)
 		return uint64(registerAt) + durationInt, nil // 1648195213

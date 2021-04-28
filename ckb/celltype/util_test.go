@@ -188,8 +188,6 @@ func Test_RecoverAccountIdFromChars(t *testing.T) {
 		NewPreAccountCellDataBuilder().
 			Account(accountChars.MoleculeAccountChars()).
 			CreatedAt(TimestampDefault()).
-			OwnerLock(ScriptDefault()).
-			RefundLock(ScriptDefault()).
 			InviterWallet(BytesDefault()).
 			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
 			Price(PriceConfigDefault()).
@@ -206,7 +204,6 @@ func Test_CreateData(t *testing.T) {
 		NewPreAccountCellDataBuilder().
 			Account(AccountCharsDefault()).
 			CreatedAt(TimestampDefault()).
-			OwnerLock(ScriptDefault()).
 			RefundLock(ScriptDefault()).
 			InviterWallet(BytesDefault()).
 			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
@@ -266,7 +263,6 @@ func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
 		NewPreAccountCellDataBuilder().
 			Account(accountChars.Build()).
 			CreatedAt(createAt).
-			OwnerLock(ScriptDefault()).
 			RefundLock(GoCkbScriptToMoleculeScript(types.Script{
 				CodeHash: types.HexToHash("123456aa"),
 				HashType: types.HashTypeType,
@@ -310,11 +306,12 @@ func Test_PreAccountDataFromBytes(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	script, err := MoleculeScriptToGo(*preAccountCell.OwnerLock())
-	if err != nil {
-		panic(err)
-	}
-	t.Log(hex.EncodeToString(script.Args))
+	// script, err := mo(*preAccountCell.OwnerLockArgs())
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// t.Log(hex.EncodeToString(script.Args))
+	t.Log(preAccountCell)
 }
 
 //
