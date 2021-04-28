@@ -14,6 +14,16 @@ import (
  * Description:
  */
 
+func Test_EmojiAccountLen(t *testing.T) {
+	t.Log(DasAccountFromStr("🏃‍♀️🏃.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("🔥或许🏃‍♀️🏃linguan.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("🏃‍♀️🏃linguan.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("123.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("11.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("😄hj🌹.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("😄人生🌹如此.bit").AccountValidateLen())
+}
+
 func Test_AccountId(t *testing.T) {
 	acc := DasAccountFromStr("12345666.bit")
 	// 5bd281eef6f9d72d71a7

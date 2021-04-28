@@ -3,6 +3,7 @@ module github.com/DA-Services/das_commonlib
 go 1.12
 
 require (
+	github.com/Andrew-M-C/go.emoji v0.0.0-20210303022417-b8fefdaedb50
 	github.com/Shopify/sarama v1.27.2
 	github.com/elazarl/goproxy v0.0.0-20210110162100-a92cc753f88e // indirect
 	github.com/ethereum/go-ethereum v1.9.14
