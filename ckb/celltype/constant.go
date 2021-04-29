@@ -77,7 +77,8 @@ type AccountCellStatus uint8
 type DataEntityChangeType uint
 
 func (t TableType) IsConfigType() bool {
-	return t == TableTyte_CONFIG_CELL_MAIN || t == TableTyte_CONFIG_CELL_REGISTER || t == TableTyte_CONFIG_CELL_MARKET || t == TableTyte_CONFIG_CELL_BLOOM_FILTER
+	return t == TableTyte_CONFIG_CELL_MAIN || t == TableTyte_CONFIG_CELL_REGISTER || t == TableTyte_CONFIG_CELL_RECORD ||
+		t == TableTyte_CONFIG_CELL_MARKET || t == TableTyte_CONFIG_CELL_BLOOM_FILTER
 }
 
 func (a AccountCellStatus) Str() string {
@@ -168,8 +169,9 @@ const (
 
 	TableTyte_CONFIG_CELL_MAIN         TableType = 7
 	TableTyte_CONFIG_CELL_REGISTER     TableType = 8
-	TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 9
+	TableTyte_CONFIG_CELL_RECORD       TableType = 9
 	TableTyte_CONFIG_CELL_MARKET       TableType = 10
+	TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
 type DasLockCodeHashIndexType uint8
