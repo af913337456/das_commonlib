@@ -38,14 +38,14 @@ const (
 const (
 	ContractCodeHash = "00000000000000000000000000000000000000000000000000545950455f4944"
 	DasPwLockCellCodeArgs = "d5eee5a3ac9d65658535b4bdad25e22a81c032f5bbdf5ace45605a33482eeb45"
-	DasLockCellCodeArgs   = "81f60a6a28add9f0df59d6448b13e89ac530829af3f1e45dff3930e216a3cf81"
-	ConfigCellCodeArgs    = "05a2994f75ecbcdf871b719c5a2902b285649a541b10f3b1e3040b4c03f2179e"
-	WalletCellCodeArgs    = "c591ed61e58538d81361c76a19af20d5a4d787b2e1fdf24622d52cbd903833d6"
-	ApplyRegisterCellCodeArgs = "81f60a6a28add9f0df59d6448b13e89ac530829af3f1e45dff3930e216a3cf81"
-	RefCellCodeArgs = "b638c0bfb91a1ee94ec6c5c4bbe7093cabeef6a6afffbc3e9c2a7cf2535fdfe7"
-	PreAccountCellCodeArgs = "ca0b1cb902a46adb59ffad2666157ab2a06bb7acce9a59c8ef6d2fb4b022d4b9"
-	ProposeCellCodeArgs = "67df6b5183e29a9d4f63f7682746ac66f3f944b5df8bacbf23415dfd91e1001f"
-	AccountCellCodeArgs = "b96273084d063d9c1f1b8a7b165dea65a8eeb23712f45fbcb25023b73799b57a"
+	DasLockCellCodeArgs   = "eedd10c7d8fee85c119daf2077fea9cf76b9a92ddca546f1f8e0031682e65aee"
+	ConfigCellCodeArgs    = "c936f9677639d3b19cff3e28664d7cca87a023669466e5e3ace58a77b75b70ae"
+	WalletCellCodeArgs    = "9b6d4934ad0366a3a047f24778197000d776c45b2dc68b2738477e730b5b6b91"
+	ApplyRegisterCellCodeArgs = "c78fa9066af1624e600ccfb21df9546f900b2afe5d7940d91aefc115653f90d9"
+	RefCellCodeArgs = "34572aae7e930aa06fdd58cd7b42d3db005f27a2d11333cf08a74188128fc090"
+	PreAccountCellCodeArgs = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
+	ProposeCellCodeArgs = "ac9a4897ee057631ca0fac806890b10ab83332376baf790b99a5ce2bf3f3a2b6"
+	AccountCellCodeArgs = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
 )
 
 var (
