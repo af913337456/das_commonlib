@@ -318,7 +318,7 @@ func UseVersion2SystemScriptCodeHash()  {
 
 	DasApplyRegisterCellScript.Out.CodeHash = types.HexToHash("0x0fbff871dd05aee1fda2be38786ad21d52a2765c6025d1ef6927d761d51a3cd1")
 	DasPreAccountCellScript.Out.CodeHash = types.HexToHash("0x6c8441233f00741955f65e476721a1a5417997c1e4368801c99c7f617f8b7544")
-	DasAccountCellScript.Out.CodeHash = types.HexToHash("0x5148d4c832ee9020ef646fb454ee81852d9e28b930eb8c667804e6a51b0a00fc")
+	DasAccountCellScript.Out.CodeHash = types.HexToHash("0xd5641acda604e1ed3422fb3616007f24e28266c4b76f6607738296c8278c2a4f")
 	// DasBiddingCellScript.Out.CodeHash = types.HexToHash("0x711bb5cec27b3a5c00da3a6dc0772be8651f7f92fd9bf09d77578b29227c1748")
 	// DasOnSaleCellScript.Out.CodeHash = types.HexToHash("0x711bb5cec27b3a5c00da3a6dc0772be8651f7f92fd9bf09d77578b29227c1748")
 	DasProposeCellScript.Out.CodeHash = types.HexToHash("0xc432a01b4e0b948e57c6291924914e548a7109028114b97d2815c16d3a06f329")
