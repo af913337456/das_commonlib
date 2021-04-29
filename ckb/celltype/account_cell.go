@@ -35,61 +35,6 @@ var TestNetAccountCell = func(param *AccountCellTxDataParam,dasLockParam *DasLoc
 	return acp
 }
 
-/**
-lock: <always_success>
-type:
-  code_hash: <nft_script>
-  type: type
-  args: []
-data:
-  hash(data: AccountCellData)
-  id // 自己的 ID，生成算法为 hash(account)，然后取前 10 bytes
-  next // 下一个 AccountCell 的 ID
-  expired_at // 小端编码的 u64 时间戳
-  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息，不含 .bit
-
-witness:
-  table Data {
-    old: table DataEntityOpt {
-    	index: Uint32,
-    	version: Uint32,
-    	entity: AccountCellData
-    },
-    new: table DataEntityOpt {
-      index: Uint32,
-      version: Uint32,
-      entity: AccountCellData
-    },
-  }
-
-======
-table AccountCellData {
-    // The first 160 bits of the hash of account.
-    id: AccountId,
-    // The lock script of owner.
-    owner: Script,
-    // The lock script of manager.
-    manager: Script,
-    account: Bytes,
-    // The status of the account, 0 means normal, 1 means being sold, 2 means being auctioned.
-    status: Uint8,
-    records: Records,
-}
-
-array AccountId [byte; 20];
-
-option AccountIdOpt (AccountId);
-
-table Record {
-    record_type: Bytes,
-    record_label: Bytes,
-    record_value: Bytes,
-    record_ttl: Uint32,
-}
-
-vector Records <Record>;
-*/
-
 type AccountCell struct {
 	p *AccountCellParam
 }
@@ -148,14 +93,6 @@ func (c *AccountCell) TypeScript() *types.Script {
 		Args:     nil,
 	}
 }
-
-/**
-  hash(data: AccountCellData)
-  id // 自己的 ID，生成算法为 hash(account)，然后取前 10 bytes
-  next // 下一个 AccountCell 的 ID
-  expired_at // 小端编码的 u64 时间戳
-  account // AccountCell 为了避免数据丢失导致用户无法找回自己用户所以额外储存了 account 的明文信息，不含 .bit
-*/
 
 func AccountIdFromOutputData(data []byte) (DasAccountId, error) {
 	if size := len(data); size < HashBytesLen+dasAccountIdLen {
