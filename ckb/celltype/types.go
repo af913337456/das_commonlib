@@ -59,6 +59,8 @@ type DASWitnessDataObj struct {
 - [8:] 第 8 字节开始往后的都是 molecule 编码的特殊数据结构，其整体结构如下；
 */
 func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
+	tempByte := make([]byte, 0 , len(rawData))
+	copy(tempByte,rawData)
 	if size := len(rawData); size <= 8 { // header'size + min(data)'size
 		return nil, fmt.Errorf("invalid rawData size: %d", size)
 	}

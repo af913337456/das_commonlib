@@ -255,6 +255,21 @@ func Test_ParseActionCell(t *testing.T) {
 	}
 }
 
+func Test_ParsePreAccountCell(t *testing.T) {
+	// 0x64617305000000fd00000010000000fd000000fd000000ed0000001000000014000000180000000600000001000000d1000000d1000000140000005d0000006b00000073000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f0a000000b7526803f67ebe70aba600000000000000005e00000008000000560000000c0000003100000025000000100000001a0000001b0000002f2e5c058a06dfc38cda00606f15d9fea831af648425000000100000001a0000001b000000606f15d9fea831af64840264e8380633ef848ec86a
+	hexStr := "0x646173000000001a0000000c00000016000000060000006465706c6f7900000000"
+	bys, err := hex.DecodeString(hexStr[2:])
+	if err != nil {
+		t.Fatal(err)
+	}
+	if witness, err := NewDasWitnessDataFromSlice(bys); err != nil {
+		t.Fatal(err)
+	} else {
+		actionData, _ := ActionDataFromSlice(witness.TableBys, false)
+		t.Log(witness.Tag,witness.TableType,hex.EncodeToString(witness.TableBys),string(actionData.Action().RawData()))
+	}
+}
+
 type tempCell struct {
 	DasLockArgs []byte
 }
