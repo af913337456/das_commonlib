@@ -76,7 +76,7 @@ var (
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash("0x326df166e3f0a900a0aee043e31a4dea0f01ea3307e6e235f09d1b4220b75fbd"),
 			CodeHashType: types.HashTypeType,
-			Args:         emptyHexToArgsBytes(),
+			Args:         dasLockDefaultBytes(),
 		},
 		ContractTypeScript: types.Script{
 			CodeHash: types.HexToHash(ContractCodeHash),
@@ -393,6 +393,10 @@ func SetSystemCodeScriptOutPoint(typeId types.Hash, point types.OutPoint) *DASCe
 
 func emptyHexToArgsBytes() []byte {
 	return []byte{}
+}
+
+func dasLockDefaultBytes() []byte {
+	return []byte{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 }
 
 func hexToArgsBytes(hexStr string) []byte {

@@ -203,7 +203,7 @@ func Test_AccountChar(t *testing.T) {
 func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// registerAt:=
 	// 2021-01-28 18:02:50, 1611828171
-	accountCellCap, err := AccountCellCap("kyle.bit")
+	accountCellCap, err := AccountCellCap("hello.bit")
 	if err != nil {
 		panic(err)
 	}
@@ -213,15 +213,18 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// {"quote":1000,"account_cell_cap":14600000000,"price_config_new":5000000,"pre_account_cell_cap":536800000000,"ref_cell_cap":21000000000}
 	// {"quote":22990,"account_cell_cap":14600000000,"price_config_new":5000000,"account_bytes_len":0,"pre_account_cell_cap":56600000000,"ref_cell_cap":21000000000,"discount_rate":800}
 	// CalAccountCellExpiredAt Param ====> {"quote":21598,"account_cell_cap":14200000000,"price_config_new":9000000,"account_bytes_len":0,"pre_account_cell_cap":74720000000,"ref_cell_cap":21000000000,"discount_rate":0}
+	// "quote":25574,"account_cell_cap":14300000000,"price_config_new":8000000,"account_bytes_len":0,"pre_account_cell_cap":66500000000,"ref_cell_cap":0,"discount_rate":0}
+	fmt.Println(len(DasLockCellScript.Out.Args))
+	// "quote":25574,"account_cell_cap":14300000000,"price_config_new":8000000,"account_bytes_len":0,"pre_account_cell_cap":66500000000,"ref_cell_cap":21000000000,"discount_rate":0}
 	param := CalAccountCellExpiredAtParam{
-		Quote:             21598, // 1000 ckb = 1 usd
+		Quote:             25574, // 1000 ckb = 1 usd
 		AccountCellCap:    accountCellCap,
-		PriceConfigNew:    9000000, // 10 usd
-		PreAccountCellCap: 74720000000, // 566 * OneCkb,
-		RefCellCap:        2 * RefCellBaseCap,
-		DiscountRate:      500,
+		PriceConfigNew:    8000000, // 10 usd
+		PreAccountCellCap: 66500000000, // 566 * OneCkb,
+		RefCellCap:        21000000000,
+		DiscountRate:      0,
 	}
-	timeSec, err := CalAccountCellExpiredAt(param, 1619540773)
+	timeSec, err := CalAccountCellExpiredAt(param, 1619881445)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
