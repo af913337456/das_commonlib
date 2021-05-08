@@ -75,7 +75,7 @@ var (
 	DasLockCellScript = DASCellBaseInfo{
 		Name: "das_lock_cell",
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x1c7ce5501634420dc56a3e0270e0de8e85b1e309a219b8a3254dd6d9793e10d6"),
+			TxHash:  types.HexToHash("0x51d6a231e01ab57ec2f6648d19b5b6964567bf6e260a60d3face5042ad48f79d"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -331,6 +331,7 @@ func UseVersion2SystemScriptCodeHash()  {
 	DasProposeCellScript.Out.CodeHash = types.HexToHash("0xc432a01b4e0b948e57c6291924914e548a7109028114b97d2815c16d3a06f329")
 	DasWalletCellScript.Out.CodeHash = types.HexToHash("0x066a699f5bba9dc4b45bfd7a46f1c5bb1a092dc0eb078810358fad2f07698c37")
 	DasRefCellScript.Out.CodeHash = types.HexToHash("0xec5abfd61507cda957d6adc3264ca9bc7120d6db3bf15a50795624e8af54aefa")
+	DasLockCellScript.Out.CodeHash = types.HexToHash("0x326df166e3f0a900a0aee043e31a4dea0f01ea3307e6e235f09d1b4220b75fbd")
 	DasConfigCellScript.Out.CodeHash = types.HexToHash("0x030ac2acd9c016f9a4ab13d52c244d23aaea636e0cbd386ec660b79974946517")
 	DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0xf1ef61b6977508d9ec56fe43399a01e576086a76cf0f7c687d1418335e8c401f")
 
