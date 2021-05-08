@@ -434,7 +434,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		message = append(message, witness...)
 	}
 
-	fmt.Println("签名 hash 前:",hex.EncodeToString(message))
+	fmt.Println("摘要进行最后一次 blake2 前:",hex.EncodeToString(message))
 	switch chainType {
 	case celltype.ChainType_ETH:
 		message, err = blake2b.Blake256(message)
@@ -446,7 +446,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("签名 hash 后:",hex.EncodeToString(message))
+	fmt.Println("摘要进行最后一次 blake2 后:",hex.EncodeToString(message))
 	return message, nil
 }
 
@@ -485,6 +485,7 @@ func SignTransactionMessage(tx *types.Transaction, group []int, witnessArgs *typ
 	if err != nil {
 		return err
 	}
+	fmt.Println("签名后的 hex 是:",hex.EncodeToString(signed))
 	if err = AppendSignedMsgToTx(tx, group, witnessArgs, signed); err != nil {
 		return err
 	}
