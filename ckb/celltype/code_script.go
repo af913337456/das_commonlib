@@ -37,7 +37,7 @@ var (
 	}
 	// 0xb988070e97c6eda68705e146985bcf2d3b3215cbb619eb61337523bc440d42e0
 	TestNetCKBSoScriptDep = DASCellBaseInfoDep{
-		TxHash:  types.HexToHash("41cc726044ee04e48dd167db1688a03046647bc292e627afd323430517d36691"),
+		TxHash:  types.HexToHash("209b35208da7d20d882f0871f3979c68c53981bcc4caa71274c035449074d082"),
 		TxIndex: 0,
 		DepType: types.DepTypeCode,
 	}
