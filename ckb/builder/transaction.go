@@ -2,6 +2,7 @@ package builder
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/ckb/celltype"
@@ -433,6 +434,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		message = append(message, witness...)
 	}
 
+	fmt.Println("签名 hash 前:",hex.EncodeToString(message))
 	switch chainType {
 	case celltype.ChainType_ETH:
 		message, err = blake2b.Blake256(message)
@@ -444,6 +446,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("签名 hash 后:",hex.EncodeToString(message))
 	return message, nil
 }
 
