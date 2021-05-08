@@ -412,6 +412,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("交易 hash:",hash.String())
 	message := append(hash.Bytes())
 	message = append(message, length...)
 	message = append(message, data...)
