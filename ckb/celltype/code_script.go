@@ -35,6 +35,12 @@ var (
 		TxIndex: 0,
 		DepType: types.DepTypeCode,
 	}
+	// 0xb988070e97c6eda68705e146985bcf2d3b3215cbb619eb61337523bc440d42e0
+	TestNetCKBSoScriptDep = DASCellBaseInfoDep{
+		TxHash:  types.HexToHash("b988070e97c6eda68705e146985bcf2d3b3215cbb619eb61337523bc440d42e0"),
+		TxIndex: 0,
+		DepType: types.DepTypeCode,
+	}
 
 	DasETHLockCellInfo = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{

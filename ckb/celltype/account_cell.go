@@ -46,6 +46,7 @@ func NewAccountCell(p *AccountCellParam) *AccountCell {
 func (c *AccountCell) SoDeps() []types.CellDep {
 	return []types.CellDep{
 		*TestNetETHSoScriptDep.ToDepCell(),
+		*TestNetCKBSoScriptDep.ToDepCell(),
 	}
 }
 
