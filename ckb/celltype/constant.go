@@ -183,7 +183,7 @@ const (
 )
 
 func (t DasLockCodeHashIndexType) Bytes() []byte {
-	return common.Uint16ToBytes(uint16(t))
+	return common.Uint8ToBytes(uint8(t))
 }
 
 func (t DasLockCodeHashIndexType) ToScriptType() LockScriptType {
