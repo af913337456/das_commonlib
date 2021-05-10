@@ -31,6 +31,11 @@ func rpcClient() rpc.Client {
 	}
 	return rpcClient
 }
+
+func Test_DasLockCodeHashIndexType(t *testing.T) {
+	t.Log(DasLockCodeHashIndexType(DasLockCodeHashIndexType_CKB_Normal).Bytes())
+}
+
 func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
 	rpcClient := rpcClient()
 	systemScripts, err := utils.NewSystemScripts(rpcClient)
