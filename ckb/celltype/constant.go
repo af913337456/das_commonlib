@@ -44,7 +44,7 @@ const (
 	ApplyRegisterCellCodeArgs = "c78fa9066af1624e600ccfb21df9546f900b2afe5d7940d91aefc115653f90d9"
 	RefCellCodeArgs = "34572aae7e930aa06fdd58cd7b42d3db005f27a2d11333cf08a74188128fc090"
 	PreAccountCellCodeArgs = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
-	ProposeCellCodeArgs = "ac9a4897ee057631ca0fac806890b10ab83332376baf790b99a5ce2bf3f3a2b6"
+	ProposeCellCodeArgs = "03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
 	AccountCellCodeArgs = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
 )
 
