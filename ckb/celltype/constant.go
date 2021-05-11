@@ -20,14 +20,14 @@ const DasAccountSuffix = ".bit"
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
 const RefCellBaseCap = 105 * OneCkb
-const AccountCellBaseCap = 134 * OneCkb
+const AccountCellBaseCap = 200 * OneCkb
 const WalletCellBaseCap = 84 * OneCkb
 const OneYearSec = int64(3600 * 24 * 365)
 const HashBytesLen = 32
 const ETHScriptLockWitnessBytesLen = 65
 const MinAccountCharsLen = 2
 const DiscountRateBase = 10000
-const DasLockArgsMinBytesLen = 1+20+1+20
+const DasLockArgsMinBytesLen = 1 + 20 + 1 + 20
 
 const (
 	PwLockMainNetCodeHash = "0xbf43c3602455798c1a61a596e0d95278864c552fafe231c063b3fabf97a8febc"
@@ -36,16 +36,16 @@ const (
 
 // type cell's args
 const (
-	ContractCodeHash = "00000000000000000000000000000000000000000000000000545950455f4944"
-	DasPwLockCellCodeArgs = "d5eee5a3ac9d65658535b4bdad25e22a81c032f5bbdf5ace45605a33482eeb45"
-	DasLockCellCodeArgs   = "eedd10c7d8fee85c119daf2077fea9cf76b9a92ddca546f1f8e0031682e65aee"
-	ConfigCellCodeArgs    = "34363fad2018db0b3b6919c26870f302da74c3c4ef4456e5665b82c4118eda51"
-	WalletCellCodeArgs    = "9b6d4934ad0366a3a047f24778197000d776c45b2dc68b2738477e730b5b6b91"
+	ContractCodeHash          = "00000000000000000000000000000000000000000000000000545950455f4944"
+	DasPwLockCellCodeArgs     = "d5eee5a3ac9d65658535b4bdad25e22a81c032f5bbdf5ace45605a33482eeb45"
+	DasLockCellCodeArgs       = "eedd10c7d8fee85c119daf2077fea9cf76b9a92ddca546f1f8e0031682e65aee"
+	ConfigCellCodeArgs        = "34363fad2018db0b3b6919c26870f302da74c3c4ef4456e5665b82c4118eda51"
+	WalletCellCodeArgs        = "9b6d4934ad0366a3a047f24778197000d776c45b2dc68b2738477e730b5b6b91"
 	ApplyRegisterCellCodeArgs = "c78fa9066af1624e600ccfb21df9546f900b2afe5d7940d91aefc115653f90d9"
-	RefCellCodeArgs = "34572aae7e930aa06fdd58cd7b42d3db005f27a2d11333cf08a74188128fc090"
-	PreAccountCellCodeArgs = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
-	ProposeCellCodeArgs = "03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
-	AccountCellCodeArgs = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
+	RefCellCodeArgs           = "34572aae7e930aa06fdd58cd7b42d3db005f27a2d11333cf08a74188128fc090"
+	PreAccountCellCodeArgs    = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
+	ProposeCellCodeArgs       = "03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
+	AccountCellCodeArgs       = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
 )
 
 var (
@@ -175,6 +175,7 @@ const (
 )
 
 type DasLockCodeHashIndexType uint8
+
 const (
 	DasLockCodeHashIndexType_CKB_Normal DasLockCodeHashIndexType = 0
 	DasLockCodeHashIndexType_CKB_MultiS DasLockCodeHashIndexType = 1
