@@ -28,6 +28,9 @@ func IsEditManagerTx(tx types.Transaction) bool {
 func IsTransferAccountTx(tx types.Transaction) bool  {
 	foundAccountCell := false
 	for _, output := range tx.Outputs {
+		if output.Type == nil {
+			continue
+		}
 		if DasAccountCellScript.Out.SameScript(output.Type) {
 			foundAccountCell = true
 			break
