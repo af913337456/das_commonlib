@@ -103,9 +103,11 @@ const (
 type ChainType uint
 
 const (
-	ChainType_CKB ChainType = 0
-	ChainType_ETH ChainType = 1
-	ChainType_BTC ChainType = 2
+	ChainType_CKB  ChainType = 0
+	ChainType_ETH  ChainType = 1
+	ChainType_BTC  ChainType = 2
+	ChainType_TRON ChainType = 3
+	ChainType_WX   ChainType = 4
 )
 
 type LockScriptType int
