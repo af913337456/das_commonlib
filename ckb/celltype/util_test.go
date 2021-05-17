@@ -318,6 +318,9 @@ func Test_PreAccountDataFromBytes(t *testing.T) {
 	// t.Log(hex.EncodeToString(script.Args))
 	t.Log(preAccountCell)
 	t.Log(hex.EncodeToString(preAccountCell.OwnerLockArgs().RawData()))
+	if hex.EncodeToString(preAccountCell.OwnerLockArgs().RawData())[2] == '0' {
+		fmt.Println("bad")
+	}
 }
 
 //

@@ -93,11 +93,12 @@ func (a AccountCellStatus) Str() string {
 	return "unknown"
 }
 
+type CfgCellType int
 const (
-	CfgCellType_ConfigCellMain        = 0
-	CfgCellType_ConfigCellRegister    = 1
-	CfgCellType_ConfigCellBloomFilter = 2
-	CfgCellType_ConfigCellMarket      = 3
+	CfgCellType_ConfigCellMain        CfgCellType = 0
+	CfgCellType_ConfigCellRegister    CfgCellType = 1
+	CfgCellType_ConfigCellBloomFilter CfgCellType = 2
+	CfgCellType_ConfigCellMarket      CfgCellType = 3
 )
 
 type ChainType uint

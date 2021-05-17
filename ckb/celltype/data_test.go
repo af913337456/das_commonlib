@@ -223,15 +223,16 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// "quote":25574,"account_cell_cap":14300000000,"price_config_new":8000000,"account_bytes_len":0,"pre_account_cell_cap":66500000000,"ref_cell_cap":21000000000,"discount_rate":0}
 	// "quote":25574,"account_cell_cap":200,"price_config_new":8000000,"account_bytes_len":0,"pre_account_cell_cap":66500000000,"ref_cell_cap":0,"discount_rate":0}
 	// 1651826722
+	// {"quote":25983,"account_cell_cap":20700000000,"price_config_new":10000000,"account_bytes_len":0,"pre_account_cell_cap":58080000000,"ref_cell_cap":0,"discount_rate":500}
 	param := CalAccountCellExpiredAtParam{
-		Quote:             25574, // 1000 ckb = 1 usd
-		AccountCellCap:    200 * OneCkb,
-		PriceConfigNew:    8000000, // 10 usd
-		PreAccountCellCap: 66500000000, // 566 * OneCkb,
+		Quote:             25983, // 1000 ckb = 1 usd
+		AccountCellCap:    207 * OneCkb,
+		PriceConfigNew:    10000000, // 10 usd
+		PreAccountCellCap: 58080000000, // 566 * OneCkb,
 		RefCellCap:        0,
 		DiscountRate:      0,
 	}
-	timeSec, err := CalAccountCellExpiredAt(param, 1620290722)
+	timeSec, err := CalAccountCellExpiredAt(param, 1620900894)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
