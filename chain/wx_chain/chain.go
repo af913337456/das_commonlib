@@ -235,18 +235,41 @@ func (c *Client) OrderNotifyResolve(notify PayNotify) (OrderNotifyData, error) {
 	return data, nil
 }
 
+type RespApplyRefund struct {
+	Amount struct {
+		Currency         string `json:"currency"`
+		DiscountRefund   int64  `json:"discount_refund"`
+		PayerRefund      int64  `json:"payer_refund"`
+		PayerTotal       int64  `json:"payer_total"`
+		Refund           int64  `json:"refund"`
+		SettlementRefund int64  `json:"settlement_refund"`
+		SettlementTotal  int64  `json:"settlement_total"`
+		Total            int64  `json:"total"`
+	} `json:"amount"`
+	Channel             string `json:"channel"`
+	CreateTime          string `json:"create_time"`
+	FundsAccount        string `json:"funds_account"`
+	OutRefundNo         string `json:"out_refund_no"`
+	OutTradeNo          string `json:"out_trade_no"`
+	RefundId            string `json:"refund_id"`
+	Status              string `json:"status"`
+	TransactionId       string `json:"transaction_id"`
+	UserReceivedAccount string `json:"user_received_account"`
+}
+
 // 申请退款
-func (c *Client) ApplyRefund(txID, refundID string, amount int64) error {
+func (c *Client) ApplyRefund(txID, refundID, reason string, amount int64) (RespApplyRefund, error) {
 	if c.dev {
 		amount = 1
 	}
+	var resp RespApplyRefund
 	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds"
 	//设置请求信息,此处也可以使用结构体来进行请求
 	mapInfo := map[string]interface{}{
 		"transaction_id": txID,
 		"out_refund_no":  refundID,
-		"reason":         "账号已被抢注",
+		"reason":         reason,
 		"notify_url":     c.notifyUrl,
 		"funds_account":  "AVAILABLE",
 		"amount": map[string]interface{}{
@@ -258,34 +281,39 @@ func (c *Client) ApplyRefund(txID, refundID string, amount int64) error {
 	// 发起请求
 	response, err := c.client.Post(c.ctx, URL, mapInfo)
 	if err != nil {
-		return fmt.Errorf("ApplyRefund client post err:%s", err.Error())
+		return resp, fmt.Errorf("ApplyRefund client post err:%s", err.Error())
 	}
 	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
-		return fmt.Errorf("ApplyRefund checkResponse err:%s", err.Error())
+		return resp, fmt.Errorf("ApplyRefund checkResponse err:%s", err.Error())
 	}
-	fmt.Println(string(body))
-	return nil
+	if err := json.Unmarshal(body, &resp); err != nil {
+		return resp, fmt.Errorf("ApplyRefund Unmarshal err:%s", err.Error())
+	}
+	return resp, nil
 }
 
 // 查询退款
-func (c *Client) QueryRefund(refundId string) error {
+func (c *Client) QueryRefund(refundId string) (RespApplyRefund, error) {
+	var resp RespApplyRefund
 	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds/%s?mchid=%s"
 	URL = fmt.Sprintf(URL, refundId, c.mchID)
 	// 发起请求
 	response, err := c.client.Get(c.ctx, URL)
 	if err != nil {
-		return fmt.Errorf("QueryRefund client get err:%s", err.Error())
+		return resp, fmt.Errorf("QueryRefund client get err:%s", err.Error())
 	}
 	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
-		return fmt.Errorf("QueryRefund checkResponse err:%s", err.Error())
+		return resp, fmt.Errorf("QueryRefund checkResponse err:%s", err.Error())
 	}
-	fmt.Println(string(body))
-	return nil
+	if err := json.Unmarshal(body, &resp); err != nil {
+		return resp, fmt.Errorf("QueryRefund Unmarshal err:%s", err.Error())
+	}
+	return resp, nil
 }
 
 type RefundNotifyData struct {
