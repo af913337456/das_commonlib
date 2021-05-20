@@ -199,6 +199,7 @@ const (
 	TableTyte_CONFIG_CELL_PROFITRATE         TableType = 107
 
 	TableTyte_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
+	TableTyte_CONFIG_CELL_PreservedAccount00     TableType = 150
 	// TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
