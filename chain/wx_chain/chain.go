@@ -53,7 +53,7 @@ func Initialize(p InitConfig) (*Client, error) {
 		option.WithHTTPClient(&http.Client{}),                           // 可以不设置
 		option.WithTimeout(2 * time.Second),                             // 自行进行超时时间配置
 		option.WithHeader(&http.Header{}),                               // 可以自行设置Header
-		option.WithoutValidator(),
+		//option.WithoutValidator(),
 	}
 	client, err := core.NewClient(ctx, opts...)
 	if err != nil {
