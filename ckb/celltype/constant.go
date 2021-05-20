@@ -10,7 +10,11 @@ import "github.com/DA-Services/das_commonlib/common"
  * Description:
  */
 
-const witnessDas = "das"
+const (
+	witnessDas = "das"
+	witnessDasCharLen = 3
+	witnessDasTableTypeEndIndex = 7
+)
 const oneDaySec = uint64(24 * 3600)
 const oneYearDays = uint64(365)
 const CellVersionByteLen = 4
