@@ -6049,6 +6049,7 @@ type PreAccountCellDataBuilder struct {
     account AccountChars
 refund_lock Script
 owner_lock_args Bytes
+inviter_id Bytes
 inviter_lock ScriptOpt
 channel_lock ScriptOpt
 price PriceConfig
@@ -6061,8 +6062,8 @@ created_at Timestamp
 func (s *PreAccountCellDataBuilder) Build() PreAccountCellData {
     b := new(bytes.Buffer)
 
-    totalSize := HeaderSizeUint * (9 + 1)
-    offsets := make([]uint32, 0, 9)
+    totalSize := HeaderSizeUint * (10 + 1)
+    offsets := make([]uint32, 0, 10)
 
     offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.account.AsSlice()))
@@ -6070,6 +6071,8 @@ offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.refund_lock.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.owner_lock_args.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.inviter_id.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.inviter_lock.AsSlice()))
 offsets = append(offsets, totalSize)
@@ -6092,6 +6095,7 @@ totalSize += uint32(len(s.created_at.AsSlice()))
     b.Write(s.account.AsSlice())
 b.Write(s.refund_lock.AsSlice())
 b.Write(s.owner_lock_args.AsSlice())
+b.Write(s.inviter_id.AsSlice())
 b.Write(s.inviter_lock.AsSlice())
 b.Write(s.channel_lock.AsSlice())
 b.Write(s.price.AsSlice())
@@ -6116,6 +6120,12 @@ func (s *PreAccountCellDataBuilder) RefundLock(v Script) *PreAccountCellDataBuil
 
 func (s *PreAccountCellDataBuilder) OwnerLockArgs(v Bytes) *PreAccountCellDataBuilder {
     s.owner_lock_args = v
+    return s
+}
+            
+
+func (s *PreAccountCellDataBuilder) InviterId(v Bytes) *PreAccountCellDataBuilder {
+    s.inviter_id = v
     return s
 }
             
@@ -6157,7 +6167,7 @@ func (s *PreAccountCellDataBuilder) CreatedAt(v Timestamp) *PreAccountCellDataBu
             
 
 func NewPreAccountCellDataBuilder() *PreAccountCellDataBuilder {
-	return &PreAccountCellDataBuilder{ account: AccountCharsDefault(),refund_lock: ScriptDefault(),owner_lock_args: BytesDefault(),inviter_lock: ScriptOptDefault(),channel_lock: ScriptOptDefault(),price: PriceConfigDefault(),quote: Uint64Default(),invited_discount: Uint32Default(),created_at: TimestampDefault() }
+	return &PreAccountCellDataBuilder{ account: AccountCharsDefault(),refund_lock: ScriptDefault(),owner_lock_args: BytesDefault(),inviter_id: BytesDefault(),inviter_lock: ScriptOptDefault(),channel_lock: ScriptOptDefault(),price: PriceConfigDefault(),quote: Uint64Default(),invited_discount: Uint32Default(),created_at: TimestampDefault() }
 }
     
 
@@ -6175,7 +6185,7 @@ func (s *PreAccountCellData) AsSlice() []byte {
             
 
 func PreAccountCellDataDefault() PreAccountCellData {
-    return *PreAccountCellDataFromSliceUnchecked([]byte{ 154,0,0,0,40,0,0,0,44,0,0,0,97,0,0,0,101,0,0,0,101,0,0,0,101,0,0,0,134,0,0,0,142,0,0,0,146,0,0,0,4,0,0,0,53,0,0,0,16,0,0,0,48,0,0,0,49,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,0,16,0,0,0,17,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *PreAccountCellDataFromSliceUnchecked([]byte{ 162,0,0,0,44,0,0,0,48,0,0,0,101,0,0,0,105,0,0,0,109,0,0,0,109,0,0,0,109,0,0,0,142,0,0,0,150,0,0,0,154,0,0,0,4,0,0,0,53,0,0,0,16,0,0,0,48,0,0,0,49,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,0,16,0,0,0,17,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -6192,7 +6202,7 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
         return nil, errors.New(errMsg)
     }
 
-    if uint32(sliceLen) == HeaderSizeUint && 9 == 0 {
+    if uint32(sliceLen) == HeaderSizeUint && 10 == 0 {
         return &PreAccountCellData{inner: slice}, nil
     }
 
@@ -6208,9 +6218,9 @@ func PreAccountCellDataFromSlice(slice []byte, compatible bool) (*PreAccountCell
     }
 
     fieldCount := offsetFirst/4 - 1
-    if fieldCount < 9 {
+    if fieldCount < 10 {
         return nil, errors.New("FieldCountNotMatch")
-    } else if !compatible && fieldCount > 9 {
+    } else if !compatible && fieldCount > 10 {
         return nil, errors.New("FieldCountNotMatch")
     }
 
@@ -6253,7 +6263,7 @@ if err != nil {
 }
                 
 
-_, err = ScriptOptFromSlice(slice[offsets[3]:offsets[4]], compatible)
+_, err = BytesFromSlice(slice[offsets[3]:offsets[4]], compatible)
 if err != nil {
     return nil, err
 }
@@ -6265,25 +6275,31 @@ if err != nil {
 }
                 
 
-_, err = PriceConfigFromSlice(slice[offsets[5]:offsets[6]], compatible)
+_, err = ScriptOptFromSlice(slice[offsets[5]:offsets[6]], compatible)
 if err != nil {
     return nil, err
 }
                 
 
-_, err = Uint64FromSlice(slice[offsets[6]:offsets[7]], compatible)
+_, err = PriceConfigFromSlice(slice[offsets[6]:offsets[7]], compatible)
 if err != nil {
     return nil, err
 }
                 
 
-_, err = Uint32FromSlice(slice[offsets[7]:offsets[8]], compatible)
+_, err = Uint64FromSlice(slice[offsets[7]:offsets[8]], compatible)
 if err != nil {
     return nil, err
 }
                 
 
-_, err = TimestampFromSlice(slice[offsets[8]:offsets[9]], compatible)
+_, err = Uint32FromSlice(slice[offsets[8]:offsets[9]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = TimestampFromSlice(slice[offsets[9]:offsets[10]], compatible)
 if err != nil {
     return nil, err
 }
@@ -6311,11 +6327,11 @@ func (s *PreAccountCellData) IsEmpty() bool {
     return s.Len() == 0
 }
 func (s *PreAccountCellData) CountExtraFields() uint {
-    return s.FieldCount() - 9
+    return s.FieldCount() - 10
 }
 
 func (s *PreAccountCellData) HasExtraFields() bool {
-    return 9 != s.FieldCount()
+    return 10 != s.FieldCount()
 }
             
 
@@ -6340,46 +6356,53 @@ func (s *PreAccountCellData) OwnerLockArgs() *Bytes {
 }
                
 
-func (s *PreAccountCellData) InviterLock() *ScriptOpt {
+func (s *PreAccountCellData) InviterId() *Bytes {
     start := unpackNumber(s.inner[16:])
     end := unpackNumber(s.inner[20:])
-    return ScriptOptFromSliceUnchecked(s.inner[start:end])
+    return BytesFromSliceUnchecked(s.inner[start:end])
 }
                
 
-func (s *PreAccountCellData) ChannelLock() *ScriptOpt {
+func (s *PreAccountCellData) InviterLock() *ScriptOpt {
     start := unpackNumber(s.inner[20:])
     end := unpackNumber(s.inner[24:])
     return ScriptOptFromSliceUnchecked(s.inner[start:end])
 }
                
 
-func (s *PreAccountCellData) Price() *PriceConfig {
+func (s *PreAccountCellData) ChannelLock() *ScriptOpt {
     start := unpackNumber(s.inner[24:])
     end := unpackNumber(s.inner[28:])
+    return ScriptOptFromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *PreAccountCellData) Price() *PriceConfig {
+    start := unpackNumber(s.inner[28:])
+    end := unpackNumber(s.inner[32:])
     return PriceConfigFromSliceUnchecked(s.inner[start:end])
 }
                
 
 func (s *PreAccountCellData) Quote() *Uint64 {
-    start := unpackNumber(s.inner[28:])
-    end := unpackNumber(s.inner[32:])
+    start := unpackNumber(s.inner[32:])
+    end := unpackNumber(s.inner[36:])
     return Uint64FromSliceUnchecked(s.inner[start:end])
 }
                
 
 func (s *PreAccountCellData) InvitedDiscount() *Uint32 {
-    start := unpackNumber(s.inner[32:])
-    end := unpackNumber(s.inner[36:])
+    start := unpackNumber(s.inner[36:])
+    end := unpackNumber(s.inner[40:])
     return Uint32FromSliceUnchecked(s.inner[start:end])
 }
                
 
 func (s *PreAccountCellData) CreatedAt() *Timestamp {
     var ret *Timestamp
-    start := unpackNumber(s.inner[36:])
+    start := unpackNumber(s.inner[40:])
     if s.HasExtraFields() {
-        end := unpackNumber(s.inner[40:])
+        end := unpackNumber(s.inner[44:])
         ret = TimestampFromSliceUnchecked(s.inner[start:end])
     } else {
         ret = TimestampFromSliceUnchecked(s.inner[start:])
@@ -6389,7 +6412,7 @@ func (s *PreAccountCellData) CreatedAt() *Timestamp {
                         
 
 func (s *PreAccountCellData) AsBuilder() PreAccountCellDataBuilder {
-    ret := NewPreAccountCellDataBuilder().Account(*s.Account()).RefundLock(*s.RefundLock()).OwnerLockArgs(*s.OwnerLockArgs()).InviterLock(*s.InviterLock()).ChannelLock(*s.ChannelLock()).Price(*s.Price()).Quote(*s.Quote()).InvitedDiscount(*s.InvitedDiscount()).CreatedAt(*s.CreatedAt())
+    ret := NewPreAccountCellDataBuilder().Account(*s.Account()).RefundLock(*s.RefundLock()).OwnerLockArgs(*s.OwnerLockArgs()).InviterId(*s.InviterId()).InviterLock(*s.InviterLock()).ChannelLock(*s.ChannelLock()).Price(*s.Price()).Quote(*s.Quote()).InvitedDiscount(*s.InvitedDiscount()).CreatedAt(*s.CreatedAt())
     return *ret
 }
         
