@@ -14,7 +14,7 @@ import (
  * Description:
  */
 
-func ETH_ComputeTxHash(t *types.Transaction) (types.Hash, error) {
+func ETHComputeTxHash(t *types.Transaction) (types.Hash, error) {
 	data, err := t.Serialize()
 	if err != nil {
 		return types.Hash{}, err

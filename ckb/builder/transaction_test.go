@@ -51,11 +51,10 @@ func Test_BuildTransaction(t *testing.T) {
 	txBuilder.inputList = append(txBuilder.inputList, i3)
 	txBuilder.inputList = append(txBuilder.inputList, i4)
 	txBuilder.inputList = append(txBuilder.inputList, i5)
-	txBuilder.BuildTransaction()
+	_ = txBuilder.BuildTransaction()
 	t.Log(i1.InputIndex)
 	t.Log(i2.InputIndex)
 	t.Log(i3.InputIndex)
 	t.Log(i4.InputIndex)
 	t.Log(i5.InputIndex)
-
 }
