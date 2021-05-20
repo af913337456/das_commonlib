@@ -46,6 +46,7 @@ const (
 	PreAccountCellCodeArgs    = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
 	ProposeCellCodeArgs       = "03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
 	AccountCellCodeArgs       = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
+	IncomeCellCodeArgs       = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
 )
 
 var (
@@ -77,8 +78,7 @@ type AccountCellStatus uint8
 type DataEntityChangeType uint
 
 func (t TableType) IsConfigType() bool {
-	return t == TableTyte_CONFIG_CELL_MAIN || t == TableTyte_CONFIG_CELL_REGISTER || t == TableTyte_CONFIG_CELL_RECORD ||
-		t == TableTyte_CONFIG_CELL_MARKET || t == TableTyte_CONFIG_CELL_BLOOM_FILTER
+	return t >= TableTyte_CONFIG_CELL_ACCOUNT
 }
 
 func (a AccountCellStatus) Str() string {
@@ -159,22 +159,47 @@ const (
 	AccountChar_En     AccountCharType = 2
 	AccountChar_Zh_Cn  AccountCharType = 3
 )
-
+/**
+const ActionData = 0,
+const AccountCellData,
+const OnSaleCellData,
+const BiddingCellData,
+const ProposalCellData,
+const PreAccountCellData,
+const IncomeCellData,
+const ConfigCellAccount = 100,
+const ConfigCellApply,
+const ConfigCellCharSet,
+const ConfigCellIncome,
+const ConfigCellMain,
+const ConfigCellPrice,
+const ConfigCellProposal,
+const ConfigCellProfitRate,
+const ConfigCellRecordKeyNamespace,
+const ConfigCellPreservedAccount00 = 150,
+*/
 const (
 	TableType_ACTION       TableType = 0
-	TableType_CONFIG_CELL  TableType = 1
-	TableType_ACCOUNT_CELL TableType = 2
+	TableType_ACCOUNT_CELL TableType = 1
 	// TableType_REGISTER_CELL TableType = 3
-	TableType_ON_SALE_CELL     TableType = 3
-	TableType_BIDDING_CELL     TableType = 4
-	TableType_PROPOSE_CELL     TableType = 5
-	TableType_PRE_ACCOUNT_CELL TableType = 6
+	TableType_ON_SALE_CELL     TableType = 2
+	TableType_BIDDING_CELL     TableType = 3
+	TableType_PROPOSE_CELL     TableType = 4
+	TableType_PRE_ACCOUNT_CELL TableType = 5
+	TableType_INCOME_CELL 	   TableType = 6
 
-	TableTyte_CONFIG_CELL_MAIN         TableType = 7
-	TableTyte_CONFIG_CELL_REGISTER     TableType = 8
-	TableTyte_CONFIG_CELL_RECORD       TableType = 9
-	TableTyte_CONFIG_CELL_MARKET       TableType = 10
-	TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 11
+	TableTyte_CONFIG_CELL_ACCOUNT       TableType = 100
+	TableTyte_CONFIG_CELL_APPLY         TableType = 101
+	TableTyte_CONFIG_CELL_CHARSET         TableType = 102
+	TableTyte_CONFIG_CELL_INCOME         TableType = 103
+
+	TableTyte_CONFIG_CELL_MAIN         TableType = 104
+	TableTyte_CONFIG_CELL_PRICE         TableType = 105
+	TableTyte_CONFIG_CELL_PROPOSAL         TableType = 106
+	TableTyte_CONFIG_CELL_PROFITRATE         TableType = 107
+
+	TableTyte_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
+	// TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
 type DasLockCodeHashIndexType uint8

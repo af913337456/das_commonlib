@@ -231,6 +231,14 @@ type OnSaleCellParam struct {
 	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
 }
 
+type IncomeCellParam struct {
+	Version uint32 `json:"version"`
+	// Data                      Data            `json:"data"`
+	IncomeCellData            IncomeCellData  `json:"-"`
+	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
+	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+}
+
 /**
 lock: <always_success>
 type:
