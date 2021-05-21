@@ -348,7 +348,7 @@ func UseVersion2SystemScriptCodeHash()  {
 	DasProposeCellScript.Out.CodeHash = types.HexToHash("0x67d48c0911e406518de2116bd91c6af37c05f1db23334ca829d2af3042427e44")
 	DasLockCellScript.Out.CodeHash = types.HexToHash("0x326df166e3f0a900a0aee043e31a4dea0f01ea3307e6e235f09d1b4220b75fbd")
 	DasConfigCellScript.Out.CodeHash = types.HexToHash("0x030ac2acd9c016f9a4ab13d52c244d23aaea636e0cbd386ec660b79974946517")
-	DasIncomeCellScript.Out.CodeHash = types.HexToHash("0xf1ef61b6977508d9ec56fe43399a01e576086a76cf0f7c687d1418335e8c401f")
+	DasIncomeCellScript.Out.CodeHash = types.HexToHash("0x08d1cdc6ab92d9cabe0096a2c7642f73d0ef1b24c94c43f21c6c3a32ffe0bb5e")
 	DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0xf1ef61b6977508d9ec56fe43399a01e576086a76cf0f7c687d1418335e8c401f")
 
 	initMap()
