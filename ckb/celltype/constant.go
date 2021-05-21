@@ -51,7 +51,7 @@ const (
 	PreAccountCellCodeArgs    = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
 	ProposeCellCodeArgs       = "03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
 	AccountCellCodeArgs       = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
-	IncomeCellCodeArgs       = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
+	IncomeCellCodeArgs        = "d7b9d8213671aec03f3a3ab95171e0e79481db2c084586b9ea99914c00ff3716"
 )
 
 var (
