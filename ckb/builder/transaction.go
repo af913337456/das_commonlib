@@ -212,6 +212,10 @@ func (builder *TransactionBuilder) AddDasSpecOutputWithCustomCellCap(cell cellty
 	return builder.addDasSpecOutput(cell, nil, cellCap, 0)
 }
 
+func (builder *TransactionBuilder) AddDasSpecOutputWithCallBackCustomCellCap(cell celltype.ICellType, cellCap uint64,callback celltype.AddDasOutputCallback) *TransactionBuilder {
+	return builder.addDasSpecOutput(cell, callback, cellCap, 0)
+}
+
 func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback, custom, increment uint64) *TransactionBuilder {
 	if soDeps := cell.SoDeps(); len(soDeps) > 0 {
 		for i :=0; i< len(soDeps); i++ {
