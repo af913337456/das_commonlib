@@ -246,6 +246,7 @@ var (
 		},
 	}
 	DasIncomeCellScript = DASCellBaseInfo{
+		Name: "income_cell",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0xa411dc40662eaf2c43d165c071947e7440e5ec01193954dbf06670bc6bf221c4"),
 			TxIndex: 0,

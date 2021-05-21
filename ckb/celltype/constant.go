@@ -309,4 +309,5 @@ const (
 	Action_AccuseAccountIllegal  = "accuse_account_illegal"
 	Action_RecycleExpiredAccount = "recycle_expired_account_by_keeper"
 	Action_CancelSaleByKeeper    = "cancel_sale_by_keeper"
+	Action_CreateIncome          = "create_income"
 )
