@@ -50,7 +50,7 @@ const (
 	RefCellCodeArgs           = "34572aae7e930aa06fdd58cd7b42d3db005f27a2d11333cf08a74188128fc090"
 	PreAccountCellCodeArgs    = "d3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
 	ProposeCellCodeArgs       = "03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
-	AccountCellCodeArgs       = "589c8e33ffde5bd3a6cda1c391f172247a44f826d3752d866050bdd20fa4d34c"
+	AccountCellCodeArgs       = "fb452ea8da6f8a2d999d0fa795035d38607af3ca88a7427b02ee998cb8789fba"
 	IncomeCellCodeArgs        = "d7b9d8213671aec03f3a3ab95171e0e79481db2c084586b9ea99914c00ff3716"
 )
 
