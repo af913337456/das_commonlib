@@ -45,9 +45,16 @@ func Test_InitWallet2(t *testing.T) {
 	t.Log(hex.EncodeToString(key.LockScript.Args))
 }
 
+// timeCell:
+// &{424241f8255e38aed1c0a2f7da978583c7a133adac4ff96471e2fe6c6207b736
+// 0220272f3a6f3c8e745d75ccdd51a939464c8caafd3d48a36e9ca927b306be8cf9
+// ckb1qyqzdyew4resmxqj89hqkjj5zdu770s697tsu7cedv} <nil>
+// args：26932ea8f30d9812396e0b4a541379ef3e1a2f97
+
+// block-ars
 // 36bb120683c254dfd54f88fcf6ab12e94b5a20de7b1ab225798f863a84772972
 // arg: e7763f58d94b43ee00b692d17562bf8353323e2e , cd908f152e1254824b673a35c7d4306e7b7fc31c
-// ckt1qyqwwa3ltrv5kslwqzmf95t4v2lcx5ej8chqaq3tqk
+// ckt1qyqwwa3ltrv5kslwqzmf95t4v2lcx5ej8chqaq3tqk, ckt1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqw90j4l
 // 038bd08219e19e90c863abcda37d84d131b655afd66fde1fa9225a16454ee4bf7f ckb1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqnq3der
 func Test_InitWallet(t *testing.T) {
 	systemScript := &utils.SystemScripts{
@@ -107,7 +114,7 @@ func Test_GetAddress(t *testing.T) {
 }
 
 func Test_AddrToArgs(t *testing.T) {
-	t.Log(GetLockScriptArgsFromShortAddress("ckb1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqnq3der"))
+	t.Log(GetLockScriptArgsFromShortAddress("ckt1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqw90j4l"))
 }
 
 func Test_VerifySign(t *testing.T) {

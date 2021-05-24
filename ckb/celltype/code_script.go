@@ -300,9 +300,9 @@ var (
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0x212dfa132279685e5d6faef8c1069c8d46d1f1d63f3e0a9ddbd7efc962e968a4"),
+			CodeHash:     types.HexToHash("0x7a6db6793ecf341f8f5289bc164d4a417c5adb99ab86a750230d7d14e73768e7"),
 			CodeHashType: types.HashTypeType,
-			Args:         emptyHexToArgsBytes(),
+			Args:         hexToArgsBytes("0x5123c074feef10b58c061b6d16a70a397b30957024f2a262102206213a808d3700000000"),
 		},
 	}
 	DasTimeCellScript = DASCellBaseInfo{
@@ -314,7 +314,7 @@ var (
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash("0xd78423449320291c41adcce741276c47df1dbb0bca212d0017db66297be88f19"),
 			CodeHashType: types.HashTypeType,
-			Args:         emptyHexToArgsBytes(),
+			Args:         hexToArgsBytes("0x248f00f2a594ae982501113267d487acd27b343e081e04d1fd0490b3288b38d900000000"),
 		},
 	}
 	SystemCodeScriptMap = syncmap.Map{} // map[types.Hash]*DASCellBaseInfo{}
