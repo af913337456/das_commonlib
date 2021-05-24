@@ -45,6 +45,10 @@ func Test_InitWallet2(t *testing.T) {
 	t.Log(hex.EncodeToString(key.LockScript.Args))
 }
 
+// 36bb120683c254dfd54f88fcf6ab12e94b5a20de7b1ab225798f863a84772972
+// arg: e7763f58d94b43ee00b692d17562bf8353323e2e , cd908f152e1254824b673a35c7d4306e7b7fc31c
+// ckt1qyqwwa3ltrv5kslwqzmf95t4v2lcx5ej8chqaq3tqk
+// 038bd08219e19e90c863abcda37d84d131b655afd66fde1fa9225a16454ee4bf7f ckb1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqnq3der
 func Test_InitWallet(t *testing.T) {
 	systemScript := &utils.SystemScripts{
 		SecpSingleSigCell: &utils.SystemScriptCell{
@@ -59,7 +63,7 @@ func Test_InitWallet(t *testing.T) {
 		SUDTCell:         nil,
 		ChequeCell:       nil,
 	}
-	key, err := InitCkbWallet("1504c89d50057bcef660251abc4c75ca28f4ed9139cd32611a78f69559fb5168", systemScript)
+	key, err := InitCkbWallet("36bb120683c254dfd54f88fcf6ab12e94b5a20de7b1ab225798f863a84772972", systemScript)
 	if err != nil {
 		panic(err)
 	}
@@ -72,7 +76,7 @@ func Test_InitWallet(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	address, err := bech32.Encode("ckb", bys)
+	address, err := bech32.Encode("ckt", bys)
 	if err != nil {
 		panic(err)
 	}
@@ -80,7 +84,7 @@ func Test_InitWallet(t *testing.T) {
 }
 
 func Test_GetAddress(t *testing.T) {
-	bs, err := hex.DecodeString("b39bbc0b3673c7d36450bc14cfcdad2d559c6c64")
+	bs, err := hex.DecodeString("cd908f152e1254824b673a35c7d4306e7b7fc31c")
 	if err != nil {
 		panic(err)
 	}
@@ -103,7 +107,7 @@ func Test_GetAddress(t *testing.T) {
 }
 
 func Test_AddrToArgs(t *testing.T) {
-	t.Log(GetLockScriptArgsFromShortAddress("ckb1qyqt8xaupvm8837nv3gtc9x0ekkj64vud3jqfwyw5v"))
+	t.Log(GetLockScriptArgsFromShortAddress("ckb1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqnq3der"))
 }
 
 func Test_VerifySign(t *testing.T) {

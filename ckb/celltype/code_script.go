@@ -295,26 +295,26 @@ var (
 	}
 	DasHeightCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x711bb5cec27b3a5c00da3a6dc0772be8651f7f92fd9bf09d77578b29227c1748"),
+			TxHash:  types.HexToHash("0x1bc39fc942746cf961f338c33626bfea999c96eb06334541859426580643fd51"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0x5f6a4cc2cd6369dbcf38ddfbc4323cf4695c2e8c20aed572b5db6adc2faf9d50"),
+			CodeHash:     types.HexToHash("0x212dfa132279685e5d6faef8c1069c8d46d1f1d63f3e0a9ddbd7efc962e968a4"),
 			CodeHashType: types.HashTypeType,
-			Args:         hexToArgsBytes("0xe1a958a4c112af95a1220c6fee5f969972a3d8ce13fb7b3211f71abb5db1824102000000"),
+			Args:         emptyHexToArgsBytes(),
 		},
 	}
 	DasTimeCellScript = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0xf3c13ffbaa1d34b8fac6cd848fa04db2e6b4e2c967c3c178295be2e7cdd77164"),
+			TxHash:  types.HexToHash("0xc0f2b262c8dbd5c8da3376cf81f3d3c69582fefcc3eba36e88f708c1a4d505fe"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0xe4fd6f46ab1fd3d5b377df9e2d4ea77e3b52f53ac3319595bb38d097ea051cfd"),
+			CodeHash:     types.HexToHash("0xd78423449320291c41adcce741276c47df1dbb0bca212d0017db66297be88f19"),
 			CodeHashType: types.HashTypeType,
-			Args:         hexToArgsBytes("0xd0c1c7156f2e310a12822e2cc336398ec4ef194abc1f96023b743f3249f09e2102000000"),
+			Args:         emptyHexToArgsBytes(),
 		},
 	}
 	SystemCodeScriptMap = syncmap.Map{} // map[types.Hash]*DASCellBaseInfo{}
