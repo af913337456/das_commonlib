@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
 	"strings"
@@ -57,8 +58,8 @@ func Test_FindTargetTypeScriptByInputList(t *testing.T) {
 	}
 }
 
-func Test_ParseProposeCellData(t *testing.T) {
-	cellData := "0x64617305000000fd000000100000001000000010000000ed0000001000000014000000180000000000000001000000d1000000d1000000140000005d0000006b00000073000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f0a000000b7526803f67ebe70aba600000000000000005e00000008000000560000000c0000003100000025000000100000001a0000001b0000008fa27d1c1f2722c0ba7900934159402b585f73e51125000000100000001a0000001b000000934159402b585f73e5110298267780c14bd317be03"
+func Test_ParseCellData(t *testing.T) {
+	cellData := "0x64617306000000470100001000000010000000100000003701000010000000140000001800000002000000010000001b0100001b0100000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000059ddf0d5d61386b6b3de4b4e8a74c0045f0a410ac60000000c000000690000005d0000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000efbf497f752ff7a655a8ec6f3c8f3feaaed6e410003f7a7d050000005d0000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000059ddf0d5d61386b6b3de4b4e8a74c0045f0a410a00a80ac401000000"
 	cellData = cellData[2:]
 	cellDataBytes, err := hex.DecodeString(cellData)
 	if err != nil {
@@ -74,11 +75,15 @@ func Test_ParseProposeCellData(t *testing.T) {
 		if das.MoleculeNewDataEntity.Entity().IsEmpty() {
 			panic("empty")
 		}
-		fmt.Println(MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData()))
-		// proposeData, err := ProposalCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
-		// if err != nil {
-		// 	panic(err)
-		// }
+		cellData, err := IncomeCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
+		if err != nil {
+			panic(err)
+		}
+		bys,err := blake2b.Blake256(cellData.AsSlice())
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(hex.EncodeToString(bys))
 		// t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
 		// _, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
 		// if err != nil {

@@ -67,9 +67,10 @@ func (c *IncomeCell) TypeScript() *types.Script {
 }
 
 func (c *IncomeCell) Data() ([]byte, error) {
-	temp := []byte{}
-	copy(temp,c.p.IncomeCellData.AsSlice())
-	bys, err := blake2b.Blake256(temp)
+	rawBytes := c.p.IncomeCellData.AsSlice()
+	tempByte := make([]byte,len(rawBytes))
+	copy(tempByte,rawBytes)
+	bys, err := blake2b.Blake256(tempByte)
 	if err != nil {
 		return nil, err
 	}
