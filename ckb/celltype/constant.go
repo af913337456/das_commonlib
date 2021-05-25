@@ -33,6 +33,7 @@ const ETHScriptLockWitnessBytesLen = 65
 const MinAccountCharsLen = 2
 const DiscountRateBase = 10000
 const DasLockArgsMinBytesLen = 1 + 20 + 1 + 20
+var RootAccountDataAccountByte = []byte{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 
 const (
 	PwLockMainNetCodeHash = "0xbf43c3602455798c1a61a596e0d95278864c552fafe231c063b3fabf97a8febc"

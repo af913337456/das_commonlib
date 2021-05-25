@@ -174,124 +174,124 @@ func (chars accountChars) MoleculeAccountChars() AccountChars {
 	}
 	return accountChars.Build()
 }
-func Test_RecoverAccountIdFromChars(t *testing.T) {
-	const testAccount = DasAccount("22222222.bit")
-	t.Log(testAccount.AccountId().HexStr())
-	accountChars := accountChars{}
-	accountBytes := []byte(testAccount)
-	for _, item := range accountBytes {
-		accountChars = append(accountChars, accountChar{
-			CharSetName: AccountChar_En,
-			Bytes:       []byte{item},
-		})
-	}
-	preAccountCellData :=
-		NewPreAccountCellDataBuilder().
-			Account(accountChars.MoleculeAccountChars()).
-			CreatedAt(TimestampDefault()).
-			InviterWallet(BytesDefault()).
-			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
-			Price(PriceConfigDefault()).
-			Quote(Uint64Default()).
-			Build()
-	account := AccountCharsToAccount(*preAccountCellData.Account())
-	t.Log(account)
-	recover := AccountCharsToAccountId(*preAccountCellData.Account())
-	t.Log(recover.HexStr())
-}
+// func Test_RecoverAccountIdFromChars(t *testing.T) {
+// 	const testAccount = DasAccount("22222222.bit")
+// 	t.Log(testAccount.AccountId().HexStr())
+// 	accountChars := accountChars{}
+// 	accountBytes := []byte(testAccount)
+// 	for _, item := range accountBytes {
+// 		accountChars = append(accountChars, accountChar{
+// 			CharSetName: AccountChar_En,
+// 			Bytes:       []byte{item},
+// 		})
+// 	}
+// 	preAccountCellData :=
+// 		NewPreAccountCellDataBuilder().
+// 			Account(accountChars.MoleculeAccountChars()).
+// 			CreatedAt(TimestampDefault()).
+// 			InviterWallet(BytesDefault()).
+// 			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
+// 			Price(PriceConfigDefault()).
+// 			Quote(Uint64Default()).
+// 			Build()
+// 	account := AccountCharsToAccount(*preAccountCellData.Account())
+// 	t.Log(account)
+// 	recover := AccountCharsToAccountId(*preAccountCellData.Account())
+// 	t.Log(recover.HexStr())
+// }
+//
+// func Test_CreateData(t *testing.T) {
+// 	preAccountCellData :=
+// 		NewPreAccountCellDataBuilder().
+// 			Account(AccountCharsDefault()).
+// 			CreatedAt(TimestampDefault()).
+// 			RefundLock(ScriptDefault()).
+// 			InviterWallet(BytesDefault()).
+// 			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
+// 			Price(PriceConfigDefault()).
+// 			Quote(Uint64Default()).
+// 			Build()
+// 	// new := NewDataEntityBuilder().
+// 	// 	Index(GoUint32ToMoleculeU32(0)).
+// 	// 	Version(GoUint32ToMoleculeU32(1)).
+// 	// 	Entity(GoBytesToMoleculeBytes(preAccountCellData.AsSlice())).
+// 	// 	Build()
+// 	// d := NewDataBuilder().
+// 	// 	Dep(DataEntityOptDefault()).
+// 	// 	Old(DataEntityOptDefault()).
+// 	// 	New(NewDataEntityOptBuilder().Set(new).Build()).
+// 	// 	Build()
+// 	// s := hex.EncodeToString(d.AsSlice())
+// 	// t.Log(s)
+// 	// preAccountCell := NewPreAccountCell(TestNetPreAccountCell("",&preAccountCellData))
+// 	witnessBys := NewDasWitnessData(TableType_PRE_ACCOUNT_CELL, preAccountCellData.AsSlice()).ToWitness()
+// 	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	// rawData
+// 	if preAccountCellData, err := PreAccountCellDataFromSlice(ret.MoleculeNewDataEntity.Entity().RawData(), false); err != nil {
+// 		panic(err)
+// 	} else {
+// 		t.Log(string(preAccountCellData.ChannelWallet().RawData()))
+// 		script, err := MoleculeScriptToGo(*preAccountCellData.RefundLock())
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		t.Log(script.CodeHash.String())
+// 		t.Log(MoleculeU64ToGo(preAccountCellData.Quote().RawData()))
+// 	}
+// }
 
-func Test_CreateData(t *testing.T) {
-	preAccountCellData :=
-		NewPreAccountCellDataBuilder().
-			Account(AccountCharsDefault()).
-			CreatedAt(TimestampDefault()).
-			RefundLock(ScriptDefault()).
-			InviterWallet(BytesDefault()).
-			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
-			Price(PriceConfigDefault()).
-			Quote(Uint64Default()).
-			Build()
-	// new := NewDataEntityBuilder().
-	// 	Index(GoUint32ToMoleculeU32(0)).
-	// 	Version(GoUint32ToMoleculeU32(1)).
-	// 	Entity(GoBytesToMoleculeBytes(preAccountCellData.AsSlice())).
-	// 	Build()
-	// d := NewDataBuilder().
-	// 	Dep(DataEntityOptDefault()).
-	// 	Old(DataEntityOptDefault()).
-	// 	New(NewDataEntityOptBuilder().Set(new).Build()).
-	// 	Build()
-	// s := hex.EncodeToString(d.AsSlice())
-	// t.Log(s)
-	// preAccountCell := NewPreAccountCell(TestNetPreAccountCell("",&preAccountCellData))
-	witnessBys := NewDasWitnessData(TableType_PRE_ACCOUNT_CELL, preAccountCellData.AsSlice()).ToWitness()
-	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
-	if err != nil {
-		panic(err)
-	}
-	// rawData
-	if preAccountCellData, err := PreAccountCellDataFromSlice(ret.MoleculeNewDataEntity.Entity().RawData(), false); err != nil {
-		panic(err)
-	} else {
-		t.Log(string(preAccountCellData.ChannelWallet().RawData()))
-		script, err := MoleculeScriptToGo(*preAccountCellData.RefundLock())
-		if err != nil {
-			panic(err)
-		}
-		t.Log(script.CodeHash.String())
-		t.Log(MoleculeU64ToGo(preAccountCellData.Quote().RawData()))
-	}
-}
-
-func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
-	createAt := NewTimestampBuilder().
-		Set(GoTimeUnixToMoleculeBytes(time.Now().Unix())).Build()
-
-	accountChars := NewAccountCharsBuilder()
-	chars := []byte("iqyueq.bit")
-	for _, item := range chars {
-		accountChar :=
-			NewAccountCharBuilder().
-				CharSetName(GoUint32ToMoleculeU32(uint32(AccountChar_En))).
-				Bytes(GoBytesToMoleculeBytes([]byte{item})).
-				Build()
-		accountChars.Push(accountChar)
-	}
-
-	inviterAccountId := GoBytesToMoleculeBytes(DasAccountFromStr("xxx.bit").AccountId().Bytes())
-	args, _ := hex.DecodeString("b7526803f67ebe70aba6")
-	preAccountCellData :=
-		NewPreAccountCellDataBuilder().
-			Account(accountChars.Build()).
-			CreatedAt(createAt).
-			RefundLock(GoCkbScriptToMoleculeScript(types.Script{
-				CodeHash: types.HexToHash("123456aa"),
-				HashType: types.HashTypeType,
-				Args:     args,
-			})).
-			InviterWallet(inviterAccountId).
-			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
-			Price(PriceConfigDefault()).
-			Quote(GoUint64ToMoleculeU64(10086)).
-			Build()
-	preAccountCell := NewPreAccountCell(TestNetPreAccountCell("", &preAccountCellData))
-	witnessBys := NewDasWitnessData(preAccountCell.TableType(), preAccountCellData.AsSlice()).ToWitness()
-	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
-	if err != nil {
-		panic(err)
-	}
-	if preAccountCellData, err := PreAccountCellDataFromSlice(ret.MoleculeNewDataEntity.Entity().AsSlice(), false); err != nil {
-		panic(err)
-	} else {
-		t.Log(string(preAccountCellData.ChannelWallet().RawData()))
-		script, err := MoleculeScriptToGo(*preAccountCellData.RefundLock())
-		if err != nil {
-			panic(err)
-		}
-		t.Log(script.CodeHash.String())
-		t.Log(MoleculeU64ToGo(preAccountCellData.Quote().RawData()))
-	}
-}
+// func Test_RecoverData_From_BuildDasCommonMoleculeDataObj(t *testing.T) {
+// 	createAt := NewTimestampBuilder().
+// 		Set(GoTimeUnixToMoleculeBytes(time.Now().Unix())).Build()
+//
+// 	accountChars := NewAccountCharsBuilder()
+// 	chars := []byte("iqyueq.bit")
+// 	for _, item := range chars {
+// 		accountChar :=
+// 			NewAccountCharBuilder().
+// 				CharSetName(GoUint32ToMoleculeU32(uint32(AccountChar_En))).
+// 				Bytes(GoBytesToMoleculeBytes([]byte{item})).
+// 				Build()
+// 		accountChars.Push(accountChar)
+// 	}
+//
+// 	inviterAccountId := GoBytesToMoleculeBytes(DasAccountFromStr("xxx.bit").AccountId().Bytes())
+// 	args, _ := hex.DecodeString("b7526803f67ebe70aba6")
+// 	preAccountCellData :=
+// 		NewPreAccountCellDataBuilder().
+// 			Account(accountChars.Build()).
+// 			CreatedAt(createAt).
+// 			RefundLock(GoCkbScriptToMoleculeScript(types.Script{
+// 				CodeHash: types.HexToHash("123456aa"),
+// 				HashType: types.HashTypeType,
+// 				Args:     args,
+// 			})).
+// 			InviterWallet(inviterAccountId).
+// 			ChannelWallet(GoBytesToMoleculeBytes([]byte("xx"))).
+// 			Price(PriceConfigDefault()).
+// 			Quote(GoUint64ToMoleculeU64(10086)).
+// 			Build()
+// 	preAccountCell := NewPreAccountCell(TestNetPreAccountCell("", &preAccountCellData))
+// 	witnessBys := NewDasWitnessData(preAccountCell.TableType(), preAccountCellData.AsSlice()).ToWitness()
+// 	ret, err := ParseTxWitnessToDasWitnessObj(witnessBys)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	if preAccountCellData, err := PreAccountCellDataFromSlice(ret.MoleculeNewDataEntity.Entity().AsSlice(), false); err != nil {
+// 		panic(err)
+// 	} else {
+// 		t.Log(string(preAccountCellData.ChannelWallet().RawData()))
+// 		script, err := MoleculeScriptToGo(*preAccountCellData.RefundLock())
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		t.Log(script.CodeHash.String())
+// 		t.Log(MoleculeU64ToGo(preAccountCellData.Quote().RawData()))
+// 	}
+// }
 
 func Test_PreAccountDataFromBytes(t *testing.T) {
 	witnessHex := "0x64617306000000ca010000100000001000000010000000ba01000010000000140000001800000000000000010000009e0100009e01000028000000f40000003d010000570100005b010000690100008a0100009201000096010000cc00000024000000390000004e00000063000000780000008d000000a2000000b7000000150000000c00000010000000010000000100000031150000000c00000010000000020000000100000061150000000c00000010000000020000000100000061150000000c00000010000000020000000100000061150000000c00000010000000020000000100000061150000000c00000010000000020000000100000061150000000c00000010000000020000000100000061150000000c000000100000000200000001000000614900000010000000300000003100000058c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a630114000000c9f53b1d85356b60453f867610888d89a0b667ad160000000003c9f53b1d85356b60453f867610888d89a0b667ad000000000a000000b7526803f67ebe70aba62100000010000000110000001900000008404b4c000000000020a1070000000000e663000000000000000000009ff9986000000000"
@@ -358,7 +358,7 @@ func Test_GoUint32ToMoleculeU32(t *testing.T) {
 }
 
 func Test_ParseTxWitnessToDasWitnessObj_ConfigCellType(t *testing.T) {
-	hexStr := "0x646173020000000c020000100000001000000010000000fc0100001000000014000000180000000100000001000000e0010000e0010000200000002a00000073000000bc000000d3010000db010000dc010000b0e9b753b2853a464029490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8011400000020af3b4ed1c7768a8b87d2fc27242c1c3a43d45f1701000030000000450000005a0000006f0000008400000099000000ae000000c3000000d8000000ed00000002010000150000000c0000001000000002000000010000006c150000000c00000010000000020000000100000069150000000c0000001000000002000000010000006e150000000c00000010000000020000000100000067150000000c00000010000000020000000100000075150000000c00000010000000020000000100000061150000000c0000001000000002000000010000006e150000000c00000010000000020000000100000068150000000c0000001000000002000000010000006f150000000c0000001000000002000000010000006e150000000c00000010000000020000000100000067d4ab5960000000000004000000"
+	hexStr := "0x646173680000000d0100000c0000000d000000000001000020000000400000006000000080000000a0000000c0000000e0000000eb236b0472c4c4b532a81b53a432520adb6d816fc1b847e6ad7cf6366a2b6a950fbff871dd05aee1fda2be38786ad21d52a2765c6025d1ef6927d761d51a3cd1000000000000000000000000000000000000000000000000000000000000000008d1cdc6ab92d9cabe0096a2c7642f73d0ef1b24c94c43f21c6c3a32ffe0bb5e00000000000000000000000000000000000000000000000000000000000000006c8441233f00741955f65e476721a1a5417997c1e4368801c99c7f617f8b754467d48c0911e406518de2116bd91c6af37c05f1db23334ca829d2af3042427e44"
 	hexStr = hexStr[2:]
 	wBytes, err := hex.DecodeString(hexStr)
 	if err != nil {
@@ -369,14 +369,14 @@ func Test_ParseTxWitnessToDasWitnessObj_ConfigCellType(t *testing.T) {
 		panic(err)
 	}
 	t.Log(obj.WitnessObj.TableType)
-	if data, err := AccountCellDataFromSlice(obj.MoleculeNewDataEntity.Entity().RawData(), false); err != nil {
-		panic(err)
-	} else {
-		account := AccountCharsToAccount(*data.Account())
-		t.Log(account.Str())
-		t.Log(account.AccountId().HexStr())
-		t.Log(MoleculeU32ToGo(obj.MoleculeNewDataEntity.Index().RawData()))
-	}
+	// if data, err := AccountCellDataFromSlice(obj.MoleculeNewDataEntity.Entity().RawData(), false); err != nil {
+	// 	panic(err)
+	// } else {
+	// 	account := AccountCharsToAccount(*data.Account())
+	// 	t.Log(account.Str())
+	// 	t.Log(account.AccountId().HexStr())
+	// 	t.Log(MoleculeU32ToGo(obj.MoleculeNewDataEntity.Index().RawData()))
+	// }
 }
 
 func Test_GoTimestampToMoleculeBytes(t *testing.T) {

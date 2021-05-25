@@ -23,9 +23,10 @@ table DataEntity {
     entity: Bytes, // 代表具体的数据结构
 }
 */
-var DefaultAccountCellParam = func(param *AccountCellTxDataParam,dasLockParam *DasLockParam) *AccountCellParam {
+var DefaultAccountCellParam = func(param *AccountCellTxDataParam,dasLockParam *DasLockParam,dataBytes []byte) *AccountCellParam {
 	acp := &AccountCellParam{
 		Version: 1,
+		DataBytes:    dataBytes,
 		// Data: *BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, &new.AccountInfo),
 		CellCodeInfo: DasAccountCellScript,
 		TxDataParam:  param,
@@ -170,7 +171,7 @@ func accountCellOutputData(newData *AccountCellTxDataParam) ([]byte, error) {
 	if accountBytes := account.Bytes(); len(accountBytes) > 0 {
 		dataBytes = append(dataBytes, account.Bytes()...) // account
 	} else {
-		dataBytes = append(dataBytes, []byte{0}...) // root account
+		dataBytes = append(dataBytes, RootAccountDataAccountByte...) // root account
 	}
 	return dataBytes, nil
 }
@@ -206,6 +207,9 @@ func AccountCellCap(account string) (uint64, error) {
 }
 
 func (c *AccountCell) Data() ([]byte, error) {
+	if c.p.DataBytes != nil && len(c.p.DataBytes) > 0 {
+		return c.p.DataBytes, nil
+	}
 	return accountCellOutputData(c.p.TxDataParam)
 }
 
