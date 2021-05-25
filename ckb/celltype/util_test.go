@@ -148,8 +148,14 @@ func Test_ParseAccountData(t *testing.T) {
 			panic(err1)
 		}
 		t.Log("next:", nextId.HexStr())
+		account, err1 := AccountFromOutputData(bys)
+		if err1 != nil {
+			panic(err1)
+		}
+		t.Log("account:", account)
+
 	}
-	printf("0xf44c70c8921227458a62fe683d84a90baa0386877d3f87b385d7cd3b872e3dfb717ce4f160d8ec367e3f80b35d34622e0d49a9b840fb37620000000031313131313131312e626974")
+	printf("0x46d316da038978b44ed0fa1f5590553f4f15ff879f2f04cfdeae72cd1c7cb7a700000000000000000000ffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000")
 }
 
 type accountChar struct {
