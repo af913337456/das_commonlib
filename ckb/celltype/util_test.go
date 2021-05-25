@@ -84,6 +84,8 @@ func Test_ParseCellData(t *testing.T) {
 			panic(err)
 		}
 		fmt.Println(hex.EncodeToString(bys))
+		r := []byte{51,59,20 ,9 ,105 ,1, 103, 187 ,153 ,67 ,192 ,74 ,179 ,219, 132, 90, 88 ,199 ,67, 162 ,255, 142 ,37 ,32 ,212 ,155 ,123 ,81, 255,147,144,21}
+		fmt.Println(hex.EncodeToString(r))
 		// t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
 		// _, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
 		// if err != nil {
