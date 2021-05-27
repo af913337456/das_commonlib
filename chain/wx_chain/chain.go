@@ -51,7 +51,7 @@ func Initialize(p InitConfig) (*Client, error) {
 		option.WithMerchant(p.MchID, p.MchCertSerialNumber, privateKey), // 设置商户信息，用于生成签名信息
 		option.WithWechatPay([]*x509.Certificate{wechatPayCertificate}), // 设置微信支付平台证书信息，对回包进行校验
 		option.WithHTTPClient(&http.Client{}),                           // 可以不设置
-		option.WithTimeout(2 * time.Second),                             // 自行进行超时时间配置
+		option.WithTimeout(10 * time.Second),                            // 自行进行超时时间配置
 		option.WithHeader(&http.Header{}),                               // 可以自行设置Header
 		//option.WithoutValidator(),
 	}
