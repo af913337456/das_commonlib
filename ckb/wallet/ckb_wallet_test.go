@@ -117,39 +117,39 @@ func Test_AddrToArgs(t *testing.T) {
 	t.Log(GetLockScriptArgsFromShortAddress("ckt1qyqvmyy0z5hpy4yzfdnn5dw86scxu7mlcvwqw90j4l"))
 }
 
-func Test_VerifySign(t *testing.T) {
-	key, err := InitCkbWallet(
-		"",
-		&utils.SystemScripts{
-			SecpSingleSigCell: &utils.SystemScriptCell{
-				CellHash: types.HexToHash("123"),
-				OutPoint: nil,
-				HashType: "",
-				DepType:  "",
-			},
-			SecpMultiSigCell: nil,
-			DaoCell:          nil,
-			ACPCell:          nil,
-			SUDTCell:         nil,
-			ChequeCell:       nil,
-		})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(hex.EncodeToString(key.LockScript.Args))
-	rawMsgHexBys := csprngEntropy(32)
-	signMsg, err := key.Secp256k1Key.Sign(rawMsgHexBys)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(len(key.Secp256k1Key.PubKey()))
-	fmt.Println("sign hex:", hex.EncodeToString(signMsg))
-	pass, err := VerifySign(rawMsgHexBys, signMsg, hex.EncodeToString(key.Secp256k1Key.PubKey()))
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("verify sign:", pass)
-}
+// func Test_VerifySign(t *testing.T) {
+// 	key, err := InitCkbWallet(
+// 		"",
+// 		&utils.SystemScripts{
+// 			SecpSingleSigCell: &utils.SystemScriptCell{
+// 				CellHash: types.HexToHash("123"),
+// 				OutPoint: nil,
+// 				HashType: "",
+// 				DepType:  "",
+// 			},
+// 			SecpMultiSigCell: nil,
+// 			DaoCell:          nil,
+// 			ACPCell:          nil,
+// 			SUDTCell:         nil,
+// 			ChequeCell:       nil,
+// 		})
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	fmt.Println(hex.EncodeToString(key.LockScript.Args))
+// 	rawMsgHexBys := csprngEntropy(32)
+// 	signMsg, err := key.Secp256k1Key.Sign(rawMsgHexBys)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	fmt.Println(len(key.Secp256k1Key.PubKey()))
+// 	fmt.Println("sign hex:", hex.EncodeToString(signMsg))
+// 	pass, err := VerifySign(rawMsgHexBys, signMsg, hex.EncodeToString(key.Secp256k1Key.PubKey()))
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	fmt.Println("verify sign:", pass)
+// }
 
 func csprngEntropy(n int) []byte {
 	buf := make([]byte, n)
