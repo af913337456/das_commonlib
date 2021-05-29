@@ -1,6 +1,7 @@
 package celltype
 
 import (
+	"context"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -355,7 +356,15 @@ func UseVersion2SystemScriptCodeHash()  {
 	initMap()
 }
 
-func TimingAsyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.Script,errHandle func(err error),successHandle func())  {
+type TimingAsyncSystemCodeScriptParam struct {
+	RpcClient rpc.Client
+	SuperLock *types.Script
+	Duration time.Duration
+	Ctx context.Context
+	ErrHandle func(err error)
+	SuccessHandle func()
+}
+func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam)  {
 	sync := func() {
 		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
 			item := value.(*DASCellBaseInfo)
@@ -366,14 +375,14 @@ func TimingAsyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.S
 				Script:     &item.ContractTypeScript,
 				ScriptType: indexer.ScriptTypeType,
 				Filter: &indexer.CellsFilter{
-					Script: superLock,
+					Script: p.SuperLock,
 				},
 			}
-			liveCells, _, err := common.LoadLiveCells(rpcClient, searchKey, 10000000*OneCkb, true, false, func(cell *indexer.LiveCell) bool {
+			liveCells, _, err := common.LoadLiveCells(p.RpcClient, searchKey, 10000000*OneCkb, true, false, func(cell *indexer.LiveCell) bool {
 				return cell.Output.Type != nil
 			})
-			if err != nil && errHandle != nil {
-				errHandle(fmt.Errorf("LoadAllScriptCodeCell err: %s", err.Error()))
+			if err != nil && p.ErrHandle != nil {
+				p.ErrHandle(fmt.Errorf("LoadAllScriptCodeCell err: %s", err.Error()))
 				return false
 			}
 			for _, liveCell := range liveCells {
@@ -386,16 +395,21 @@ func TimingAsyncSystemCodeScriptOutPoint(rpcClient rpc.Client,superLock *types.S
 			}
 			return true
 		})
-		if successHandle != nil {
-			successHandle()
+		if p.SuccessHandle != nil {
+			p.SuccessHandle()
 		}
 	}
 	sync()
 	go func() {
-		ticker := time.NewTicker(time.Second * 10)
+		ticker := time.NewTicker(p.Duration)
 		defer ticker.Stop()
+		if p.Ctx == nil {
+			p.Ctx = context.TODO()
+		}
 		for {
 			select {
+			case <-p.Ctx.Done():
+				return
 			case <-ticker.C:
 				sync()
 			}

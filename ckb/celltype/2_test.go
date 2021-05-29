@@ -22,6 +22,9 @@ func Test_EmojiAccountLen(t *testing.T) {
 	t.Log(DasAccountFromStr("11.bit").AccountValidateLen())
 	t.Log(DasAccountFromStr("😄hj🌹.bit").AccountValidateLen())
 	t.Log(DasAccountFromStr("😄人生🌹如此.bit").AccountValidateLen())
+	// 🙈🙈🙈🙈🙈.bit
+	t.Log(len(DasAccountFromStr("🙈🙈🙈🙈🙈🙈🙈.bit").Bytes()))
+	t.Log(DasAccountFromStr("🙈🙈🙈🙈🙈.bit").AccountValidateLen())
 }
 
 func Test_AccountId(t *testing.T) {

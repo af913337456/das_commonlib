@@ -8,7 +8,6 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
-	"github.com/nervosnetwork/ckb-sdk-go/utils"
 	"testing"
 	"time"
 )
@@ -38,25 +37,33 @@ func Test_DasLockCodeHashIndexType(t *testing.T) {
 
 func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
 	rpcClient := rpcClient()
-	systemScripts, err := utils.NewSystemScripts(rpcClient)
-	if err != nil {
-		fmt.Println(fmt.Errorf("NewSystemScripts failed: %s", err.Error()))
-		return
-	}
-	argsBytes, _ := hex.DecodeString("5eb00c0e51afb537fc8071810034ce92f98c3259")
-	TimingAsyncSystemCodeScriptOutPoint(rpcClient,&types.Script{
-		CodeHash: systemScripts.SecpSingleSigCell.CellHash,
-		HashType: types.HashTypeType,
-		Args:     argsBytes,
-	}, func(err error) {
-		fmt.Println("err:",err.Error())
-	}, func() {
-		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
-			item := value.(*DASCellBaseInfo)
-			fmt.Println("成功:",item.Name,item.Dep.TxHash.String())
-			return true
-		})
-		fmt.Println("=====",DasAccountCellScript.Dep.TxHash.String())
+	// systemScripts, err := utils.NewSystemScripts(rpcClient)
+	// if err != nil {
+	// 	fmt.Println(fmt.Errorf("NewSystemScripts failed: %s", err.Error()))
+	// 	return
+	// }
+	ctx,cancel := context.WithCancel(context.TODO())
+	go func() {
+		time.Sleep(time.Minute * 5)
+		fmt.Println("finish")
+		cancel()
+	}()
+	TimingAsyncSystemCodeScriptOutPoint(&TimingAsyncSystemCodeScriptParam{
+		RpcClient:    rpcClient,
+		SuperLock:    nil,
+		Duration:      time.Second,
+		Ctx:           ctx,
+		ErrHandle:     func(err error) {
+			fmt.Println("err:",err.Error())
+		},
+		SuccessHandle: func() {
+			SystemCodeScriptMap.Range(func(key, value interface{}) bool {
+				item := value.(*DASCellBaseInfo)
+				fmt.Println("成功:",item.Name,item.Dep.TxHash.String())
+				return true
+			})
+			fmt.Println("=====",DasAccountCellScript.Dep.TxHash.String())
+		},
 	})
 	select {}
 }
@@ -224,15 +231,16 @@ func Test_CalAccountCellExpiredAt(t *testing.T) {
 	// "quote":25574,"account_cell_cap":200,"price_config_new":8000000,"account_bytes_len":0,"pre_account_cell_cap":66500000000,"ref_cell_cap":0,"discount_rate":0}
 	// 1651826722
 	// {"quote":25983,"account_cell_cap":20700000000,"price_config_new":10000000,"account_bytes_len":0,"pre_account_cell_cap":58080000000,"ref_cell_cap":0,"discount_rate":500}
+	// {"quote":13464,"account_cell_cap":21100000000,"price_config_new":6000000,"account_bytes_len":0,"pre_account_cell_cap":112200000000,"ref_cell_cap":0,"discount_rate":0}
 	param := CalAccountCellExpiredAtParam{
-		Quote:             25983, // 1000 ckb = 1 usd
-		AccountCellCap:    207 * OneCkb,
-		PriceConfigNew:    10000000, // 10 usd
-		PreAccountCellCap: 58080000000, // 566 * OneCkb,
+		Quote:             13464, // 1000 ckb = 1 usd
+		AccountCellCap:    211 * OneCkb,
+		PriceConfigNew:    6000000, // 10 usd
+		PreAccountCellCap: 112200000000, // 566 * OneCkb,
 		RefCellCap:        0,
 		DiscountRate:      0,
 	}
-	timeSec, err := CalAccountCellExpiredAt(param, 1620900894)
+	timeSec, err := CalAccountCellExpiredAt(param, 1622085497)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
