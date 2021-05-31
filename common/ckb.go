@@ -48,6 +48,9 @@ NextBatch:
 			return nil, 0, fmt.Errorf("LoadLiveCells, read iterator current err: %s", err.Error())
 		}
 		if filter != nil && !filter(liveCell) {
+			if iterator.HasNext() {
+				continue
+			}
 			if err = iterator.Next(); err != nil {
 				return nil, 0, fmt.Errorf("LoadLiveCells, read iterator next err: %s", err.Error())
 			}
