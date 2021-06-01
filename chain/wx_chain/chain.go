@@ -78,6 +78,50 @@ func checkResponse(response *http.Response) ([]byte, error) {
 
 type RespCreateOrder struct {
 	CodeUrl string `json:"code_url"`
+	H5Url   string `json:"h5_url"`
+}
+
+// H5下单
+func (c *Client) CreateOrderH5(orderId, description, clientIP string, amount int64) (RespCreateOrder, error) {
+	if c.dev {
+		amount = 1
+	}
+	var resp RespCreateOrder
+	//设置请求地址
+	URL := "https://api.mch.weixin.qq.com/v3/pay/transactions/h5"
+	//设置请求信息,此处也可以使用结构体来进行请求
+	mapInfo := map[string]interface{}{
+		"mchid":        c.mchID,
+		"out_trade_no": orderId,
+		"appid":        c.appID,
+		"description":  description,
+		"notify_url":   c.notifyUrl,
+		"time_expire":  time.Now().Add(time.Hour * 2).Format("2006-01-02T15:04:05+08:00"),
+		"amount": map[string]interface{}{
+			"total":    amount, //单位 分
+			"currency": "CNY",
+		},
+		"scene_info": map[string]interface{}{
+			"payer_client_ip": clientIP,
+			"h5_info": map[string]interface{}{
+				"type": "Wap",
+			},
+		},
+	}
+	// 发起请求
+	response, err := c.client.Post(c.ctx, URL, mapInfo)
+	if err != nil {
+		return resp, fmt.Errorf("CreateOrder client post err:%s", err.Error())
+	}
+	// 校验回包
+	body, err := checkResponse(response)
+	if err != nil {
+		return resp, fmt.Errorf("CreateOrder checkResponse err:%s", err.Error())
+	}
+	if err := json.Unmarshal(body, &resp); err != nil {
+		return resp, fmt.Errorf("CreateOrder Unmarshal err:%s", err.Error())
+	}
+	return resp, nil
 }
 
 // Native支付统一下单
@@ -95,7 +139,7 @@ func (c *Client) CreateOrder(orderId, description string, amount int64) (RespCre
 		"appid":        c.appID,
 		"description":  description,
 		"notify_url":   c.notifyUrl,
-		"time_expire":  time.Now().Add(time.Hour * 24).Format("2006-01-02T15:04:05+08:00"),
+		"time_expire":  time.Now().Add(time.Hour * 2).Format("2006-01-02T15:04:05+08:00"),
 		"amount": map[string]interface{}{
 			"total":    amount, //单位 分
 			"currency": "CNY",
