@@ -362,13 +362,13 @@ type TimingAsyncSystemCodeScriptParam struct {
 	Ctx           context.Context
 	ErrHandle     func(err error)
 	SuccessHandle func()
-	InitHandle    func()
-	IsAsync       bool
+	InitHandle    func() bool
 }
 
 func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
+	isNeedSync := true
 	if p.InitHandle != nil {
-		p.InitHandle()
+		isNeedSync = p.InitHandle()
 	}
 	sync := func() {
 		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
@@ -404,7 +404,7 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 			p.SuccessHandle()
 		}
 	}
-	if !p.IsAsync {
+	if isNeedSync {
 		sync()
 	}
 	go func() {
