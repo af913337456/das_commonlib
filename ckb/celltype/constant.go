@@ -133,6 +133,10 @@ const (
 
 	TableTyte_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
 	TableTyte_CONFIG_CELL_PreservedAccount00     TableType = 150
+
+	TableTyte_CONFIG_CELL_CharSetEmoji TableType = 100000
+	TableTyte_CONFIG_CELL_CharSetDigit TableType = 100001
+	TableTyte_CONFIG_CELL_CharSetEn TableType = 100002
 	// TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
