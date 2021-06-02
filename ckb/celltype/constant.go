@@ -109,7 +109,8 @@ const ConfigCellPreservedAccount00 = 150,
 func (t TableType) ValidateType() bool {
 	return t <= TableType_INCOME_CELL ||
 		(t >= TableTyte_CONFIG_CELL_ACCOUNT && t <= TableTyte_CONFIG_CELL_RECORD_NAMESPACE) ||
-		t == TableTyte_CONFIG_CELL_PreservedAccount00
+		t == TableTyte_CONFIG_CELL_PreservedAccount00 ||
+		(t >=TableTyte_CONFIG_CELL_CharSetEmoji && t <= TableTyte_CONFIG_CELL_CharSetEn)
 }
 const (
 	TableType_ACTION       TableType = 0
