@@ -23,7 +23,6 @@ import (
  * Description:
  */
 
-
 var (
 	TestNetLockScriptDep = DASCellBaseInfoDep{
 		TxHash:  types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
@@ -325,22 +324,22 @@ func init() {
 	initMap()
 }
 
-func initMap()  {
-	SystemCodeScriptMap.Store(DasApplyRegisterCellScript.Out.CodeHash,&DasApplyRegisterCellScript)
-	SystemCodeScriptMap.Store(DasPreAccountCellScript.Out.CodeHash,&DasPreAccountCellScript)
-	SystemCodeScriptMap.Store(DasAccountCellScript.Out.CodeHash,&DasAccountCellScript)
-	SystemCodeScriptMap.Store(DasBiddingCellScript.Out.CodeHash,&DasBiddingCellScript)
-	SystemCodeScriptMap.Store(DasOnSaleCellScript.Out.CodeHash,&DasOnSaleCellScript)
-	SystemCodeScriptMap.Store(DasProposeCellScript.Out.CodeHash,&DasProposeCellScript)
-	SystemCodeScriptMap.Store(DasConfigCellScript.Out.CodeHash,&DasConfigCellScript)
-	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash,&DasIncomeCellScript)
+func initMap() {
+	SystemCodeScriptMap.Store(DasApplyRegisterCellScript.Out.CodeHash, &DasApplyRegisterCellScript)
+	SystemCodeScriptMap.Store(DasPreAccountCellScript.Out.CodeHash, &DasPreAccountCellScript)
+	SystemCodeScriptMap.Store(DasAccountCellScript.Out.CodeHash, &DasAccountCellScript)
+	SystemCodeScriptMap.Store(DasBiddingCellScript.Out.CodeHash, &DasBiddingCellScript)
+	SystemCodeScriptMap.Store(DasOnSaleCellScript.Out.CodeHash, &DasOnSaleCellScript)
+	SystemCodeScriptMap.Store(DasProposeCellScript.Out.CodeHash, &DasProposeCellScript)
+	SystemCodeScriptMap.Store(DasConfigCellScript.Out.CodeHash, &DasConfigCellScript)
+	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash, &DasIncomeCellScript)
 
 }
 
 // testnet version 2
-func UseVersion2SystemScriptCodeHash()  {
+func UseVersion2SystemScriptCodeHash() {
 
-	SystemCodeScriptMap.Store(DasLockCellScript.Out.CodeHash,&DasLockCellScript)
+	SystemCodeScriptMap.Store(DasLockCellScript.Out.CodeHash, &DasLockCellScript)
 
 	DasApplyRegisterCellScript.Out.CodeHash = types.HexToHash("0x0fbff871dd05aee1fda2be38786ad21d52a2765c6025d1ef6927d761d51a3cd1")
 	DasPreAccountCellScript.Out.CodeHash = types.HexToHash("0x6c8441233f00741955f65e476721a1a5417997c1e4368801c99c7f617f8b7544")
@@ -357,14 +356,20 @@ func UseVersion2SystemScriptCodeHash()  {
 }
 
 type TimingAsyncSystemCodeScriptParam struct {
-	RpcClient rpc.Client
-	SuperLock *types.Script
-	Duration time.Duration
-	Ctx context.Context
-	ErrHandle func(err error)
+	RpcClient     rpc.Client
+	SuperLock     *types.Script
+	Duration      time.Duration
+	Ctx           context.Context
+	ErrHandle     func(err error)
 	SuccessHandle func()
+	InitHandle    func()
+	IsAsync       bool
 }
-func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam)  {
+
+func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
+	if p.InitHandle != nil {
+		p.InitHandle()
+	}
 	sync := func() {
 		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
 			item := value.(*DASCellBaseInfo)
@@ -399,7 +404,9 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam)  {
 			p.SuccessHandle()
 		}
 	}
-	sync()
+	if !p.IsAsync {
+		sync()
+	}
 	go func() {
 		ticker := time.NewTicker(p.Duration)
 		defer ticker.Stop()
@@ -434,7 +441,7 @@ func emptyHexToArgsBytes() []byte {
 }
 
 func dasLockDefaultBytes() []byte {
-	return []byte{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+	return []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 }
 
 func hexToArgsBytes(hexStr string) []byte {
