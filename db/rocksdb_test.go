@@ -23,10 +23,14 @@ func Test_Ascill(t *testing.T) {
 }
 
 func Test_BatchWrite(t *testing.T) {
-	db, err := NewDefaultRocksNormalDb("/Users/DA-Services/go/src/src/das_commonlib/data")
+	db, err := NewDefaultRocksNormalDb("data")
 	if err != nil {
 		t.Error(err)
 	}
+	defer func() {
+		// db.Close()
+	}()
+	t.Log("finish init db")
 	wb := gorocksdb.NewWriteBatch()
 	for i := 0; i < 10; i++ {
 		if i == 9 {
@@ -38,6 +42,14 @@ func Test_BatchWrite(t *testing.T) {
 	}
 	if err = db.Write(gorocksdb.NewDefaultWriteOptions(), wb); err != nil {
 		t.Error(err)
+	}
+	reader := db.NewIterator(gorocksdb.NewDefaultReadOptions())
+	keyPrefix := []byte("111_a")
+	for reader.Seek(keyPrefix); ; reader.Next() {
+		if valid := reader.ValidForPrefix(keyPrefix); !valid {
+			break
+		}
+		t.Log(string(reader.Key().Data()), string(reader.Value().Data()))
 	}
 }
 func Test_BatchRead(t *testing.T) {
