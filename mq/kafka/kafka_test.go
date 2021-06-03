@@ -20,7 +20,7 @@ import (
 func Test_kafkaConsumer(t *testing.T) {
 	runtime.GOMAXPROCS(4)
 	ctx, cancel := context.WithCancel(context.Background())
-	consumer, err := NewDefaultKafkaMessageQueueConsumer([]string{"127.0.0.1:9092"}, "2", ctx)
+	consumer, err := NewDefaultKafkaMessageQueueConsumer([]string{"127.0.0.1:9092"}, "2",false, ctx)
 	if err != nil {
 		panic(err.Error())
 	}

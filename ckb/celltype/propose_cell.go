@@ -89,7 +89,6 @@ var DefaultProposeCellParam = func(new *ProposalCellData) *ProposeCellParam {
 	acp := &ProposeCellParam{
 		Version:     1,
 		TxDataParam: *new,
-		// Data:                      *buildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, new),
 		CellCodeInfo:              DasProposeCellScript,
 		AlwaysSpendableScriptInfo: DasAnyOneCanSendCellInfo,
 	}

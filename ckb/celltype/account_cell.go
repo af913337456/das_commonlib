@@ -1,7 +1,6 @@
 package celltype
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/common"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
@@ -166,9 +165,9 @@ func (c *AccountCell) accountCellOutputData() ([]byte, error) {
 	account := AccountCharsToAccount(*newData.AccountInfo.Account())
 	accountId := newData.AccountInfo.Id()
 
-	fmt.Println("accountCellOutputData -------accountId------> ", hex.EncodeToString(accountId.RawData()))
-	fmt.Println("accountCellOutputData -------account__------> ", account)
-	fmt.Println("accountCellOutputData -------expired__------> ", newData.ExpiredAt)
+	// fmt.Println("accountCellOutputData -------accountId------> ", hex.EncodeToString(accountId.RawData()))
+	// fmt.Println("accountCellOutputData -------account__------> ", account)
+	// fmt.Println("accountCellOutputData -------expired__------> ", newData.ExpiredAt)
 
 	dataBytes = append(dataBytes, accountInfoDataBytes...)
 	dataBytes = append(dataBytes, accountId.RawData()...)                // id

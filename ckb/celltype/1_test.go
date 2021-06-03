@@ -59,10 +59,10 @@ func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
 		SuccessHandle: func() {
 			SystemCodeScriptMap.Range(func(key, value interface{}) bool {
 				item := value.(*DASCellBaseInfo)
-				fmt.Println("成功:",item.Name,item.Dep.TxHash.String())
+				fmt.Println("success:",item.Name,item.Dep.TxHash.String())
 				return true
 			})
-			fmt.Println("=====",DasAccountCellScript.Dep.TxHash.String())
+			fmt.Println("accountCellDepTxHash:",DasAccountCellScript.Dep.TxHash.String())
 		},
 	})
 	select {}
@@ -143,10 +143,10 @@ func Test_Ticker(t *testing.T) {
 		for {
 			select {
 			case <-ticker.C:
-				fmt.Println("1111")
+				fmt.Println("ticker")
 			default:
 				time.Sleep(time.Second)
-				fmt.Println("2")
+				fmt.Println("delay")
 			}
 		}
 	}()

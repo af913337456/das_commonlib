@@ -1,8 +1,6 @@
 package celltype
 
 import (
-	"encoding/hex"
-	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 )
@@ -76,7 +74,7 @@ func (c *IncomeCell) Data() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("incomeCell 的 dataHash:",hex.EncodeToString(bys))
+	// fmt.Println("incomeCell's dataHash:",hex.EncodeToString(bys))
 	return bys, nil
 }
 

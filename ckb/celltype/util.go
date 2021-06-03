@@ -512,21 +512,17 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	return newWitnessData.ToWitness(), nil
 }
 
-/**
-singlePrice = ConfigCell.price / quote * 10^8 / 365 * 86400
-expiredAt = ((PreAccountCell.capacity - AccountCell.capacity - RefCell.capacity) / singlePrice
-*/
 func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {
-	fmt.Println("CalAccountCellExpiredAt Param ====>", param.Json())
+	// fmt.Println("CalAccountCellExpiredAt Param ====>", param.Json())
 	if param.PreAccountCellCap < param.AccountCellCap+param.RefCellCap {
 		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
 	} else {
 		paid := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
 		registerFee := registerFee(param.PriceConfigNew, param.Quote, param.DiscountRate)
 		durationInt := paid * oneYearDays / registerFee * oneDaySec
-		fmt.Println("CalAccountCellExpiredAt registerFee ====>", registerFee)
-		fmt.Println("CalAccountCellExpiredAt storageFee ====>", paid)
-		fmt.Println("CalAccountCellExpiredAt duration   ====>", durationInt)
+		// fmt.Println("CalAccountCellExpiredAt registerFee ====>", registerFee)
+		// fmt.Println("CalAccountCellExpiredAt storageFee ====>", paid)
+		// fmt.Println("CalAccountCellExpiredAt duration   ====>", durationInt)
 		return uint64(registerAt) + durationInt, nil // 1648195213
 	}
 }

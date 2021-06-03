@@ -24,7 +24,7 @@ func Test_ETH_ComputeHash(t *testing.T) {
 
 	xx := crypto.Keccak256([]byte("foo"))
 	fmt.Println(len(xx))
-	msg, err := ETH_ComputeHash(xx)
+	msg, err := ETHMessageDigest(xx)
 	if err != nil {
 		t.Errorf("Sign error: %s", err)
 	}

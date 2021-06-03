@@ -115,7 +115,6 @@ func (t TableType) ValidateType() bool {
 const (
 	TableType_ACTION       TableType = 0
 	TableType_ACCOUNT_CELL TableType = 1
-	// TableType_REGISTER_CELL TableType = 3
 	TableType_ON_SALE_CELL     TableType = 2
 	TableType_BIDDING_CELL     TableType = 3
 	TableType_PROPOSE_CELL     TableType = 4

@@ -44,7 +44,7 @@ func NewChangeWatcher(fileDir string) *FileChangeWatcher {
 }
 
 func (w *FileChangeWatcher) PrintlnWatchCount() {
-	fmt.Println("fileWatcher -->", "Dir:", len(w.watcherMap), "file:", len(*w.targetFileNames))
+	fmt.Println(fmt.Sprintf("fileWatcher --> Dir: %d, file count: %d", len(w.watcherMap),len(*w.targetFileNames)))
 }
 
 func (w *FileChangeWatcher) RegisterWatcher(fileName string, handlerFunc func(fileName string, optName fsnotify.Op)) error {

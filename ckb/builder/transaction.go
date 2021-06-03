@@ -154,14 +154,13 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 	return uint32(len(builder.tx.Outputs) - 1)
 }
 
-// 自动计算需要的 input
+// auto calculate inputs
 func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) ([]*types.OutPoint, error) {
 	needCap := builder.NeedCapacityValue()
 	if needCap == 0 {
 		return nil, nil
 	}
 	usedOutPoints := []*types.OutPoint{}
-	// 添加 input，只取需要的那么多个
 	capCounter := uint64(0)
 	for _, cell := range liveCells {
 		if capCounter < needCap {
@@ -281,7 +280,7 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 	return builder.fromAddress
 }
 
-// 在加完 input 和 output 后调用
+// call this method after add inputs && add outputs
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
 	builder.AddCellDep(&types.CellDep{
 		OutPoint: signCell.OutPoint,
@@ -415,7 +414,6 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("交易 hash:",hash.String())
 	message := append(hash.Bytes())
 	message = append(message, length...)
 	message = append(message, data...)
