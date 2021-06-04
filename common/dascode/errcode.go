@@ -4,7 +4,7 @@ package dascode
  * Copyright (C), 2019-2021
  * FileName: errcode
  * Author:   LinGuanHong
- * Date:     2021/2/4 1:02 下午
+ * Date:     2021/2/4 1:02
  * Description:
  */
 

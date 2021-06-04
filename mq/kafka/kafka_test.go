@@ -13,7 +13,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: lib_test
  * Author:   LinGuanHong
- * Date:     2020/12/15 11:20 上午
+ * Date:     2020/12/15 11:20
  * Description:
  */
 

@@ -20,7 +20,7 @@ package ckb
 //  * Copyright (C), 2019-2020
 //  * FileName: test_tx
 //  * Author:   LinGuanHong
-//  * Date:     2020/12/15 12:15 下午
+//  * Date:     2020/12/15 12:15
 //  * Description:
 //  */
 //

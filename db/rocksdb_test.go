@@ -12,7 +12,7 @@ import (
  * Copyright (C), 2019-2021
  * FileName: rocksdb_test
  * Author:   LinGuanHong
- * Date:     2021/1/8 11:26 上午
+ * Date:     2021/1/8 11:26
  * Description:
  */
 

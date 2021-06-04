@@ -10,7 +10,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: t_test
  * Author:   LinGuanHong
- * Date:     2020/12/30 4:23 下午
+ * Date:     2020/12/30 4:23
  * Description:
  */
 
@@ -21,7 +21,7 @@ func Test_EmojiAccountLen(t *testing.T) {
 	t.Log(DasAccountFromStr("123.bit").AccountValidateLen())
 	t.Log(DasAccountFromStr("11.bit").AccountValidateLen())
 	t.Log(DasAccountFromStr("😄hj🌹.bit").AccountValidateLen())
-	t.Log(DasAccountFromStr("😄人生🌹如此.bit").AccountValidateLen())
+	t.Log(DasAccountFromStr("😄🌹如此.bit").AccountValidateLen())
 	// 🙈🙈🙈🙈🙈.bit
 	t.Log(len(DasAccountFromStr("🙈🙈🙈🙈🙈🙈🙈.bit").Bytes()))
 	t.Log(DasAccountFromStr("🙈🙈🙈🙈🙈.bit").AccountValidateLen())
@@ -59,7 +59,7 @@ func index(f setIndex) {
 }
 
 func Test_NewDasWitnessData(t *testing.T) {
-	obj := NewDasWitnessData(1, []byte("china"))
+	obj := NewDasWitnessData(1, []byte("usa"))
 	t.Log(hex.EncodeToString(obj.ToWitness()))
 	das, err := NewDasWitnessDataFromSlice(obj.ToWitness())
 	if err != nil {

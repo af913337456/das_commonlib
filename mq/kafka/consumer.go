@@ -10,7 +10,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: consumer
  * Author:   LinGuanHong
- * Date:     2020/12/15 10:45 上午
+ * Date:     2020/12/15 10:45
  * Description:
  */
 

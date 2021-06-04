@@ -10,7 +10,7 @@ import (
  * Copyright (C), 2019-2021
  * FileName: transaction_test
  * Author:   LinGuanHong
- * Date:     2021/3/24 5:16 下午
+ * Date:     2021/3/24 5:16
  * Description:
  */
 

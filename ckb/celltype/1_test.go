@@ -16,7 +16,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: data_test
  * Author:   LinGuanHong
- * Date:     2020/12/20 2:57 下午
+ * Date:     2020/12/20 2:57
  * Description:
  */
 
@@ -154,9 +154,6 @@ func Test_Ticker(t *testing.T) {
 }
 
 func Test_AccountCharLen(t *testing.T) {
-	// accountId 包含 bit
-	// 取价格，不需要
-	//
 	fmt.Println(len([]rune("xx🌹你")))
 	fmt.Println([]byte("🌹"))
 	/**
@@ -185,7 +182,7 @@ func Test_PriceConfigs(t *testing.T) {
 		list := NewPriceConfigListBuilder().Push(p1).Push(p2).Push(p3).Build()
 		fmt.Println(list.ItemCount())
 		priceIndex := uint(0)
-		accountBytesLen := uint8(len([]rune("123"))) // 字符长度
+		accountBytesLen := uint8(len([]rune("123")))
 		for ; priceIndex < list.ItemCount(); priceIndex++ {
 			item := list.Get(priceIndex)
 			accountLen, err := MoleculeU8ToGo(item.Length().AsSlice())

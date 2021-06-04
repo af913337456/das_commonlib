@@ -16,12 +16,12 @@ import (
 type Client struct {
 	ctx                 context.Context
 	client              *core.Client
-	mchID               string // 直连商户号
-	mchCertSerialNumber string // 商户证书序列号
-	notifyUrl           string // 支付回调通知URL
-	appID               string // 应用ID
-	apiV3Key            string // 通知解密密钥
-	dev                 bool   // 开发环境
+	mchID               string
+	mchCertSerialNumber string
+	notifyUrl           string
+	appID               string
+	apiV3Key            string
+	dev                 bool
 }
 
 type InitConfig struct {
@@ -36,23 +36,21 @@ type InitConfig struct {
 }
 
 func Initialize(p InitConfig) (*Client, error) {
-	// 加载商户私钥
 	privateKey, err := utils.LoadPrivateKeyWithPath(p.PrivateKeyPath)
 	if err != nil {
 		return nil, fmt.Errorf("LoadPrivateKeyWithPath err:%s", err.Error())
 	}
-	// 加载微信支付平台证书
 	wechatPayCertificate, err := utils.LoadCertificateWithPath(p.WechatCertificatePath)
 	if err != nil {
 		return nil, fmt.Errorf("LoadCertificateWithPath err:%s", err.Error())
 	}
 	ctx := context.Background()
 	opts := []option.ClientOption{
-		option.WithMerchant(p.MchID, p.MchCertSerialNumber, privateKey), // 设置商户信息，用于生成签名信息
-		option.WithWechatPay([]*x509.Certificate{wechatPayCertificate}), // 设置微信支付平台证书信息，对回包进行校验
-		option.WithHTTPClient(&http.Client{}),                           // 可以不设置
-		option.WithTimeout(30 * time.Second),                            // 自行进行超时时间配置
-		option.WithHeader(&http.Header{}),                               // 可以自行设置Header
+		option.WithMerchant(p.MchID, p.MchCertSerialNumber, privateKey),
+		option.WithWechatPay([]*x509.Certificate{wechatPayCertificate}),
+		option.WithHTTPClient(&http.Client{}),
+		option.WithTimeout(30 * time.Second),
+		option.WithHeader(&http.Header{}),
 		//option.WithoutValidator(),
 	}
 	client, err := core.NewClient(ctx, opts...)
@@ -62,13 +60,10 @@ func Initialize(p InitConfig) (*Client, error) {
 	return &Client{ctx: ctx, client: client, mchID: p.MchID, appID: p.AppID, apiV3Key: p.ApiV3Key, notifyUrl: p.NotifyUrl, dev: p.Dev}, nil
 }
 
-// 校验回包
 func checkResponse(response *http.Response) ([]byte, error) {
-	// 校验回包内容是否有逻辑错误
 	if err := core.CheckResponse(response); err != nil {
 		return nil, fmt.Errorf("check response err:%s", err.Error())
 	}
-	// 读取回包信息
 	if body, err := ioutil.ReadAll(response.Body); err != nil {
 		return nil, fmt.Errorf("read response body err:%s", err.Error())
 	} else {
@@ -81,15 +76,12 @@ type RespCreateOrder struct {
 	H5Url   string `json:"h5_url"`
 }
 
-// H5下单
 func (c *Client) CreateOrderH5(orderId, description, clientIP string, amount int64) (RespCreateOrder, error) {
 	if c.dev {
 		amount = 1
 	}
 	var resp RespCreateOrder
-	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/pay/transactions/h5"
-	//设置请求信息,此处也可以使用结构体来进行请求
 	mapInfo := map[string]interface{}{
 		"mchid":        c.mchID,
 		"out_trade_no": orderId,
@@ -108,12 +100,10 @@ func (c *Client) CreateOrderH5(orderId, description, clientIP string, amount int
 			},
 		},
 	}
-	// 发起请求
 	response, err := c.client.Post(c.ctx, URL, mapInfo)
 	if err != nil {
 		return resp, fmt.Errorf("CreateOrder client post err:%s", err.Error())
 	}
-	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
 		return resp, fmt.Errorf("CreateOrder checkResponse err:%s", err.Error())
@@ -124,15 +114,12 @@ func (c *Client) CreateOrderH5(orderId, description, clientIP string, amount int
 	return resp, nil
 }
 
-// Native支付统一下单
 func (c *Client) CreateOrder(orderId, description string, amount int64) (RespCreateOrder, error) {
 	if c.dev {
 		amount = 1
 	}
 	var resp RespCreateOrder
-	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/pay/transactions/native"
-	//设置请求信息,此处也可以使用结构体来进行请求
 	mapInfo := map[string]interface{}{
 		"mchid":        c.mchID,
 		"out_trade_no": orderId,
@@ -141,16 +128,14 @@ func (c *Client) CreateOrder(orderId, description string, amount int64) (RespCre
 		"notify_url":   c.notifyUrl,
 		"time_expire":  time.Now().Add(time.Hour * 2).Format("2006-01-02T15:04:05+08:00"),
 		"amount": map[string]interface{}{
-			"total":    amount, //单位 分
+			"total":    amount,
 			"currency": "CNY",
 		},
 	}
-	// 发起请求
 	response, err := c.client.Post(c.ctx, URL, mapInfo)
 	if err != nil {
 		return resp, fmt.Errorf("CreateOrder client post err:%s", err.Error())
 	}
-	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
 		return resp, fmt.Errorf("CreateOrder checkResponse err:%s", err.Error())
@@ -183,18 +168,14 @@ type RespQueryOrder struct {
 	} `json:"amount"`
 }
 
-// 查询订单
 func (c *Client) QueryOrder(orderId string) (RespQueryOrder, error) {
 	var resp RespQueryOrder
-	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s?mchid=%s"
 	URL = fmt.Sprintf(URL, orderId, c.mchID)
-	// 发起请求
 	response, err := c.client.Get(c.ctx, URL)
 	if err != nil {
 		return resp, fmt.Errorf("QueryOrder client get err:%s", err.Error())
 	}
-	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
 		return resp, fmt.Errorf("QueryOrder checkResponse err:%s", err.Error())
@@ -205,21 +186,16 @@ func (c *Client) QueryOrder(orderId string) (RespQueryOrder, error) {
 	return resp, nil
 }
 
-// 关闭订单
 func (c *Client) CloseOrder(txID string) error {
-	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s/close"
 	URL = fmt.Sprintf(URL, txID)
-	//设置请求信息,此处也可以使用结构体来进行请求
 	mapInfo := map[string]interface{}{
 		"mchid": c.mchID,
 	}
-	// 发起请求
 	response, err := c.client.Post(c.ctx, URL, mapInfo)
 	if err != nil {
 		return fmt.Errorf("CloseOrder client post err:%s", err.Error())
 	}
-	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
 		return fmt.Errorf("CloseOrder checkResponse err:%s", err.Error())
@@ -263,16 +239,13 @@ type OrderNotifyData struct {
 	} `json:"amount"`
 }
 
-// 支付通知解析
 func (c *Client) OrderNotifyResolve(notify PayNotify) (OrderNotifyData, error) {
 	var data OrderNotifyData
-	// 解密数据
 	certificate, err := utils.DecryptToString(c.apiV3Key, notify.Resource.AssociatedData, notify.Resource.Nonce, notify.Resource.Ciphertext)
 	if err != nil {
 		return data, fmt.Errorf("DecryptToString err:%s", err.Error())
 	}
 	fmt.Println(certificate)
-	// 解析
 	if err := json.Unmarshal([]byte(certificate), &data); err != nil {
 		return data, fmt.Errorf("json.Unmarshal err:%s", err.Error())
 	}
@@ -301,15 +274,12 @@ type RespApplyRefund struct {
 	UserReceivedAccount string `json:"user_received_account"`
 }
 
-// 申请退款
 func (c *Client) ApplyRefund(txID, refundID, reason string, amount int64) (RespApplyRefund, error) {
 	if c.dev {
 		amount = 1
 	}
 	var resp RespApplyRefund
-	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds"
-	//设置请求信息,此处也可以使用结构体来进行请求
 	mapInfo := map[string]interface{}{
 		"transaction_id": txID,
 		"out_refund_no":  refundID,
@@ -322,12 +292,10 @@ func (c *Client) ApplyRefund(txID, refundID, reason string, amount int64) (RespA
 			"currency": "CNY",
 		},
 	}
-	// 发起请求
 	response, err := c.client.Post(c.ctx, URL, mapInfo)
 	if err != nil {
 		return resp, fmt.Errorf("ApplyRefund client post err:%s", err.Error())
 	}
-	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
 		return resp, fmt.Errorf("ApplyRefund checkResponse err:%s", err.Error())
@@ -338,18 +306,14 @@ func (c *Client) ApplyRefund(txID, refundID, reason string, amount int64) (RespA
 	return resp, nil
 }
 
-// 查询退款
 func (c *Client) QueryRefund(refundId string) (RespApplyRefund, error) {
 	var resp RespApplyRefund
-	//设置请求地址
 	URL := "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds/%s?mchid=%s"
 	URL = fmt.Sprintf(URL, refundId, c.mchID)
-	// 发起请求
 	response, err := c.client.Get(c.ctx, URL)
 	if err != nil {
 		return resp, fmt.Errorf("QueryRefund client get err:%s", err.Error())
 	}
-	// 校验回包
 	body, err := checkResponse(response)
 	if err != nil {
 		return resp, fmt.Errorf("QueryRefund checkResponse err:%s", err.Error())
@@ -377,16 +341,13 @@ type RefundNotifyData struct {
 	} `json:"amount"`
 }
 
-// 退款通知
 func (c *Client) RefundNotifyResolve(notify PayNotify) (RefundNotifyData, error) {
 	var data RefundNotifyData
-	// 解密数据
 	certificate, err := utils.DecryptToString(c.apiV3Key, notify.Resource.AssociatedData, notify.Resource.Nonce, notify.Resource.Ciphertext)
 	if err != nil {
 		return data, fmt.Errorf("DecryptToString err:%s", err.Error())
 	}
 	fmt.Println(certificate)
-	// 解析
 	if err := json.Unmarshal([]byte(certificate), &data); err != nil {
 		return data, fmt.Errorf("json.Unmarshal err:%s", err.Error())
 	}

@@ -6,7 +6,7 @@ import "github.com/DA-Services/das_commonlib/common"
  * Copyright (C), 2019-2020
  * FileName: value
  * Author:   LinGuanHong
- * Date:     2020/12/20 3:12 下午
+ * Date:     2020/12/20 3:12
  * Description:
  */
 

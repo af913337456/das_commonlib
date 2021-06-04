@@ -20,7 +20,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: util
  * Author:   LinGuanHong
- * Date:     2020/12/18 2:57 下午
+ * Date:     2020/12/18 2:57
  * Description:
  */
 
@@ -121,7 +121,7 @@ func GoBytesToMoleculeAccountBytes(bys []byte) [10]Byte {
 }
 
 func GoCkbScriptToMoleculeScript(script types.Script) Script {
-	// 这里 data 类型应该就是 0x00 ，type 就是 0x01
+	// data 0x00 ，type 0x01
 	ht := 0
 	if script.HashType == types.HashTypeType {
 		ht = 1
@@ -294,9 +294,8 @@ func registerFee(price, quote, discount uint64) uint64 {
 }
 
 func CalPreAccountCellCap(years uint, price, quote, discountRate uint64, account DasAccount) uint64 {
-	// PreAccountCell.capacity >= c + AccountCell 基础成本 + RefCell 基础成本 + Account 字节长度
 	registerYearFee := registerFee(price, quote, discountRate) * uint64(years)
-	storageFee := AccountCellBaseCap //+ 2*RefCellBaseCap
+	storageFee := AccountCellBaseCap
 	accountCharFee := uint64(len([]byte(account))) * OneCkb
 	return registerYearFee + storageFee + accountCharFee
 }

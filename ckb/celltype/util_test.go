@@ -18,7 +18,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: util_test
  * Author:   LinGuanHong
- * Date:     2020/12/27 12:09 下午
+ * Date:     2020/12/27 12:09
  * Description:
  */
 

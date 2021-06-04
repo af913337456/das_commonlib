@@ -12,7 +12,7 @@ import (
  * Copyright (C), 2019-2021
  * FileName: rocksdb_util
  * Author:   LinGuanHong
- * Date:     2021/1/8 2:30 下午
+ * Date:     2021/1/8 2:30
  * Description:
  */
 
@@ -85,7 +85,7 @@ func RocksDbIteratorLoad(rocksdb *gorocksdb.DB, keyPrefix []byte, handleBytes fu
 	defer reader.Close()
 	for reader.Seek(keyPrefix); ; reader.Next() {
 		if valid := reader.ValidForPrefix(keyPrefix); !valid {
-			// lsm tree，key 是有顺序的，如果出现一个不是同前缀，那么就直接退出，结束遍历
+			// lsm tree，key follow orders
 			break
 		}
 		if _, err := SafeHandleReaderKV(reader.Key(), reader.Value(), handleBytes); err != nil {

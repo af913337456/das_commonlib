@@ -11,17 +11,10 @@ import (
  * Copyright (C), 2019-2020
  * FileName: publishaccountcell
  * Author:   LinGuanHong
- * Date:     2020/12/25 5:51 下午
+ * Date:     2020/12/25 5:51
  * Description:
  */
 
-/**
-table DataEntity {
-    index: Uint32, // 表明此数据项属于 inputs/outputs 中的第几个 cell
-    version: Uint32, // 表明 entity 数据结构的版本号
-    entity: Bytes, // 代表具体的数据结构
-}
-*/
 var DefaultAccountCellParam = func(param *AccountCellTxDataParam,dasLockParam *DasLockParam,dataBytes []byte) *AccountCellParam {
 	acp := &AccountCellParam{
 		Version: 1,

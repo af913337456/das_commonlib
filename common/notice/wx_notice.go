@@ -13,7 +13,7 @@ const (
 )
 
 var (
-	DefaultKey = "" // 默认通知key
+	DefaultKey = ""
 )
 
 type NotifyDataWx struct {
@@ -55,12 +55,11 @@ func SendNotifyWx(msgType, msg, key string) error {
 	return nil
 }
 
-// 方法调用异常通知
 func SendNotifyWxCallFuncErr(key, funcName, errInfo, keyInfo string) error {
-	msg := `<font color="warning">方法调用异常</font>
-> 方法名：%s
-> 错误信息：%s
-> 关键信息：%s`
+	msg := `<font color="warning">Method Call Error</font>
+> method name：%s
+> info：%s
+> key info：%s`
 	msg = fmt.Sprintf(msg, funcName, errInfo, keyInfo)
 	return SendNotifyWx(NotifyWxTypeMarkdown, msg, key)
 }

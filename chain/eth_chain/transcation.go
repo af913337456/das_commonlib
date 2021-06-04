@@ -22,15 +22,15 @@ func NewTransaction(ctx context.Context, client *ethclient.Client, rpcAddr, priv
 	if !ok {
 		return nil, fmt.Errorf("publicKey is not type ecdsa.PublicKey")
 	}
-	fromAddr, toAddr := crypto.PubkeyToAddress(*publicKeyECDSA), common.HexToAddress(to) //通过私钥解出地址
-	nonce, err := PendingNonceAt(rpcAddr, fromAddr.Hex())                                //获取nonce值
+	fromAddr, toAddr := crypto.PubkeyToAddress(*publicKeyECDSA), common.HexToAddress(to)
+	nonce, err := PendingNonceAt(rpcAddr, fromAddr.Hex())
 	if err != nil {
 		return nil, fmt.Errorf("PendingNonceAt err:%v", err)
 	}
 
 	var tx *types.Transaction
 	switch common.HexToAddress(to).Hex() {
-	case common.HexToAddress("").Hex(): //合约部署
+	case common.HexToAddress("").Hex():
 		gasPrice, gasLimit, err := EstimateGas(ctx, client, fromAddr, nil, amount, data)
 		if err != nil {
 			return nil, err
@@ -42,13 +42,13 @@ func NewTransaction(ctx context.Context, client *ethclient.Client, rpcAddr, priv
 			return nil, err
 		}
 		fmt.Println("gasPrice and gasLimit", gasPrice, gasLimit)
-		tx = types.NewTransaction(nonce, common.HexToAddress(to), amount, gasLimit, gasPrice, data) //构造交易体
+		tx = types.NewTransaction(nonce, common.HexToAddress(to), amount, gasLimit, gasPrice, data)
 	}
 	chainID, err := client.NetworkID(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("NetworkID err:%v", err)
 	}
-	sigTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey) //对交易签名
+	sigTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("SignTx err:%v", err)
 	}

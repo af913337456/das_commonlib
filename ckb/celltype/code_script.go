@@ -19,7 +19,7 @@ import (
  * Copyright (C), 2019-2020
  * FileName: cell_info
  * Author:   LinGuanHong
- * Date:     2020/12/22 3:01 下午
+ * Date:     2020/12/22 3:01
  * Description:
  */
 
