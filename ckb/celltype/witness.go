@@ -24,17 +24,6 @@ import (
  * Description:
  */
 
-// int64 4Byte
-// func PackCellDataWithVersion(version uint32, cellData []byte) []byte {
-// 	bytebuf := bytes.NewBuffer([]byte{})
-// 	_ = binary.Write(bytebuf, binary.LittleEndian, version)
-// 	return append(bytebuf.Bytes(), cellData...)
-// }
-
-// func UnpackCellDataWithVersion(cellData []byte) []byte {
-// 	return cellData[CellVersionByteLen:]
-// }
-
 func GoBytesToMoleculeHash(bytes []byte) Hash {
 	byteArr := [32]Byte{}
 	size := len(bytes)

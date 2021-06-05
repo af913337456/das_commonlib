@@ -407,3 +407,15 @@ func Test_GoTimestampToMoleculeBytes(t *testing.T) {
 func byteToInt64(bys []byte) int64 {
 	return int64(binary.LittleEndian.Uint64(bys))
 }
+
+func Test_NewDasWitnessData(t *testing.T) {
+	obj := NewDasWitnessData(1, []byte("usa"))
+	t.Log(hex.EncodeToString(obj.ToWitness()))
+	das, err := NewDasWitnessDataFromSlice(obj.ToWitness())
+	if err != nil {
+		panic(err.Error())
+	} else {
+		t.Log(hex.EncodeToString(das.ToWitness()))
+		t.Log(das.Tag, das.TableType)
+	}
+}

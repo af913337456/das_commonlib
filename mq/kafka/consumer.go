@@ -77,7 +77,9 @@ func (consumer *HandCommitConsumer) ConsumeClaim(session sarama.ConsumerGroupSes
 		default:
 			if consumer.HandleMsg != nil {
 				if consumer.HandleMsg(message) {
-					session.MarkMessage(message, "") // MarkMessage 并不是实时写入kafka，有可能在程序crash时丢掉未提交的offset
+					// 'MarkMessage' is not written to Kafka in real time.
+					// It is possible to lose the uncommitted offset when the program crashes
+					session.MarkMessage(message, "")
 				}
 			}
 		}

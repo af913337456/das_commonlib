@@ -229,18 +229,6 @@ func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, cal
 	return builder
 }
 
-func normalChargeOutputCellCap() uint64 {
-	output := &types.CellOutput{
-		Lock: &types.Script{
-			CodeHash: types.HexToHash("0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e"),
-			HashType: types.HashTypeType,
-			Args:     []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
-		},
-		Type: nil,
-	}
-	return output.OccupiedCapacity(nil) * celltype.OneCkb
-}
-
 func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScript *types.Script,
 	data []byte, callback celltype.AddDasOutputCallback, customCellCap, incrementCellCap uint64) *TransactionBuilder {
 	output := &types.CellOutput{
