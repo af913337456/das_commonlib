@@ -692,14 +692,16 @@ type ConfigCellAccountBuilder struct {
 basic_capacity Uint64
 expiration_grace_period Uint32
 record_min_ttl Uint32
+record_size_limit Uint32
+operate_throttle Uint32
 }
         
 
 func (s *ConfigCellAccountBuilder) Build() ConfigCellAccount {
     b := new(bytes.Buffer)
 
-    totalSize := HeaderSizeUint * (4 + 1)
-    offsets := make([]uint32, 0, 4)
+    totalSize := HeaderSizeUint * (6 + 1)
+    offsets := make([]uint32, 0, 6)
 
     offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.max_length.AsSlice()))
@@ -709,6 +711,10 @@ offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.expiration_grace_period.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.record_min_ttl.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.record_size_limit.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.operate_throttle.AsSlice()))
 
     b.Write(packNumber(Number(totalSize)))
 
@@ -720,6 +726,8 @@ totalSize += uint32(len(s.record_min_ttl.AsSlice()))
 b.Write(s.basic_capacity.AsSlice())
 b.Write(s.expiration_grace_period.AsSlice())
 b.Write(s.record_min_ttl.AsSlice())
+b.Write(s.record_size_limit.AsSlice())
+b.Write(s.operate_throttle.AsSlice())
     return ConfigCellAccount{inner: b.Bytes()}
 }
                 
@@ -748,8 +756,20 @@ func (s *ConfigCellAccountBuilder) RecordMinTtl(v Uint32) *ConfigCellAccountBuil
 }
             
 
+func (s *ConfigCellAccountBuilder) RecordSizeLimit(v Uint32) *ConfigCellAccountBuilder {
+    s.record_size_limit = v
+    return s
+}
+            
+
+func (s *ConfigCellAccountBuilder) OperateThrottle(v Uint32) *ConfigCellAccountBuilder {
+    s.operate_throttle = v
+    return s
+}
+            
+
 func NewConfigCellAccountBuilder() *ConfigCellAccountBuilder {
-	return &ConfigCellAccountBuilder{ max_length: Uint32Default(),basic_capacity: Uint64Default(),expiration_grace_period: Uint32Default(),record_min_ttl: Uint32Default() }
+	return &ConfigCellAccountBuilder{ max_length: Uint32Default(),basic_capacity: Uint64Default(),expiration_grace_period: Uint32Default(),record_min_ttl: Uint32Default(),record_size_limit: Uint32Default(),operate_throttle: Uint32Default() }
 }
     
 
@@ -767,7 +787,7 @@ func (s *ConfigCellAccount) AsSlice() []byte {
             
 
 func ConfigCellAccountDefault() ConfigCellAccount {
-    return *ConfigCellAccountFromSliceUnchecked([]byte{ 40,0,0,0,20,0,0,0,24,0,0,0,32,0,0,0,36,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *ConfigCellAccountFromSliceUnchecked([]byte{ 56,0,0,0,28,0,0,0,32,0,0,0,40,0,0,0,44,0,0,0,48,0,0,0,52,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -784,7 +804,7 @@ func ConfigCellAccountFromSlice(slice []byte, compatible bool) (*ConfigCellAccou
         return nil, errors.New(errMsg)
     }
 
-    if uint32(sliceLen) == HeaderSizeUint && 4 == 0 {
+    if uint32(sliceLen) == HeaderSizeUint && 6 == 0 {
         return &ConfigCellAccount{inner: slice}, nil
     }
 
@@ -800,9 +820,9 @@ func ConfigCellAccountFromSlice(slice []byte, compatible bool) (*ConfigCellAccou
     }
 
     fieldCount := offsetFirst/4 - 1
-    if fieldCount < 4 {
+    if fieldCount < 6 {
         return nil, errors.New("FieldCountNotMatch")
-    } else if !compatible && fieldCount > 4 {
+    } else if !compatible && fieldCount > 6 {
         return nil, errors.New("FieldCountNotMatch")
     }
 
@@ -851,6 +871,18 @@ if err != nil {
 }
                 
 
+_, err = Uint32FromSlice(slice[offsets[4]:offsets[5]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = Uint32FromSlice(slice[offsets[5]:offsets[6]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
     return &ConfigCellAccount{inner: slice}, nil
 }
             
@@ -873,11 +905,11 @@ func (s *ConfigCellAccount) IsEmpty() bool {
     return s.Len() == 0
 }
 func (s *ConfigCellAccount) CountExtraFields() uint {
-    return s.FieldCount() - 4
+    return s.FieldCount() - 6
 }
 
 func (s *ConfigCellAccount) HasExtraFields() bool {
-    return 4 != s.FieldCount()
+    return 6 != s.FieldCount()
 }
             
 
@@ -903,10 +935,24 @@ func (s *ConfigCellAccount) ExpirationGracePeriod() *Uint32 {
                
 
 func (s *ConfigCellAccount) RecordMinTtl() *Uint32 {
-    var ret *Uint32
     start := unpackNumber(s.inner[16:])
+    end := unpackNumber(s.inner[20:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) RecordSizeLimit() *Uint32 {
+    start := unpackNumber(s.inner[20:])
+    end := unpackNumber(s.inner[24:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) OperateThrottle() *Uint32 {
+    var ret *Uint32
+    start := unpackNumber(s.inner[24:])
     if s.HasExtraFields() {
-        end := unpackNumber(s.inner[20:])
+        end := unpackNumber(s.inner[28:])
         ret = Uint32FromSliceUnchecked(s.inner[start:end])
     } else {
         ret = Uint32FromSliceUnchecked(s.inner[start:])
@@ -916,7 +962,7 @@ func (s *ConfigCellAccount) RecordMinTtl() *Uint32 {
                         
 
 func (s *ConfigCellAccount) AsBuilder() ConfigCellAccountBuilder {
-    ret := NewConfigCellAccountBuilder().MaxLength(*s.MaxLength()).BasicCapacity(*s.BasicCapacity()).ExpirationGracePeriod(*s.ExpirationGracePeriod()).RecordMinTtl(*s.RecordMinTtl())
+    ret := NewConfigCellAccountBuilder().MaxLength(*s.MaxLength()).BasicCapacity(*s.BasicCapacity()).ExpirationGracePeriod(*s.ExpirationGracePeriod()).RecordMinTtl(*s.RecordMinTtl()).RecordSizeLimit(*s.RecordSizeLimit()).OperateThrottle(*s.OperateThrottle())
     return *ret
 }
         
@@ -3846,7 +3892,7 @@ func (s *ProposalItem) AsSlice() []byte {
             
 
 func ProposalItemDefault() ProposalItem {
-    return *ProposalItemFromSliceUnchecked([]byte{ 37,0,0,0,16,0,0,0,26,0,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *ProposalItemFromSliceUnchecked([]byte{ 57,0,0,0,16,0,0,0,36,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -4645,7 +4691,7 @@ func (s *AccountCellData) AsSlice() []byte {
             
 
 func AccountCellDataDefault() AccountCellData {
-    return *AccountCellDataFromSliceUnchecked([]byte{ 51,0,0,0,24,0,0,0,34,0,0,0,38,0,0,0,46,0,0,0,47,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0 })
+    return *AccountCellDataFromSliceUnchecked([]byte{ 61,0,0,0,24,0,0,0,44,0,0,0,48,0,0,0,56,0,0,0,57,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0 })
 }
             
 
@@ -4813,11 +4859,11 @@ func (s *AccountCellData) AsBuilder() AccountCellDataBuilder {
         
 
 type AccountIdBuilder struct {
-	inner [10]Byte
+	inner [20]Byte
 }
 
 func NewAccountIdBuilder() *AccountIdBuilder {
-	return &AccountIdBuilder{inner: [10]Byte{ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault()}}
+	return &AccountIdBuilder{inner: [20]Byte{ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault(),ByteDefault()}}
 }
 
 func (s *AccountIdBuilder) Build() AccountId {
@@ -4830,7 +4876,7 @@ func (s *AccountIdBuilder) Build() AccountId {
 }
         
 
-func (s *AccountIdBuilder) Set(v [10]Byte) *AccountIdBuilder {
+func (s *AccountIdBuilder) Set(v [20]Byte) *AccountIdBuilder {
 	s.inner = v
 	return s
 }
@@ -4896,6 +4942,66 @@ func (s *AccountIdBuilder) Nth9(v Byte) *AccountIdBuilder {
 }
                 
 
+func (s *AccountIdBuilder) Nth10(v Byte) *AccountIdBuilder {
+	s.inner[10] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth11(v Byte) *AccountIdBuilder {
+	s.inner[11] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth12(v Byte) *AccountIdBuilder {
+	s.inner[12] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth13(v Byte) *AccountIdBuilder {
+	s.inner[13] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth14(v Byte) *AccountIdBuilder {
+	s.inner[14] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth15(v Byte) *AccountIdBuilder {
+	s.inner[15] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth16(v Byte) *AccountIdBuilder {
+	s.inner[16] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth17(v Byte) *AccountIdBuilder {
+	s.inner[17] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth18(v Byte) *AccountIdBuilder {
+	s.inner[18] = v
+	return s
+}
+                
+
+func (s *AccountIdBuilder) Nth19(v Byte) *AccountIdBuilder {
+	s.inner[19] = v
+	return s
+}
+                
+
 type AccountId struct {
     inner []byte
 }
@@ -4910,14 +5016,14 @@ func (s *AccountId) AsSlice() []byte {
             
 
 func AccountIdDefault() AccountId {
-    return *AccountIdFromSliceUnchecked([]byte{ 0,0,0,0,0,0,0,0,0,0 })
+    return *AccountIdFromSliceUnchecked([]byte{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
 func AccountIdFromSlice(slice []byte, _compatible bool) (*AccountId, error) {
     sliceLen := len(slice)
-    if sliceLen != 10 {
-        errMsg := strings.Join([]string{"TotalSizeNotMatch", "AccountId", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(10)}, " ")
+    if sliceLen != 20 {
+        errMsg := strings.Join([]string{"TotalSizeNotMatch", "AccountId", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(20)}, " ")
         return nil, errors.New(errMsg)
     }
     return &AccountId{inner: slice}, nil
@@ -4989,6 +5095,66 @@ func (s *AccountId) Nth9() *Byte {
 }
             
 
+func (s *AccountId) Nth10() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[10:11])
+    return ret
+}
+            
+
+func (s *AccountId) Nth11() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[11:12])
+    return ret
+}
+            
+
+func (s *AccountId) Nth12() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[12:13])
+    return ret
+}
+            
+
+func (s *AccountId) Nth13() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[13:14])
+    return ret
+}
+            
+
+func (s *AccountId) Nth14() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[14:15])
+    return ret
+}
+            
+
+func (s *AccountId) Nth15() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[15:16])
+    return ret
+}
+            
+
+func (s *AccountId) Nth16() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[16:17])
+    return ret
+}
+            
+
+func (s *AccountId) Nth17() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[17:18])
+    return ret
+}
+            
+
+func (s *AccountId) Nth18() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[18:19])
+    return ret
+}
+            
+
+func (s *AccountId) Nth19() *Byte {
+    ret := ByteFromSliceUnchecked(s.inner[19:20])
+    return ret
+}
+            
+
 func (s *AccountId) AsBuilder() AccountIdBuilder {
 	t := NewAccountIdBuilder()
 	t.Nth0(*s.Nth0())
@@ -5001,6 +5167,16 @@ t.Nth6(*s.Nth6())
 t.Nth7(*s.Nth7())
 t.Nth8(*s.Nth8())
 t.Nth9(*s.Nth9())
+t.Nth10(*s.Nth10())
+t.Nth11(*s.Nth11())
+t.Nth12(*s.Nth12())
+t.Nth13(*s.Nth13())
+t.Nth14(*s.Nth14())
+t.Nth15(*s.Nth15())
+t.Nth16(*s.Nth16())
+t.Nth17(*s.Nth17())
+t.Nth18(*s.Nth18())
+t.Nth19(*s.Nth19())
 	return *t
 }
         
