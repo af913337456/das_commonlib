@@ -100,8 +100,8 @@ func GoTimeUnixToMoleculeBytes(timeSec int64) [8]Byte {
 	return timestampByteArr
 }
 
-func GoBytesToMoleculeAccountBytes(bys []byte) [10]Byte {
-	byteArr := [10]Byte{}
+func GoBytesToMoleculeAccountBytes(bys []byte) [dasAccountIdLen]Byte {
+	byteArr := [dasAccountIdLen]Byte{}
 	size := len(bys)
 	for i := 0; i < size; i++ {
 		byteArr[i] = *ByteFromSliceUnchecked([]byte{bys[i]})

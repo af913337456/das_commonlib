@@ -104,7 +104,7 @@ func (d DasAccount) AccountId() DasAccountId {
 	return *id
 }
 
-const dasAccountIdLen = 10
+const dasAccountIdLen = 20
 const expireTimeEndIndex = HashBytesLen + dasAccountIdLen*2 + 8
 
 type DasAccountId [dasAccountIdLen]byte
