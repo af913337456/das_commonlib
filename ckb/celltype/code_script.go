@@ -363,6 +363,7 @@ type TimingAsyncSystemCodeScriptParam struct {
 	ErrHandle     func(err error)
 	SuccessHandle func()
 	InitHandle    func() bool
+	FirstSuccessCallBack func()
 }
 
 func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
@@ -370,7 +371,7 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 	if p.InitHandle != nil {
 		isNeedSync = p.InitHandle()
 	}
-	sync := func() {
+	sync := func(callback bool) {
 		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
 			item := value.(*DASCellBaseInfo)
 			if item.ContractTypeScript.Args == nil {
@@ -403,9 +404,12 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 		if p.SuccessHandle != nil {
 			p.SuccessHandle()
 		}
+		if callback && p.FirstSuccessCallBack != nil {
+			p.FirstSuccessCallBack()
+		}
 	}
 	if isNeedSync {
-		sync()
+		sync(true)
 	}
 	go func() {
 		ticker := time.NewTicker(p.Duration)
@@ -418,7 +422,7 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 			case <-p.Ctx.Done():
 				return
 			case <-ticker.C:
-				sync()
+				sync(false)
 			}
 		}
 	}()
