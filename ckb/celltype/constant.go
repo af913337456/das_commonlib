@@ -23,10 +23,8 @@ const OneCkb = uint64(1e8)
 const DasAccountSuffix = ".bit"
 const CkbTxMinOutputCKBValue = 61 * OneCkb
 const AccountCellDataAccountIdStartIndex = 72
-const RefCellBaseCap = 105 * OneCkb
 const AccountCellBaseCap = 200 * OneCkb
 const IncomeCellBaseCap  = 106 * OneCkb
-const WalletCellBaseCap = 84 * OneCkb
 const OneYearSec = int64(3600 * 24 * 365)
 const HashBytesLen = 32
 const ETHScriptLockWitnessBytesLen = 65
@@ -34,6 +32,8 @@ const MinAccountCharsLen = 2
 const DiscountRateBase = 10000
 const DasLockArgsMinBytesLen = 1 + 20 + 1 + 20
 var RootAccountDataAccountByte = []byte{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+var EmptyDataHash = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+var EmptyAccountId = DasAccountId{}
 
 const (
 	PwLockMainNetCodeHash = "0xbf43c3602455798c1a61a596e0d95278864c552fafe231c063b3fabf97a8febc"
@@ -75,16 +75,13 @@ const (
 	RefCellType_Manager = 1
 )
 
-var EmptyDataHash = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-var EmptyAccountId = DasAccountId{}
-
 type TableType uint32
 type AccountCharType uint32
 type AccountCellStatus uint8
 type DataEntityChangeType uint
 
 func (t TableType) IsConfigType() bool {
-	return t >= TableTyte_CONFIG_CELL_ACCOUNT
+	return t >= TableType_CONFIG_CELL_ACCOUNT
 }
 
 /**
@@ -108,9 +105,9 @@ const ConfigCellPreservedAccount00 = 150,
 */
 func (t TableType) ValidateType() bool {
 	return t <= TableType_INCOME_CELL ||
-		(t >= TableTyte_CONFIG_CELL_ACCOUNT && t <= TableTyte_CONFIG_CELL_RECORD_NAMESPACE) ||
-		t == TableTyte_CONFIG_CELL_PreservedAccount00 ||
-		(t >=TableTyte_CONFIG_CELL_CharSetEmoji && t <= TableTyte_CONFIG_CELL_CharSetEn)
+		(t >= TableType_CONFIG_CELL_ACCOUNT && t <= TableType_CONFIG_CELL_RECORD_NAMESPACE) ||
+		t == TableType_CONFIG_CELL_PreservedAccount00 ||
+		(t >=TableType_CONFIG_CELL_CharSetEmoji && t <= TableType_CONFIG_CELL_CharSetEn)
 }
 const (
 	TableType_ACTION       TableType = 0
@@ -121,23 +118,23 @@ const (
 	TableType_PRE_ACCOUNT_CELL TableType = 5
 	TableType_INCOME_CELL 	   TableType = 6
 
-	TableTyte_CONFIG_CELL_ACCOUNT       TableType = 100
-	TableTyte_CONFIG_CELL_APPLY         TableType = 101
-	TableTyte_CONFIG_CELL_CHARSET         TableType = 102
-	TableTyte_CONFIG_CELL_INCOME         TableType = 103
+	TableType_CONFIG_CELL_ACCOUNT       TableType = 100
+	TableType_CONFIG_CELL_APPLY         TableType = 101
+	TableType_CONFIG_CELL_CHARSET         TableType = 102
+	TableType_CONFIG_CELL_INCOME         TableType = 103
 
-	TableTyte_CONFIG_CELL_MAIN         TableType = 104
-	TableTyte_CONFIG_CELL_PRICE         TableType = 105
-	TableTyte_CONFIG_CELL_PROPOSAL         TableType = 106
-	TableTyte_CONFIG_CELL_PROFITRATE         TableType = 107
+	TableType_CONFIG_CELL_MAIN         TableType = 104
+	TableType_CONFIG_CELL_PRICE         TableType = 105
+	TableType_CONFIG_CELL_PROPOSAL         TableType = 106
+	TableType_CONFIG_CELL_PROFITRATE         TableType = 107
 
-	TableTyte_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
-	TableTyte_CONFIG_CELL_PreservedAccount00     TableType = 150
+	TableType_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
+	TableType_CONFIG_CELL_PreservedAccount00     TableType = 150
 
-	TableTyte_CONFIG_CELL_CharSetEmoji TableType = 100000
-	TableTyte_CONFIG_CELL_CharSetDigit TableType = 100001
-	TableTyte_CONFIG_CELL_CharSetEn TableType = 100002
-	// TableTyte_CONFIG_CELL_BLOOM_FILTER TableType = 11
+	TableType_CONFIG_CELL_CharSetEmoji TableType = 100000
+	TableType_CONFIG_CELL_CharSetDigit TableType = 100001
+	TableType_CONFIG_CELL_CharSetEn TableType = 100002
+	// TableType_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
 func (a AccountCellStatus) Str() string {
@@ -197,9 +194,9 @@ type DasAccountSearchStatus int
 const (
 	SearchStatus_NotOpenRegister  DasAccountSearchStatus = -1
 	SearchStatus_Registerable     DasAccountSearchStatus = 0
-	SearchStatus_ReservedAccount  DasAccountSearchStatus = 1 // 候选
+	SearchStatus_ReservedAccount  DasAccountSearchStatus = 1 
 	SearchStatus_OnePriceSell     DasAccountSearchStatus = 2
-	SearchStatus_AuctionSell      DasAccountSearchStatus = 3 // 竞拍，候选 -> 竞拍
+	SearchStatus_AuctionSell      DasAccountSearchStatus = 3
 	SearchStatus_CandidateAccount DasAccountSearchStatus = 4
 	SearchStatus_Registered       DasAccountSearchStatus = 5
 )
