@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/DA-Services/das_commonlib/common"
 	"github.com/nervosnetwork/ckb-sdk-go/indexer"
@@ -367,6 +368,12 @@ type TimingAsyncSystemCodeScriptParam struct {
 }
 
 func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
+	if p.SuperLock == nil {
+		if p.ErrHandle != nil {
+			p.ErrHandle(errors.New("superLock cant be null"))
+		}
+		return
+	}
 	isNeedSync := true
 	if p.InitHandle != nil {
 		isNeedSync = p.InitHandle()
@@ -378,10 +385,10 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 				return true
 			}
 			searchKey := &indexer.SearchKey{
-				Script:     &item.ContractTypeScript,
-				ScriptType: indexer.ScriptTypeType,
+				Script:     p.SuperLock,
+				ScriptType: indexer.ScriptTypeLock,
 				Filter: &indexer.CellsFilter{
-					Script: p.SuperLock,
+					Script: &item.ContractTypeScript,
 				},
 			}
 			liveCells, _, err := common.LoadLiveCells(p.RpcClient, searchKey, 10000000*OneCkb, true, false, func(cell *indexer.LiveCell) bool {
