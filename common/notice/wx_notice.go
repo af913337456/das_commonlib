@@ -47,7 +47,7 @@ func SendNotifyWx(msgType, msg, key string) error {
 	}
 	url := fmt.Sprintf(NotifyUrlWx, key)
 	resp, _, errs := gorequest.New().Post(url).SendStruct(&data).End()
-	if len(errs) == 0 {
+	if len(errs) > 0 {
 		return fmt.Errorf("errs:%v", errs)
 	} else if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("http code:%d", resp.StatusCode)
