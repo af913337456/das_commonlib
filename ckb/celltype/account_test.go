@@ -23,8 +23,8 @@ import (
 func rpcClient() rpc.Client {
 	rpcClient, err := rpc.DialWithIndexerContext(
 		context.TODO(),
-		"http://192.168.199.120:8114",
-		"http://192.168.199.120:8116")
+		"http://:8114",
+		"http://:8116")
 	if err != nil {
 		panic(fmt.Errorf("init rpcClient failed: %s", err.Error()))
 	}
@@ -33,39 +33,6 @@ func rpcClient() rpc.Client {
 
 func Test_DasLockCodeHashIndexType(t *testing.T) {
 	t.Log(DasLockCodeHashIndexType(DasLockCodeHashIndexType_CKB_Normal).Bytes())
-}
-
-func Test_TimingSyncSystemCodeScriptOutPoint(t *testing.T) {
-	rpcClient := rpcClient()
-	// systemScripts, err := utils.NewSystemScripts(rpcClient)
-	// if err != nil {
-	// 	fmt.Println(fmt.Errorf("NewSystemScripts failed: %s", err.Error()))
-	// 	return
-	// }
-	ctx,cancel := context.WithCancel(context.TODO())
-	go func() {
-		time.Sleep(time.Minute * 5)
-		fmt.Println("finish")
-		cancel()
-	}()
-	TimingAsyncSystemCodeScriptOutPoint(&TimingAsyncSystemCodeScriptParam{
-		RpcClient:    rpcClient,
-		SuperLock:    nil,
-		Duration:      time.Second,
-		Ctx:           ctx,
-		ErrHandle:     func(err error) {
-			fmt.Println("err:",err.Error())
-		},
-		SuccessHandle: func() {
-			SystemCodeScriptMap.Range(func(key, value interface{}) bool {
-				item := value.(*DASCellBaseInfo)
-				fmt.Println("success:",item.Name,item.Dep.TxHash.String())
-				return true
-			})
-			fmt.Println("accountCellDepTxHash:",DasAccountCellScript.Dep.TxHash.String())
-		},
-	})
-	select {}
 }
 
 func Test_ExpiredAtFromOutputData(t *testing.T) {
