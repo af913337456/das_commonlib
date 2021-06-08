@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/DA-Services/das_commonlib/common"
+	"github.com/DA-Services/das_commonlib/ckb/collector"
 	"github.com/nervosnetwork/ckb-sdk-go/indexer"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
@@ -326,6 +326,7 @@ func init() {
 }
 
 func initMap() {
+	SystemCodeScriptMap.Store(DasLockCellScript.Out.CodeHash, &DasLockCellScript)
 	SystemCodeScriptMap.Store(DasApplyRegisterCellScript.Out.CodeHash, &DasApplyRegisterCellScript)
 	SystemCodeScriptMap.Store(DasPreAccountCellScript.Out.CodeHash, &DasPreAccountCellScript)
 	SystemCodeScriptMap.Store(DasAccountCellScript.Out.CodeHash, &DasAccountCellScript)
@@ -339,9 +340,6 @@ func initMap() {
 
 // testnet version 3
 func UseVersion3SystemScriptCodeHash() {
-
-	SystemCodeScriptMap.Store(DasLockCellScript.Out.CodeHash, &DasLockCellScript)
-
 	DasApplyRegisterCellScript.Out.CodeHash = types.HexToHash("0xd8e70cbc0d61daee85b8e121fcb6f278c4536ac26cf9cdce36957a2aa289d4d9")
 	DasPreAccountCellScript.Out.CodeHash = types.HexToHash("0x9f7ce0892e4484c058d547b648f969266a43d61d8635bb8460252597bc1a7ecd")
 	DasAccountCellScript.Out.CodeHash = types.HexToHash("0xf727c4459d3fbd3f2caf59884a5984f66b3891c69501cecc2959104b3f6f39e0")
@@ -379,6 +377,7 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 		isNeedSync = p.InitHandle()
 	}
 	sync := func(callback bool) {
+		liveCells := []indexer.LiveCell{}
 		SystemCodeScriptMap.Range(func(key, value interface{}) bool {
 			item := value.(*DASCellBaseInfo)
 			if item.ContractTypeScript.Args == nil {
@@ -387,27 +386,38 @@ func TimingAsyncSystemCodeScriptOutPoint(p *TimingAsyncSystemCodeScriptParam) {
 			searchKey := &indexer.SearchKey{
 				Script:     p.SuperLock,
 				ScriptType: indexer.ScriptTypeLock,
-				Filter: &indexer.CellsFilter{
+				Filter:     &indexer.CellsFilter{
 					Script: &item.ContractTypeScript,
 				},
 			}
-			liveCells, _, err := common.LoadLiveCells(p.RpcClient, searchKey, 10000000*OneCkb, true, false, func(cell *indexer.LiveCell) bool {
-				return cell.Output.Type != nil
-			})
-			if err != nil && p.ErrHandle != nil {
-				p.ErrHandle(fmt.Errorf("LoadAllScriptCodeCell err: %s", err.Error()))
+			c := collector.NewLiveCellCollector(p.RpcClient, searchKey, indexer.SearchOrderDesc, 20, "",false)
+			iterator, err := c.Iterator()
+			if err != nil {
+				p.ErrHandle(fmt.Errorf("LoadLiveCells Collect failed: %s", err.Error()))
 				return false
 			}
-			for _, liveCell := range liveCells {
-				scriptCodeOutput := liveCell.Output
-				typeId := CalTypeIdFromScript(scriptCodeOutput.Type)
-				_ = SetSystemCodeScriptOutPoint(typeId, types.OutPoint{
-					TxHash: liveCell.OutPoint.TxHash,
-					Index:  liveCell.OutPoint.Index,
-				})
+			for iterator.HasNext() {
+				liveCell, err := iterator.CurrentItem()
+				if err != nil {
+					p.ErrHandle(fmt.Errorf("LoadLiveCells, read iterator current err: %s", err.Error()))
+					return false
+				}
+				liveCells = append(liveCells,*liveCell)
+				if err = iterator.Next(); err != nil {
+					p.ErrHandle(fmt.Errorf("LoadLiveCells, read iterator next err: %s", err.Error()))
+					return false
+				}
 			}
 			return true
 		})
+		for _, liveCell := range liveCells {
+			scriptCodeOutput := liveCell.Output
+			typeId := CalTypeIdFromScript(scriptCodeOutput.Type)
+			_ = SetSystemCodeScriptOutPoint(typeId, types.OutPoint{
+				TxHash: liveCell.OutPoint.TxHash,
+				Index:  liveCell.OutPoint.Index,
+			})
+		}
 		if p.SuccessHandle != nil {
 			p.SuccessHandle()
 		}
