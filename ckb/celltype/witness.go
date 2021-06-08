@@ -282,9 +282,12 @@ func registerFee(price, quote, discount uint64) uint64 {
 	return retVal
 }
 
-func CalPreAccountCellCap(years uint, price, quote, discountRate,accountCellBaseCap uint64, account DasAccount) uint64 {
+func CalPreAccountCellCap(years uint, price, quote, discountRate, accountCellBaseCap uint64, account DasAccount, isRenew bool) uint64 {
 	registerYearFee := registerFee(price, quote, discountRate) * uint64(years)
 	accountCharFee := uint64(len([]byte(account))) * OneCkb
+	if isRenew {
+		return registerYearFee
+	}
 	return registerYearFee + accountCellBaseCap + accountCharFee
 }
 
@@ -299,7 +302,7 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 		return nil, fmt.Errorf("fail to parse dasWitness data: %s", err.Error())
 	}
 	if tableType := dasWitnessObj.TableType; !tableType.ValidateType() {
-		return nil, fmt.Errorf("invalid tableType, your: %d",tableType)
+		return nil, fmt.Errorf("invalid tableType, your: %d", tableType)
 	}
 	if dasWitnessObj.TableType == TableType_ACTION {
 		ret.WitnessObj = DasActionWitness
