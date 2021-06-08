@@ -282,11 +282,10 @@ func registerFee(price, quote, discount uint64) uint64 {
 	return retVal
 }
 
-func CalPreAccountCellCap(years uint, price, quote, discountRate uint64, account DasAccount) uint64 {
+func CalPreAccountCellCap(years uint, price, quote, discountRate,accountCellBaseCap uint64, account DasAccount) uint64 {
 	registerYearFee := registerFee(price, quote, discountRate) * uint64(years)
-	storageFee := AccountCellBaseCap
 	accountCharFee := uint64(len([]byte(account))) * OneCkb
-	return registerYearFee + storageFee + accountCharFee
+	return registerYearFee + accountCellBaseCap + accountCharFee
 }
 
 func CalBuyAccountYearSec(years uint) int64 {
