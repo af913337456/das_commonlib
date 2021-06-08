@@ -31,13 +31,13 @@ var (
 	}
 
 	TestNetETHSoScriptDep = DASCellBaseInfoDep{
-		TxHash:  types.HexToHash("0xc7d052452e8d6cd9e87680e13a91f733167c3275fa47e4b09baed826c19fef7e"),
+		TxHash:  types.HexToHash("0x3bffc9beff67d5f93b60b378c68a9910ecc936e5bff0348b3bdf99c4f416213d"),
 		TxIndex: 0,
 		DepType: types.DepTypeCode,
 	}
 	// 0xb988070e97c6eda68705e146985bcf2d3b3215cbb619eb61337523bc440d42e0
 	TestNetCKBSoScriptDep = DASCellBaseInfoDep{
-		TxHash:  types.HexToHash("0x209b35208da7d20d882f0871f3979c68c53981bcc4caa71274c035449074d082"),
+		TxHash:  types.HexToHash("0xe08b6487bab378df62d1abe58faebecdfefc5dc4297627c1f7240441db69355b"),
 		TxIndex: 0,
 		DepType: types.DepTypeCode,
 	}
