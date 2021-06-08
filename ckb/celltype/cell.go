@@ -4605,6 +4605,7 @@ type AccountCellDataBuilder struct {
     id AccountId
 account AccountChars
 registered_at Uint64
+updated_at Uint64
 status Uint8
 records Records
 }
@@ -4613,8 +4614,8 @@ records Records
 func (s *AccountCellDataBuilder) Build() AccountCellData {
     b := new(bytes.Buffer)
 
-    totalSize := HeaderSizeUint * (5 + 1)
-    offsets := make([]uint32, 0, 5)
+    totalSize := HeaderSizeUint * (6 + 1)
+    offsets := make([]uint32, 0, 6)
 
     offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.id.AsSlice()))
@@ -4622,6 +4623,8 @@ offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.account.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.registered_at.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.updated_at.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.status.AsSlice()))
 offsets = append(offsets, totalSize)
@@ -4636,6 +4639,7 @@ totalSize += uint32(len(s.records.AsSlice()))
     b.Write(s.id.AsSlice())
 b.Write(s.account.AsSlice())
 b.Write(s.registered_at.AsSlice())
+b.Write(s.updated_at.AsSlice())
 b.Write(s.status.AsSlice())
 b.Write(s.records.AsSlice())
     return AccountCellData{inner: b.Bytes()}
@@ -4660,6 +4664,12 @@ func (s *AccountCellDataBuilder) RegisteredAt(v Uint64) *AccountCellDataBuilder 
 }
             
 
+func (s *AccountCellDataBuilder) UpdatedAt(v Uint64) *AccountCellDataBuilder {
+    s.updated_at = v
+    return s
+}
+            
+
 func (s *AccountCellDataBuilder) Status(v Uint8) *AccountCellDataBuilder {
     s.status = v
     return s
@@ -4673,7 +4683,7 @@ func (s *AccountCellDataBuilder) Records(v Records) *AccountCellDataBuilder {
             
 
 func NewAccountCellDataBuilder() *AccountCellDataBuilder {
-	return &AccountCellDataBuilder{ id: AccountIdDefault(),account: AccountCharsDefault(),registered_at: Uint64Default(),status: Uint8Default(),records: RecordsDefault() }
+	return &AccountCellDataBuilder{ id: AccountIdDefault(),account: AccountCharsDefault(),registered_at: Uint64Default(),updated_at: Uint64Default(),status: Uint8Default(),records: RecordsDefault() }
 }
     
 
@@ -4691,7 +4701,7 @@ func (s *AccountCellData) AsSlice() []byte {
             
 
 func AccountCellDataDefault() AccountCellData {
-    return *AccountCellDataFromSliceUnchecked([]byte{ 61,0,0,0,24,0,0,0,44,0,0,0,48,0,0,0,56,0,0,0,57,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0 })
+    return *AccountCellDataFromSliceUnchecked([]byte{ 73,0,0,0,28,0,0,0,48,0,0,0,52,0,0,0,60,0,0,0,68,0,0,0,69,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0 })
 }
             
 
@@ -4708,7 +4718,7 @@ func AccountCellDataFromSlice(slice []byte, compatible bool) (*AccountCellData, 
         return nil, errors.New(errMsg)
     }
 
-    if uint32(sliceLen) == HeaderSizeUint && 5 == 0 {
+    if uint32(sliceLen) == HeaderSizeUint && 6 == 0 {
         return &AccountCellData{inner: slice}, nil
     }
 
@@ -4724,9 +4734,9 @@ func AccountCellDataFromSlice(slice []byte, compatible bool) (*AccountCellData, 
     }
 
     fieldCount := offsetFirst/4 - 1
-    if fieldCount < 5 {
+    if fieldCount < 6 {
         return nil, errors.New("FieldCountNotMatch")
-    } else if !compatible && fieldCount > 5 {
+    } else if !compatible && fieldCount > 6 {
         return nil, errors.New("FieldCountNotMatch")
     }
 
@@ -4769,13 +4779,19 @@ if err != nil {
 }
                 
 
-_, err = Uint8FromSlice(slice[offsets[3]:offsets[4]], compatible)
+_, err = Uint64FromSlice(slice[offsets[3]:offsets[4]], compatible)
 if err != nil {
     return nil, err
 }
                 
 
-_, err = RecordsFromSlice(slice[offsets[4]:offsets[5]], compatible)
+_, err = Uint8FromSlice(slice[offsets[4]:offsets[5]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = RecordsFromSlice(slice[offsets[5]:offsets[6]], compatible)
 if err != nil {
     return nil, err
 }
@@ -4803,11 +4819,11 @@ func (s *AccountCellData) IsEmpty() bool {
     return s.Len() == 0
 }
 func (s *AccountCellData) CountExtraFields() uint {
-    return s.FieldCount() - 5
+    return s.FieldCount() - 6
 }
 
 func (s *AccountCellData) HasExtraFields() bool {
-    return 5 != s.FieldCount()
+    return 6 != s.FieldCount()
 }
             
 
@@ -4832,18 +4848,25 @@ func (s *AccountCellData) RegisteredAt() *Uint64 {
 }
                
 
-func (s *AccountCellData) Status() *Uint8 {
+func (s *AccountCellData) UpdatedAt() *Uint64 {
     start := unpackNumber(s.inner[16:])
     end := unpackNumber(s.inner[20:])
+    return Uint64FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *AccountCellData) Status() *Uint8 {
+    start := unpackNumber(s.inner[20:])
+    end := unpackNumber(s.inner[24:])
     return Uint8FromSliceUnchecked(s.inner[start:end])
 }
                
 
 func (s *AccountCellData) Records() *Records {
     var ret *Records
-    start := unpackNumber(s.inner[20:])
+    start := unpackNumber(s.inner[24:])
     if s.HasExtraFields() {
-        end := unpackNumber(s.inner[24:])
+        end := unpackNumber(s.inner[28:])
         ret = RecordsFromSliceUnchecked(s.inner[start:end])
     } else {
         ret = RecordsFromSliceUnchecked(s.inner[start:])
@@ -4853,7 +4876,7 @@ func (s *AccountCellData) Records() *Records {
                         
 
 func (s *AccountCellData) AsBuilder() AccountCellDataBuilder {
-    ret := NewAccountCellDataBuilder().Id(*s.Id()).Account(*s.Account()).RegisteredAt(*s.RegisteredAt()).Status(*s.Status()).Records(*s.Records())
+    ret := NewAccountCellDataBuilder().Id(*s.Id()).Account(*s.Account()).RegisteredAt(*s.RegisteredAt()).UpdatedAt(*s.UpdatedAt()).Status(*s.Status()).Records(*s.Records())
     return *ret
 }
         
