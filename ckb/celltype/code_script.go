@@ -76,7 +76,7 @@ var (
 	DasLockCellScript = DASCellBaseInfo{
 		Name: "das_lock_cell",
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x51d6a231e01ab57ec2f6648d19b5b6964567bf6e260a60d3face5042ad48f79d"),
+			TxHash:  types.HexToHash("0x22b7e4a537b107b32d3e1c5704455b30e04a63f0e97347b32155be49510ae0d0"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
