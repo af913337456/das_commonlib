@@ -50,8 +50,8 @@ const (
 	ApplyRegisterCellCodeArgs = "0x43b56d4fa45b57680b4cea21819ea5100c209ebb9434f141a53a05bdee93e4d6"
 	RefCellCodeArgs           = "34572aae7e930aa06fdd58cd7b42d3db005f27a2d11333cf08a74188128fc090"
 	PreAccountCellCodeArgs    = "0x9d608a334270b7ee7c5b61422bcb5a6021552fa4ec1f2d31acc02b2c4306265e"
-	ProposeCellCodeArgs       = "0xd681905f0b26093a78f66e8625d84f5454005fd147d8750438a39d3aa6d5c8dd"
-	AccountCellCodeArgs       = "0x9a66afb8358de29c452d2501c156b79e7955d234c14872c567868218ee6c7349"
+	ProposeCellCodeArgs       = "0xe789cf86f36fe1c67c04b2aad300867d1fc2778511365ce0b169d0518e860175"
+	AccountCellCodeArgs       = "0x37844013d5230454359d93dea9074d653f94dadc1a36fbe88fc01ac8456cddc7"
 	IncomeCellCodeArgs        = "0x54d53b0db02b7ca2ecaf1cf6bbe5a9011c8ae6e1dba6d45444e1f3f79eb13896"
 )
 
