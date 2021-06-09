@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"net/http"
+	"time"
 )
 
 const (
@@ -46,7 +47,7 @@ func SendNotifyWx(msgType, msg, key string) error {
 		data.Text = content
 	}
 	url := fmt.Sprintf(NotifyUrlWx, key)
-	resp, _, errs := gorequest.New().Post(url).SendStruct(&data).End()
+	resp, _, errs := gorequest.New().Post(url).Timeout(time.Second * 10).SendStruct(&data).End()
 	if len(errs) > 0 {
 		return fmt.Errorf("errs:%v", errs)
 	} else if resp.StatusCode != http.StatusOK {

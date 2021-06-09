@@ -63,6 +63,10 @@ func (j *JsonrpcServiceImpl) registerHandler(delegate ...*RpcServiceDelegate) (*
 	return handler, nil
 }
 
+func (j *JsonrpcServiceImpl) SetOrigins(origins []string) {
+	j.allowedOrigins = origins
+}
+
 func (j *JsonrpcServiceImpl) Start(beforeServeFunc BeforeServeFunc) error {
 	if j.httpServer != nil {
 		return nil
