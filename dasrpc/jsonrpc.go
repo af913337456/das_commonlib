@@ -26,20 +26,26 @@ type RpcServiceDelegate struct {
 }
 
 type JsonrpcServiceImpl struct {
-	port       string
-	httpServer *http.Server
-	delegates  []*RpcServiceDelegate
+	port           string
+	httpServer     *http.Server
+	delegates      []*RpcServiceDelegate
+	allowedOrigins []string
 }
 
 func NewJsonrpcService(port string, delegate ...*RpcServiceDelegate) *JsonrpcServiceImpl {
 	l := &JsonrpcServiceImpl{}
 	l.port = port
 	l.delegates = append(l.delegates, delegate...)
+	l.allowedOrigins = []string{"*"}
 	return l
 }
 
 func (*JsonrpcServiceImpl) Ping(val string, val2 int) (res string, err error) {
 	return
+}
+
+func (j *JsonrpcServiceImpl) SetOrigins(origins []string) {
+	j.allowedOrigins = origins
 }
 
 func (j *JsonrpcServiceImpl) registerHandler(delegate ...*RpcServiceDelegate) (*rpc.Server, error) {
@@ -72,7 +78,7 @@ func (j *JsonrpcServiceImpl) Start(beforeServeFunc BeforeServeFunc) error {
 	if listener, err = net.Listen("tcp", ":"+j.port); err != nil {
 		panic(err.Error())
 	}
-	j.httpServer = &http.Server{Handler: newCorsHandler(handler, []string{"*"}, beforeServeFunc)}
+	j.httpServer = &http.Server{Handler: newCorsHandler(handler, j.allowedOrigins, beforeServeFunc)}
 	if err = j.httpServer.Serve(listener); err != nil {
 		return fmt.Errorf("jsonrpc serve err: %s", err.Error())
 	}
