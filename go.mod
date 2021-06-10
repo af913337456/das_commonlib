@@ -1,4 +1,4 @@
-module github.com/DA-Services/das_commonlib
+module github.com/DeAccountSystems/das_commonlib
 
 go 1.12
 
