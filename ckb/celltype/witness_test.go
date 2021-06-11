@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
 	"strings"
@@ -59,7 +58,7 @@ func Test_FindTargetTypeScriptByInputList(t *testing.T) {
 }
 
 func Test_ParseCellData(t *testing.T) {
-	cellData := "0x646173060000009401000010000000100000001000000084010000100000001400000018000000020000000100000068010000680100000c00000041000000350000001000000030000000310000000000000000000000000000000000000000000000000000000000000000000000000000000027010000100000006d000000ca0000005d0000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000efbf497f752ff7a655a8ec6f3c8f3feaaed6e4100089b309730000005d0000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce80114000000c866479211cadf63ad115b9da50a6c16bd3d226d80ae0fa8000000005d0000000c000000550000004900000010000000300000003100000058c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a630114000000d43b906be6fbfffff60977a0d75ec93696e01dc780ae0fa800000000"
+	cellData := "0x64617300000000210000000c0000001c0000000c000000656469745f7265636f7264730100000001"
 	if strings.HasPrefix(cellData,"0x") {
 		cellData = cellData[2:]
 	}
@@ -70,25 +69,25 @@ func Test_ParseCellData(t *testing.T) {
 	if das, err := ParseTxWitnessToDasWitnessObj(cellDataBytes); err != nil {
 		panic(err)
 	} else {
-		t.Log(das.WitnessObj.TableType)
-		if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
-			panic("empty 1")
-		}
-		if das.MoleculeNewDataEntity.Entity().IsEmpty() {
-			panic("empty 2")
-		}
-		cellData, err := IncomeCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println("entity hex:",hex.EncodeToString(cellData.AsSlice()))
-		bys,err := blake2b.Blake256(cellData.AsSlice())
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println("hex:",hex.EncodeToString(bys))
-		fmt.Println("itemCount:",cellData.Records().ItemCount())
-		// t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
+		t.Log(das.WitnessObj.TableType,string(das.WitnessObj.TableBys))
+		// if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
+		// 	panic("empty 1")
+		// }
+		// if das.MoleculeNewDataEntity.Entity().IsEmpty() {
+		// 	panic("empty 2")
+		// }
+		// cellData, err := IncomeCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// fmt.Println("entity hex:",hex.EncodeToString(cellData.AsSlice()))
+		// bys,err := blake2b.Blake256(cellData.AsSlice())
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// fmt.Println("hex:",hex.EncodeToString(bys))
+		// fmt.Println("itemCount:",cellData.Records().ItemCount())
+		// // t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
 		// _, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
 		// if err != nil {
 		// 	panic(err)
