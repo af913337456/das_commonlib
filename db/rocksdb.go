@@ -30,9 +30,7 @@ func NewDefaultRocksTxDb(dataDir string) (*gorocksdb.TransactionDB, error) {
 }
 
 func NewDefaultRocksNormalDb(dataDir string) (*gorocksdb.DB, error) {
-	rateLimiter := defaultRateLimiter()
 	opts := gorocksdb.NewDefaultOptions()
-	opts.SetRateLimiter(rateLimiter)
 	opts.SetCreateIfMissing(true)
 	db, err := gorocksdb.OpenDb(opts, dataDir)
 	if err != nil {

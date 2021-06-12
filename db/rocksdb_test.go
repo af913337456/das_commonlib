@@ -121,7 +121,8 @@ func Test_BatchWrite2(t *testing.T) {
 func Test_BatchDel(t *testing.T) {
 	db, err := NewDefaultRocksNormalDb("data")
 	if err != nil {
-		t.Error(err)
+		fmt.Println(err.Error())
+		return
 	}
 	wb := gorocksdb.NewWriteBatch()
 	keyStrs := []string{"1234431", "name3_0x0000"}
