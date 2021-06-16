@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
 	"strings"
@@ -58,7 +59,7 @@ func Test_FindTargetTypeScriptByInputList(t *testing.T) {
 }
 
 func Test_ParseCellData(t *testing.T) {
-	cellData := "0x64617300000000210000000c0000001c0000000c000000656469745f7265636f7264730100000001"
+	cellData := "0x64617304000000a10400001000000010000000100000009104000010000000140000001800000000000000010000007504000075040000100000005900000061000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000000daf676ba7d268446c6e79da5c58dda393f0be2500000000000000001404000024000000a2000000200100009e0100001c0200009a02000018030000960300007e0000000c00000045000000390000001000000024000000250000001b8cc4589ac521e9012aa5897b02e66ba451fee8001ba67e59c90bb93d192ccdde189b05e460adc0be390000001000000024000000250000001ba67e59c90bb93d192ccdde189b05e460adc0be021ba73bd4911823f9fbaeb01a5edf06142d60848d7e0000000c00000045000000390000001000000024000000250000008bc7aca87fd6683a6dd1938a29824893850cd6f7008bcb51b36347ddc7286c165f94c440a75d06de3d390000001000000024000000250000008bcb51b36347ddc7286c165f94c440a75d06de3d028bdd0f376d9ea1a1f9d65b4be1614d3bbbd637d77e0000000c00000045000000390000001000000024000000250000008bfad4b1328ad88a3f37e96848c690518eb60ea5008c00359fb689f81e35ee98a4d159e6a975984667390000001000000024000000250000008c00359fb689f81e35ee98a4d159e6a975984667028c01bfa41d36f76b52a1851e3af62b29316ebaec7e0000000c00000045000000390000001000000024000000250000008de0ea9a6ca11543b2ce6a0be078fca284fa143c008decee1865de003f0c84315c8533b524ec6d9f66390000001000000024000000250000008decee1865de003f0c84315c8533b524ec6d9f66028e1a5abb4e87095ada530482d15bbb06e0101cea7e0000000c00000045000000390000001000000024000000250000009fe757403c2302af8082faedad9152786e90d1f9009febcae703695b2f0f157c5e5311ca89773243ce390000001000000024000000250000009febcae703695b2f0f157c5e5311ca89773243ce029fefbe339dcd8916240bb29c74991ea0bbf127c37e0000000c0000004500000039000000100000002400000025000000cd0b1a1efb26770098e27a8e25e4b576c4abade500cd17ff8dec8216fc62bc5c75e769533710e2cd2439000000100000002400000025000000cd17ff8dec8216fc62bc5c75e769533710e2cd2402cd1a97f68c3f35c40b5db70a4332240a88fd0c2b7e0000000c0000004500000039000000100000002400000025000000ecb623d8418feb37086b959eb1b95a9400647b2c00ecb62404a5b5f572cca7c25bd19b19181a38528039000000100000002400000025000000ecb62404a5b5f572cca7c25bd19b19181a38528002ecbf880a753dca8b75cb89ddd1214a64e1021bd57e0000000c0000004500000039000000100000002400000025000000f18c985f090f80f2bf2b9b32fff79a3a77f5f04200f19429d4aed43a822d13e5cb2b70a22a2c2fc2e039000000100000002400000025000000f19429d4aed43a822d13e5cb2b70a22a2c2fc2e002f19bf464a527548675960e489831b140365912ec"
 	if strings.HasPrefix(cellData,"0x") {
 		cellData = cellData[2:]
 	}
@@ -70,22 +71,22 @@ func Test_ParseCellData(t *testing.T) {
 		panic(err)
 	} else {
 		t.Log(das.WitnessObj.TableType,string(das.WitnessObj.TableBys))
-		// if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
-		// 	panic("empty 1")
-		// }
-		// if das.MoleculeNewDataEntity.Entity().IsEmpty() {
-		// 	panic("empty 2")
-		// }
-		// cellData, err := IncomeCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// fmt.Println("entity hex:",hex.EncodeToString(cellData.AsSlice()))
-		// bys,err := blake2b.Blake256(cellData.AsSlice())
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// fmt.Println("hex:",hex.EncodeToString(bys))
+		if len(das.MoleculeNewDataEntity.AsSlice()) == 0 {
+			panic("empty 1")
+		}
+		if das.MoleculeNewDataEntity.Entity().IsEmpty() {
+			panic("empty 2")
+		}
+		cellData, err := ProposalCellDataFromSlice(das.MoleculeNewDataEntity.Entity().RawData(), false)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("entity hex:",hex.EncodeToString(cellData.AsSlice()))
+		bys,err := blake2b.Blake256(cellData.AsSlice())
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("hex:",hex.EncodeToString(bys))
 		// fmt.Println("itemCount:",cellData.Records().ItemCount())
 		// // t.Log(MoleculeU32ToGo(accountCellData.Status().RawData()))
 		// _, err = MoleculeU32ToGo(das.MoleculeNewDataEntity.Index().RawData())
