@@ -693,15 +693,20 @@ basic_capacity Uint64
 expiration_grace_period Uint32
 record_min_ttl Uint32
 record_size_limit Uint32
-operate_throttle Uint32
+transfer_account_fee Uint32
+edit_manager_fee Uint32
+edit_records_fee Uint32
+transfer_account_throttle Uint32
+edit_manager_throttle Uint32
+edit_records_throttle Uint32
 }
         
 
 func (s *ConfigCellAccountBuilder) Build() ConfigCellAccount {
     b := new(bytes.Buffer)
 
-    totalSize := HeaderSizeUint * (6 + 1)
-    offsets := make([]uint32, 0, 6)
+    totalSize := HeaderSizeUint * (11 + 1)
+    offsets := make([]uint32, 0, 11)
 
     offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.max_length.AsSlice()))
@@ -714,7 +719,17 @@ totalSize += uint32(len(s.record_min_ttl.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.record_size_limit.AsSlice()))
 offsets = append(offsets, totalSize)
-totalSize += uint32(len(s.operate_throttle.AsSlice()))
+totalSize += uint32(len(s.transfer_account_fee.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.edit_manager_fee.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.edit_records_fee.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.transfer_account_throttle.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.edit_manager_throttle.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.edit_records_throttle.AsSlice()))
 
     b.Write(packNumber(Number(totalSize)))
 
@@ -727,7 +742,12 @@ b.Write(s.basic_capacity.AsSlice())
 b.Write(s.expiration_grace_period.AsSlice())
 b.Write(s.record_min_ttl.AsSlice())
 b.Write(s.record_size_limit.AsSlice())
-b.Write(s.operate_throttle.AsSlice())
+b.Write(s.transfer_account_fee.AsSlice())
+b.Write(s.edit_manager_fee.AsSlice())
+b.Write(s.edit_records_fee.AsSlice())
+b.Write(s.transfer_account_throttle.AsSlice())
+b.Write(s.edit_manager_throttle.AsSlice())
+b.Write(s.edit_records_throttle.AsSlice())
     return ConfigCellAccount{inner: b.Bytes()}
 }
                 
@@ -762,14 +782,44 @@ func (s *ConfigCellAccountBuilder) RecordSizeLimit(v Uint32) *ConfigCellAccountB
 }
             
 
-func (s *ConfigCellAccountBuilder) OperateThrottle(v Uint32) *ConfigCellAccountBuilder {
-    s.operate_throttle = v
+func (s *ConfigCellAccountBuilder) TransferAccountFee(v Uint32) *ConfigCellAccountBuilder {
+    s.transfer_account_fee = v
+    return s
+}
+            
+
+func (s *ConfigCellAccountBuilder) EditManagerFee(v Uint32) *ConfigCellAccountBuilder {
+    s.edit_manager_fee = v
+    return s
+}
+            
+
+func (s *ConfigCellAccountBuilder) EditRecordsFee(v Uint32) *ConfigCellAccountBuilder {
+    s.edit_records_fee = v
+    return s
+}
+            
+
+func (s *ConfigCellAccountBuilder) TransferAccountThrottle(v Uint32) *ConfigCellAccountBuilder {
+    s.transfer_account_throttle = v
+    return s
+}
+            
+
+func (s *ConfigCellAccountBuilder) EditManagerThrottle(v Uint32) *ConfigCellAccountBuilder {
+    s.edit_manager_throttle = v
+    return s
+}
+            
+
+func (s *ConfigCellAccountBuilder) EditRecordsThrottle(v Uint32) *ConfigCellAccountBuilder {
+    s.edit_records_throttle = v
     return s
 }
             
 
 func NewConfigCellAccountBuilder() *ConfigCellAccountBuilder {
-	return &ConfigCellAccountBuilder{ max_length: Uint32Default(),basic_capacity: Uint64Default(),expiration_grace_period: Uint32Default(),record_min_ttl: Uint32Default(),record_size_limit: Uint32Default(),operate_throttle: Uint32Default() }
+	return &ConfigCellAccountBuilder{ max_length: Uint32Default(),basic_capacity: Uint64Default(),expiration_grace_period: Uint32Default(),record_min_ttl: Uint32Default(),record_size_limit: Uint32Default(),transfer_account_fee: Uint32Default(),edit_manager_fee: Uint32Default(),edit_records_fee: Uint32Default(),transfer_account_throttle: Uint32Default(),edit_manager_throttle: Uint32Default(),edit_records_throttle: Uint32Default() }
 }
     
 
@@ -787,7 +837,7 @@ func (s *ConfigCellAccount) AsSlice() []byte {
             
 
 func ConfigCellAccountDefault() ConfigCellAccount {
-    return *ConfigCellAccountFromSliceUnchecked([]byte{ 56,0,0,0,28,0,0,0,32,0,0,0,40,0,0,0,44,0,0,0,48,0,0,0,52,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *ConfigCellAccountFromSliceUnchecked([]byte{ 96,0,0,0,48,0,0,0,52,0,0,0,60,0,0,0,64,0,0,0,68,0,0,0,72,0,0,0,76,0,0,0,80,0,0,0,84,0,0,0,88,0,0,0,92,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -804,7 +854,7 @@ func ConfigCellAccountFromSlice(slice []byte, compatible bool) (*ConfigCellAccou
         return nil, errors.New(errMsg)
     }
 
-    if uint32(sliceLen) == HeaderSizeUint && 6 == 0 {
+    if uint32(sliceLen) == HeaderSizeUint && 11 == 0 {
         return &ConfigCellAccount{inner: slice}, nil
     }
 
@@ -820,9 +870,9 @@ func ConfigCellAccountFromSlice(slice []byte, compatible bool) (*ConfigCellAccou
     }
 
     fieldCount := offsetFirst/4 - 1
-    if fieldCount < 6 {
+    if fieldCount < 11 {
         return nil, errors.New("FieldCountNotMatch")
-    } else if !compatible && fieldCount > 6 {
+    } else if !compatible && fieldCount > 11 {
         return nil, errors.New("FieldCountNotMatch")
     }
 
@@ -883,6 +933,36 @@ if err != nil {
 }
                 
 
+_, err = Uint32FromSlice(slice[offsets[6]:offsets[7]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = Uint32FromSlice(slice[offsets[7]:offsets[8]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = Uint32FromSlice(slice[offsets[8]:offsets[9]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = Uint32FromSlice(slice[offsets[9]:offsets[10]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
+_, err = Uint32FromSlice(slice[offsets[10]:offsets[11]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
     return &ConfigCellAccount{inner: slice}, nil
 }
             
@@ -905,11 +985,11 @@ func (s *ConfigCellAccount) IsEmpty() bool {
     return s.Len() == 0
 }
 func (s *ConfigCellAccount) CountExtraFields() uint {
-    return s.FieldCount() - 6
+    return s.FieldCount() - 11
 }
 
 func (s *ConfigCellAccount) HasExtraFields() bool {
-    return 6 != s.FieldCount()
+    return 11 != s.FieldCount()
 }
             
 
@@ -948,11 +1028,46 @@ func (s *ConfigCellAccount) RecordSizeLimit() *Uint32 {
 }
                
 
-func (s *ConfigCellAccount) OperateThrottle() *Uint32 {
-    var ret *Uint32
+func (s *ConfigCellAccount) TransferAccountFee() *Uint32 {
     start := unpackNumber(s.inner[24:])
+    end := unpackNumber(s.inner[28:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) EditManagerFee() *Uint32 {
+    start := unpackNumber(s.inner[28:])
+    end := unpackNumber(s.inner[32:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) EditRecordsFee() *Uint32 {
+    start := unpackNumber(s.inner[32:])
+    end := unpackNumber(s.inner[36:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) TransferAccountThrottle() *Uint32 {
+    start := unpackNumber(s.inner[36:])
+    end := unpackNumber(s.inner[40:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) EditManagerThrottle() *Uint32 {
+    start := unpackNumber(s.inner[40:])
+    end := unpackNumber(s.inner[44:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellAccount) EditRecordsThrottle() *Uint32 {
+    var ret *Uint32
+    start := unpackNumber(s.inner[44:])
     if s.HasExtraFields() {
-        end := unpackNumber(s.inner[28:])
+        end := unpackNumber(s.inner[48:])
         ret = Uint32FromSliceUnchecked(s.inner[start:end])
     } else {
         ret = Uint32FromSliceUnchecked(s.inner[start:])
@@ -962,7 +1077,7 @@ func (s *ConfigCellAccount) OperateThrottle() *Uint32 {
                         
 
 func (s *ConfigCellAccount) AsBuilder() ConfigCellAccountBuilder {
-    ret := NewConfigCellAccountBuilder().MaxLength(*s.MaxLength()).BasicCapacity(*s.BasicCapacity()).ExpirationGracePeriod(*s.ExpirationGracePeriod()).RecordMinTtl(*s.RecordMinTtl()).RecordSizeLimit(*s.RecordSizeLimit()).OperateThrottle(*s.OperateThrottle())
+    ret := NewConfigCellAccountBuilder().MaxLength(*s.MaxLength()).BasicCapacity(*s.BasicCapacity()).ExpirationGracePeriod(*s.ExpirationGracePeriod()).RecordMinTtl(*s.RecordMinTtl()).RecordSizeLimit(*s.RecordSizeLimit()).TransferAccountFee(*s.TransferAccountFee()).EditManagerFee(*s.EditManagerFee()).EditRecordsFee(*s.EditRecordsFee()).TransferAccountThrottle(*s.TransferAccountThrottle()).EditManagerThrottle(*s.EditManagerThrottle()).EditRecordsThrottle(*s.EditRecordsThrottle())
     return *ret
 }
         
@@ -2620,19 +2735,22 @@ func (s *ConfigCellProfitRate) AsBuilder() ConfigCellProfitRateBuilder {
 type ConfigCellIncomeBuilder struct {
     basic_capacity Uint64
 max_records Uint32
+min_transfer_capacity Uint32
 }
         
 
 func (s *ConfigCellIncomeBuilder) Build() ConfigCellIncome {
     b := new(bytes.Buffer)
 
-    totalSize := HeaderSizeUint * (2 + 1)
-    offsets := make([]uint32, 0, 2)
+    totalSize := HeaderSizeUint * (3 + 1)
+    offsets := make([]uint32, 0, 3)
 
     offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.basic_capacity.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.max_records.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.min_transfer_capacity.AsSlice()))
 
     b.Write(packNumber(Number(totalSize)))
 
@@ -2642,6 +2760,7 @@ totalSize += uint32(len(s.max_records.AsSlice()))
 
     b.Write(s.basic_capacity.AsSlice())
 b.Write(s.max_records.AsSlice())
+b.Write(s.min_transfer_capacity.AsSlice())
     return ConfigCellIncome{inner: b.Bytes()}
 }
                 
@@ -2658,8 +2777,14 @@ func (s *ConfigCellIncomeBuilder) MaxRecords(v Uint32) *ConfigCellIncomeBuilder 
 }
             
 
+func (s *ConfigCellIncomeBuilder) MinTransferCapacity(v Uint32) *ConfigCellIncomeBuilder {
+    s.min_transfer_capacity = v
+    return s
+}
+            
+
 func NewConfigCellIncomeBuilder() *ConfigCellIncomeBuilder {
-	return &ConfigCellIncomeBuilder{ basic_capacity: Uint64Default(),max_records: Uint32Default() }
+	return &ConfigCellIncomeBuilder{ basic_capacity: Uint64Default(),max_records: Uint32Default(),min_transfer_capacity: Uint32Default() }
 }
     
 
@@ -2677,7 +2802,7 @@ func (s *ConfigCellIncome) AsSlice() []byte {
             
 
 func ConfigCellIncomeDefault() ConfigCellIncome {
-    return *ConfigCellIncomeFromSliceUnchecked([]byte{ 24,0,0,0,12,0,0,0,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *ConfigCellIncomeFromSliceUnchecked([]byte{ 32,0,0,0,16,0,0,0,24,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -2694,7 +2819,7 @@ func ConfigCellIncomeFromSlice(slice []byte, compatible bool) (*ConfigCellIncome
         return nil, errors.New(errMsg)
     }
 
-    if uint32(sliceLen) == HeaderSizeUint && 2 == 0 {
+    if uint32(sliceLen) == HeaderSizeUint && 3 == 0 {
         return &ConfigCellIncome{inner: slice}, nil
     }
 
@@ -2710,9 +2835,9 @@ func ConfigCellIncomeFromSlice(slice []byte, compatible bool) (*ConfigCellIncome
     }
 
     fieldCount := offsetFirst/4 - 1
-    if fieldCount < 2 {
+    if fieldCount < 3 {
         return nil, errors.New("FieldCountNotMatch")
-    } else if !compatible && fieldCount > 2 {
+    } else if !compatible && fieldCount > 3 {
         return nil, errors.New("FieldCountNotMatch")
     }
 
@@ -2749,6 +2874,12 @@ if err != nil {
 }
                 
 
+_, err = Uint32FromSlice(slice[offsets[2]:offsets[3]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
     return &ConfigCellIncome{inner: slice}, nil
 }
             
@@ -2771,11 +2902,11 @@ func (s *ConfigCellIncome) IsEmpty() bool {
     return s.Len() == 0
 }
 func (s *ConfigCellIncome) CountExtraFields() uint {
-    return s.FieldCount() - 2
+    return s.FieldCount() - 3
 }
 
 func (s *ConfigCellIncome) HasExtraFields() bool {
-    return 2 != s.FieldCount()
+    return 3 != s.FieldCount()
 }
             
 
@@ -2787,10 +2918,17 @@ func (s *ConfigCellIncome) BasicCapacity() *Uint64 {
                
 
 func (s *ConfigCellIncome) MaxRecords() *Uint32 {
-    var ret *Uint32
     start := unpackNumber(s.inner[8:])
+    end := unpackNumber(s.inner[12:])
+    return Uint32FromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *ConfigCellIncome) MinTransferCapacity() *Uint32 {
+    var ret *Uint32
+    start := unpackNumber(s.inner[12:])
     if s.HasExtraFields() {
-        end := unpackNumber(s.inner[12:])
+        end := unpackNumber(s.inner[16:])
         ret = Uint32FromSliceUnchecked(s.inner[start:end])
     } else {
         ret = Uint32FromSliceUnchecked(s.inner[start:])
@@ -2800,7 +2938,7 @@ func (s *ConfigCellIncome) MaxRecords() *Uint32 {
                         
 
 func (s *ConfigCellIncome) AsBuilder() ConfigCellIncomeBuilder {
-    ret := NewConfigCellIncomeBuilder().BasicCapacity(*s.BasicCapacity()).MaxRecords(*s.MaxRecords())
+    ret := NewConfigCellIncomeBuilder().BasicCapacity(*s.BasicCapacity()).MaxRecords(*s.MaxRecords()).MinTransferCapacity(*s.MinTransferCapacity())
     return *ret
 }
         
