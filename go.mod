@@ -14,6 +14,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-yaml/yaml v2.1.0+incompatible
+	github.com/hashicorp/golang-lru v0.5.4
 	github.com/jinzhu/gorm v1.9.16
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
 	github.com/nervosnetwork/ckb-sdk-go v0.3.1-0.20210330153910-1d9878636bf6
