@@ -31,16 +31,27 @@ var (
 		DepType: types.DepTypeDepGroup,
 	}
 
-	TestNetETHSoScriptDep = DASCellBaseInfoDep{
-		TxHash:  types.HexToHash("0x3bffc9beff67d5f93b60b378c68a9910ecc936e5bff0348b3bdf99c4f416213d"),
-		TxIndex: 0,
-		DepType: types.DepTypeCode,
+	TestNetETHSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
+		txHashStr := "0x3bffc9beff67d5f93b60b378c68a9910ecc936e5bff0348b3bdf99c4f416213d"
+		if !testNet {
+			txHashStr = ""
+		}
+		return DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(txHashStr),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		}
 	}
-	// 0xb988070e97c6eda68705e146985bcf2d3b3215cbb619eb61337523bc440d42e0
-	TestNetCKBSoScriptDep = DASCellBaseInfoDep{
-		TxHash:  types.HexToHash("0xe08b6487bab378df62d1abe58faebecdfefc5dc4297627c1f7240441db69355b"),
-		TxIndex: 0,
-		DepType: types.DepTypeCode,
+	TestNetCKBSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
+		txHashStr := "0xe08b6487bab378df62d1abe58faebecdfefc5dc4297627c1f7240441db69355b"
+		if !testNet {
+			txHashStr = ""
+		}
+		return DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(txHashStr),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		}
 	}
 
 	DasETHLockCellInfo = DASCellBaseInfo{

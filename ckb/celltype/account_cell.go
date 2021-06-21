@@ -15,8 +15,9 @@ import (
  * Description:
  */
 
-var DefaultAccountCellParam = func(param *AccountCellTxDataParam,dasLockParam *DasLockParam,dataBytes []byte) *AccountCellParam {
+var DefaultAccountCellParam = func(testNet bool,param *AccountCellTxDataParam,dasLockParam *DasLockParam,dataBytes []byte) *AccountCellParam {
 	acp := &AccountCellParam{
+		TestNet: testNet,
 		Version: 1,
 		DataBytes:    dataBytes,
 		// Data: *BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex, dep, old, &new.AccountInfo),
@@ -38,8 +39,8 @@ func NewAccountCell(p *AccountCellParam) *AccountCell {
 
 func (c *AccountCell) SoDeps() []types.CellDep {
 	return []types.CellDep{
-		*TestNetETHSoScriptDep.ToDepCell(),
-		*TestNetCKBSoScriptDep.ToDepCell(),
+		*TestNetETHSoScriptDep(c.p.TestNet).ToDepCell(),
+		*TestNetCKBSoScriptDep(c.p.TestNet).ToDepCell(),
 	}
 }
 

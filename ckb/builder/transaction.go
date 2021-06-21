@@ -427,7 +427,9 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 	switch chainType {
 	case celltype.ChainType_ETH:
 		message, err = blake2b.Blake256(message)
-		// message = ethcrypto.Keccak256(message)
+		break
+	case celltype.ChainType_TRON:
+		message, err = blake2b.Blake256(message)
 		break
 	default:
 		message, err = blake2b.Blake256(message)

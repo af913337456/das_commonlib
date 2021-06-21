@@ -31,9 +31,13 @@ const ETHScriptLockWitnessBytesLen = 65
 const MinAccountCharsLen = 2
 const DiscountRateBase = 10000
 const DasLockArgsMinBytesLen = 1 + 20 + 1 + 20
-var RootAccountDataAccountByte = []byte{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-var EmptyDataHash = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-var EmptyAccountId = DasAccountId{}
+
+var (
+	NullDasLockManagerArg = make([]byte,DasLockArgsMinBytesLen / 2 -1)
+	RootAccountDataAccountByte = make([]byte,29)
+	EmptyDataHash  = make([]byte,HashBytesLen)
+	EmptyAccountId = DasAccountId{}
+)
 
 const (
 	PwLockMainNetCodeHash = "0xbf43c3602455798c1a61a596e0d95278864c552fafe231c063b3fabf97a8febc"
@@ -170,10 +174,14 @@ const (
 type LockScriptType int
 
 const (
+	// use to group inputs when combine tx
 	ScriptType_User LockScriptType = 0
 	ScriptType_Any  LockScriptType = 1
 	ScriptType_ETH  LockScriptType = 2
 	ScriptType_BTC  LockScriptType = 3
+	ScriptType_DasManager_User  LockScriptType = 4
+	ScriptType_DasOwner_User    LockScriptType = 5
+	ScriptType_TRON  LockScriptType = 6
 )
 
 func (l LockScriptType) ToDasLockCodeHashIndexType() DasLockCodeHashIndexType {
@@ -184,6 +192,8 @@ func (l LockScriptType) ToDasLockCodeHashIndexType() DasLockCodeHashIndexType {
 		return DasLockCodeHashIndexType_CKB_AnyOne
 	case ScriptType_ETH:
 		return DasLockCodeHashIndexType_ETH_Normal
+	case ScriptType_TRON:
+		return DasLockCodeHashIndexType_TRON_Normal
 	default:
 		return DasLockCodeHashIndexType_CKB_Normal
 	}
@@ -223,32 +233,33 @@ const (
 	DasLockCodeHashIndexType_CKB_MultiS DasLockCodeHashIndexType = 1
 	DasLockCodeHashIndexType_CKB_AnyOne DasLockCodeHashIndexType = 2
 	DasLockCodeHashIndexType_ETH_Normal DasLockCodeHashIndexType = 3
+	DasLockCodeHashIndexType_TRON_Normal DasLockCodeHashIndexType = 4
 )
 
 func (t DasLockCodeHashIndexType) Bytes() []byte {
 	return common.Uint8ToBytes(uint8(t))
 }
 
-func (t DasLockCodeHashIndexType) ToScriptType() LockScriptType {
+func (t DasLockCodeHashIndexType) ToScriptType(fromOwner bool) LockScriptType {
 	switch t {
 	case DasLockCodeHashIndexType_CKB_Normal:
-		return ScriptType_User
+		if fromOwner {
+			return ScriptType_DasOwner_User
+		} else {
+			return ScriptType_DasManager_User
+		}
 	case DasLockCodeHashIndexType_CKB_AnyOne:
 		return ScriptType_Any
 	case DasLockCodeHashIndexType_ETH_Normal:
 		return ScriptType_ETH
+	case DasLockCodeHashIndexType_TRON_Normal:
+		return ScriptType_TRON
 	default:
 		return ScriptType_User
 	}
 }
 
 const (
-	/**
-	- status ，状态字段：
-	  - 0 ，正常；
-	  - 1 ，出售中；
-	  - 2 ，拍卖中；
-	*/
 	AccountCellStatus_Normal AccountCellStatus = 0
 	AccountCellStatus_OnSale AccountCellStatus = 1
 	AccountCellStatus_OnBid  AccountCellStatus = 2
