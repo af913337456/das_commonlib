@@ -41,6 +41,7 @@ func (c *AccountCell) SoDeps() []types.CellDep {
 	return []types.CellDep{
 		*TestNetETHSoScriptDep(c.p.TestNet).ToDepCell(),
 		*TestNetCKBSoScriptDep(c.p.TestNet).ToDepCell(),
+		*TestNetTRONSoScriptDep(c.p.TestNet).ToDepCell(),
 	}
 }
 

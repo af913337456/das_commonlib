@@ -42,6 +42,18 @@ var (
 			DepType: types.DepTypeCode,
 		}
 	}
+	TestNetTRONSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
+		txHashStr := "0x9f6b5041638b10e9d53498e0b27db51778274c75efaffddceca93f6ab9e2053c"
+		if !testNet {
+			txHashStr = ""
+		}
+		return DASCellBaseInfoDep{
+			TxHash:  types.HexToHash(txHashStr),
+			TxIndex: 0,
+			DepType: types.DepTypeCode,
+		}
+	}
+
 	TestNetCKBSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
 		txHashStr := "0xe08b6487bab378df62d1abe58faebecdfefc5dc4297627c1f7240441db69355b"
 		if !testNet {
