@@ -309,6 +309,7 @@ type InOutputWitnessCallbackParam struct {
 }
 // callback method return 'true' means use the oldData to newData
 func (a *AccountCell) UpdateAccountCellInfos(
+	testNet bool,
 	callback func(param *InOutputWitnessCallbackParam) bool,
 	setOwner func() (indexType celltype.DasLockCodeHashIndexType, args []byte),
 	setManager func() (indexType celltype.DasLockCodeHashIndexType, args []byte)) (*UpdateAccountCellInfo, error) {
@@ -356,12 +357,12 @@ func (a *AccountCell) UpdateAccountCellInfos(
 	}
 	return &UpdateAccountCellInfo{
 		OldData:           oldData,
-		OutputAccountCell: celltype.NewAccountCell(celltype.DefaultAccountCellParam(newFullData, a.ToDasLockArgParam(),nil)),
+		OutputAccountCell: celltype.NewAccountCell(celltype.DefaultAccountCellParam(testNet,newFullData, a.ToDasLockArgParam(),nil)),
 		NewData:           &newData,
 	}, nil
 }
 
-func (a *AccountCell) UpdateAccountCellNextId(nextAccountId celltype.DasAccountId) (*UpdateAccountCellInfo, error) {
+func (a *AccountCell) UpdateAccountCellNextId(testNet bool,nextAccountId celltype.DasAccountId) (*UpdateAccountCellInfo, error) {
 	oldData, err := a.GetOldAccountCellData()
 	if err != nil {
 		return nil, fmt.Errorf("GetOldAccountCellData err: %s", err.Error())
@@ -377,7 +378,7 @@ func (a *AccountCell) UpdateAccountCellNextId(nextAccountId celltype.DasAccountI
 	}
 	return &UpdateAccountCellInfo{
 		OldData:           oldData,
-		OutputAccountCell: celltype.NewAccountCell(celltype.DefaultAccountCellParam(newData, a.ToDasLockArgParam(),a.Data)),
+		OutputAccountCell: celltype.NewAccountCell(celltype.DefaultAccountCellParam(testNet,newData, a.ToDasLockArgParam(),a.Data)),
 		NewData:           oldData,
 	}, nil
 }
@@ -399,4 +400,12 @@ func (a *AccountCell) JudgeExpireStatus(expiredCheck, frozenCheck bool,frozenRan
 		}
 	}
 	return expired, frozen, nil
+}
+
+func BytesToAccountCellTxValue(bys []byte) (*AccountCell, error) {
+	ret := &AccountCell{}
+	if err := rlp.DecodeBytes(bys, ret); err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
