@@ -31,39 +31,22 @@ var (
 		DepType: types.DepTypeDepGroup,
 	}
 
-	TestNetETHSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
-		txHashStr := "0x3bffc9beff67d5f93b60b378c68a9910ecc936e5bff0348b3bdf99c4f416213d"
-		if !testNet {
-			txHashStr = ""
-		}
-		return DASCellBaseInfoDep{
-			TxHash:  types.HexToHash(txHashStr),
-			TxIndex: 0,
-			DepType: types.DepTypeCode,
-		}
-	}
-	TestNetTRONSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
-		txHashStr := "0x9f6b5041638b10e9d53498e0b27db51778274c75efaffddceca93f6ab9e2053c"
-		if !testNet {
-			txHashStr = ""
-		}
-		return DASCellBaseInfoDep{
-			TxHash:  types.HexToHash(txHashStr),
-			TxIndex: 0,
-			DepType: types.DepTypeCode,
-		}
+	TestNetETHSoScriptDep = DASCellBaseInfoDep{
+		TxHash:  types.HexToHash("0x3bffc9beff67d5f93b60b378c68a9910ecc936e5bff0348b3bdf99c4f416213d"),
+		TxIndex: 0,
+		DepType: types.DepTypeCode,
 	}
 
-	TestNetCKBSoScriptDep = func(testNet bool) DASCellBaseInfoDep {
-		txHashStr := "0xe08b6487bab378df62d1abe58faebecdfefc5dc4297627c1f7240441db69355b"
-		if !testNet {
-			txHashStr = ""
-		}
-		return DASCellBaseInfoDep{
-			TxHash:  types.HexToHash(txHashStr),
-			TxIndex: 0,
-			DepType: types.DepTypeCode,
-		}
+	TestNetTRONSoScriptDep = DASCellBaseInfoDep{
+		TxHash:  types.HexToHash("0x9f6b5041638b10e9d53498e0b27db51778274c75efaffddceca93f6ab9e2053c"),
+		TxIndex: 0,
+		DepType: types.DepTypeCode,
+	}
+
+	TestNetCKBSoScriptDep = DASCellBaseInfoDep{
+		TxHash:  types.HexToHash("0xe08b6487bab378df62d1abe58faebecdfefc5dc4297627c1f7240441db69355b"),
+		TxIndex: 0,
+		DepType: types.DepTypeCode,
 	}
 
 	DasETHLockCellInfo = DASCellBaseInfo{
@@ -363,6 +346,10 @@ func initMap() {
 
 // testnet version 2
 func UseVersion2SystemScriptCodeHash() {
+
+	TestNetCKBSoScriptDep.TxHash = types.HexToHash("0x209b35208da7d20d882f0871f3979c68c53981bcc4caa71274c035449074d082")
+	TestNetETHSoScriptDep.TxHash = types.HexToHash("0xfeb2151e03b933736f64c7fb845f0c1ac1f13f28405edb263c418864a48f2122")
+	TestNetTRONSoScriptDep.TxHash = types.HexToHash("0x9f6b5041638b10e9d53498e0b27db51778274c75efaffddceca93f6ab9e2053c")
 
 	DasApplyRegisterCellScript.ContractTypeScript.Args = types.HexToHash("0xc78fa9066af1624e600ccfb21df9546f900b2afe5d7940d91aefc115653f90d9").Bytes()
 	DasPreAccountCellScript.ContractTypeScript.Args = types.HexToHash("0xd3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b").Bytes()
