@@ -45,7 +45,7 @@ const (
 )
 
 // type cell's args
-const (
+var (
 	ContractCodeHash          = "00000000000000000000000000000000000000000000000000545950455f4944"
 	DasPwLockCellCodeArgs     = "d5eee5a3ac9d65658535b4bdad25e22a81c032f5bbdf5ace45605a33482eeb45"
 	DasLockCellCodeArgs       = "0xc3fd71e4f537b8d77a412b896304abf1a60daaa7f0fab10f83e8649a4f1e9713"

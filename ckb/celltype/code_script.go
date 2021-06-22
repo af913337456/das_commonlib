@@ -363,6 +363,15 @@ func initMap() {
 
 // testnet version 2
 func UseVersion2SystemScriptCodeHash() {
+
+	DasLockCellCodeArgs       = "0xeedd10c7d8fee85c119daf2077fea9cf76b9a92ddca546f1f8e0031682e65aee"
+	ConfigCellCodeArgs        = "0x34363fad2018db0b3b6919c26870f302da74c3c4ef4456e5665b82c4118eda51"
+	ApplyRegisterCellCodeArgs = "0xc78fa9066af1624e600ccfb21df9546f900b2afe5d7940d91aefc115653f90d9"
+	PreAccountCellCodeArgs    = "0xd3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b"
+	ProposeCellCodeArgs       = "0x03d0bb128bd10e666975d9a07c148f6abebe811f511e9574048b30600b065b9a"
+	AccountCellCodeArgs       = "0x6f0b8328b703617508d62d1f017b0d91fab2056de320a7b7faed4c777a356b7b"
+	IncomeCellCodeArgs        = "0xd7b9d8213671aec03f3a3ab95171e0e79481db2c084586b9ea99914c00ff3716"
+
 	DasApplyRegisterCellScript.Out.CodeHash = types.HexToHash("0x0fbff871dd05aee1fda2be38786ad21d52a2765c6025d1ef6927d761d51a3cd1")
 	DasPreAccountCellScript.Out.CodeHash = types.HexToHash("0x6c8441233f00741955f65e476721a1a5417997c1e4368801c99c7f617f8b7544")
 	DasAccountCellScript.Out.CodeHash = types.HexToHash("0x1106d9eaccde0995a7e07e80dd0ce7509f21752538dfdd1ee2526d24574846b1")
