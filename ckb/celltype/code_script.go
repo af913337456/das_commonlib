@@ -349,7 +349,7 @@ func UseVersion2SystemScriptCodeHash() {
 
 	TestNetCKBSoScriptDep.TxHash = types.HexToHash("0x209b35208da7d20d882f0871f3979c68c53981bcc4caa71274c035449074d082")
 	TestNetETHSoScriptDep.TxHash = types.HexToHash("0xb035c200bf759537d3796edf49b5d6a8ec5f5d78326713f987f31ad24d0b0171")
-	TestNetTRONSoScriptDep.TxHash = types.HexToHash("0xd960a5fd1cf3051e38a9e88790ac79bed7b55a0f4c31ad3c1502da4f0080bd82")
+	TestNetTRONSoScriptDep.TxHash = types.HexToHash("0x7dc4ae8fe597045fbd7fe78f2bd26435644a69b755de3824a856f681bacb732b")
 
 	DasApplyRegisterCellScript.ContractTypeScript.Args = types.HexToHash("0xc78fa9066af1624e600ccfb21df9546f900b2afe5d7940d91aefc115653f90d9").Bytes()
 	DasPreAccountCellScript.ContractTypeScript.Args = types.HexToHash("0xd3f7ad59632a2ebdc2fe9d41aa69708ed1069b074cd8b297b205f835335d3a6b").Bytes()
