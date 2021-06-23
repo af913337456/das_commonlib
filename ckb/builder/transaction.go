@@ -257,7 +257,7 @@ func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 		} else if left := builder.totalInputCap - totalSpend; left > celltype.CkbTxMinOutputCKBValue {
 			return left // 直接返回 left
 		} else {
-			return 0 // 剩下的全部给矿工，不在返回，避免 liveCell 收集器去组装
+			return 0
 		}
 	} else {
 		return min // 最少 61 kb + fee
@@ -279,7 +279,7 @@ func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signC
 	}
 	chargeCap := builder.totalInputCap - (builder.totalOutputCap + builder.fee)
 	if chargeCap < celltype.CkbTxMinOutputCKBValue {
-		return builder // 剩下的，不满足最小值，那么全部给矿工
+		return builder // give it all to miner
 	}
 	builder.tx.Outputs = append(builder.tx.Outputs, &types.CellOutput{
 		Capacity: chargeCap,
