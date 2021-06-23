@@ -162,9 +162,11 @@ func (a *AccountCell) GetNewAccountCellData() (*celltype.AccountCellData, error)
 }
 
 func (a *AccountCell) ParseDasLockArgsIndexType() (celltype.DasLockCodeHashIndexType, celltype.DasLockCodeHashIndexType) {
-	ownerType := celltype.DasLockCodeHashIndexType(a.DasLockArgs[0])
+	tempBytes := make([]byte, len(a.DasLockArgs))
+	copy(tempBytes,a.DasLockArgs)
+	ownerType := celltype.DasLockCodeHashIndexType(tempBytes[0])
 	managerTypeStartIndex := celltype.DasLockArgsMinBytesLen / 2
-	managerType := celltype.DasLockCodeHashIndexType(a.DasLockArgs[managerTypeStartIndex : managerTypeStartIndex+1][0])
+	managerType := celltype.DasLockCodeHashIndexType(tempBytes[managerTypeStartIndex : managerTypeStartIndex+1][0])
 	return ownerType, managerType
 }
 

@@ -1,6 +1,8 @@
 package builder
 
 import (
+	"encoding/hex"
+	"fmt"
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"testing"
@@ -13,6 +15,17 @@ import (
  * Date:     2021/3/24 5:16
  * Description:
  */
+
+func Test_ActionTx(t *testing.T) {
+	params := celltype.ActionParam_Owner
+	actionBuilder := celltype.NewActionDataBuilder().Action(celltype.GoStrToMoleculeBytes(celltype.Action_WithdrawFromWallet))
+	if params != nil {
+		actionBuilder.Params(celltype.GoBytesToMoleculeBytes(params))
+	}
+	actionData := actionBuilder.Build()
+	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
+	fmt.Println(hex.EncodeToString(witnessBys))
+}
 
 func Test_BuildTransaction(t *testing.T) {
 	txBuilder := NewTransactionBuilder0("", nil, 0)
