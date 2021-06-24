@@ -111,7 +111,7 @@ func (t TableType) ValidateType() bool {
 	return t <= TableType_INCOME_CELL ||
 		(t >= TableType_CONFIG_CELL_ACCOUNT && t <= TableType_CONFIG_CELL_RECORD_NAMESPACE) ||
 		t == TableType_CONFIG_CELL_PreservedAccount00 ||
-		(t >=TableType_CONFIG_CELL_CharSetEmoji && t <= TableType_CONFIG_CELL_CharSetEn)
+		(t >=TableType_CONFIG_CELL_CharSetEmoji && t <= TableType_CONFIG_CELL_CharSetHanT)
 }
 const (
 	TableType_ACTION       TableType = 0
@@ -138,6 +138,8 @@ const (
 	TableType_CONFIG_CELL_CharSetEmoji TableType = 100000
 	TableType_CONFIG_CELL_CharSetDigit TableType = 100001
 	TableType_CONFIG_CELL_CharSetEn TableType = 100002
+	TableType_CONFIG_CELL_CharSetHanS TableType = 100003
+	TableType_CONFIG_CELL_CharSetHanT TableType = 100004
 	// TableType_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
