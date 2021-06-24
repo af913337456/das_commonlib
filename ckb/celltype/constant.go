@@ -137,9 +137,9 @@ const (
 
 	TableType_CONFIG_CELL_CharSetEmoji TableType = 100000
 	TableType_CONFIG_CELL_CharSetDigit TableType = 100001
-	TableType_CONFIG_CELL_CharSetEn TableType = 100002
-	TableType_CONFIG_CELL_CharSetHanS TableType = 100003
-	TableType_CONFIG_CELL_CharSetHanT TableType = 100004
+	TableType_CONFIG_CELL_CharSetEn    TableType = 100002
+	TableType_CONFIG_CELL_CharSetHanS  TableType = 100003
+	TableType_CONFIG_CELL_CharSetHanT  TableType = 100004
 	// TableType_CONFIG_CELL_BLOOM_FILTER TableType = 11
 )
 
