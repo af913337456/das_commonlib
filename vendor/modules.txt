@@ -70,6 +70,9 @@ github.com/golang/snappy
 github.com/gorilla/websocket
 # github.com/hashicorp/go-uuid v1.0.2
 github.com/hashicorp/go-uuid
+# github.com/hashicorp/golang-lru v0.5.4
+github.com/hashicorp/golang-lru
+github.com/hashicorp/golang-lru/simplelru
 # github.com/jcmturner/gofork v1.0.0
 github.com/jcmturner/gofork/encoding/asn1
 github.com/jcmturner/gofork/x/crypto/pbkdf2
@@ -86,13 +89,13 @@ github.com/klauspost/compress/fse
 # github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
 github.com/minio/blake2b-simd
 # github.com/nervosnetwork/ckb-sdk-go v0.3.1-0.20210330153910-1d9878636bf6
+github.com/nervosnetwork/ckb-sdk-go/indexer
+github.com/nervosnetwork/ckb-sdk-go/rpc
+github.com/nervosnetwork/ckb-sdk-go/types
 github.com/nervosnetwork/ckb-sdk-go/address
 github.com/nervosnetwork/ckb-sdk-go/crypto
 github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b
-github.com/nervosnetwork/ckb-sdk-go/indexer
-github.com/nervosnetwork/ckb-sdk-go/types
 github.com/nervosnetwork/ckb-sdk-go/utils
-github.com/nervosnetwork/ckb-sdk-go/rpc
 github.com/nervosnetwork/ckb-sdk-go/crypto/bech32
 github.com/nervosnetwork/ckb-sdk-go/crypto/secp256k1
 github.com/nervosnetwork/ckb-sdk-go/transaction
@@ -109,6 +112,8 @@ github.com/rcrowley/go-metrics
 github.com/rs/cors
 # github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521
 github.com/rs/xhandler
+# github.com/shopspring/decimal v1.2.0
+github.com/shopspring/decimal
 # github.com/steakknife/bloomfilter v0.0.0-20180922174646-6819c0d2a570
 github.com/steakknife/bloomfilter
 # github.com/steakknife/hamming v0.0.0-20180906055917-c99c65617cd3

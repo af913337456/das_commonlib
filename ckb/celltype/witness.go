@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/DeAccountSystems/das_commonlib/ckb/gotype"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
@@ -282,16 +283,25 @@ func registerFee(price, quote, discount uint64) uint64 {
 	return retVal
 }
 
-func CalPreAccountCellCap(years uint, price, quote, discountRate, accountCellBaseCap,prepareFeeCap uint64, account DasAccount, isRenew bool) uint64 {
+func CalPreAccountCellCap(years uint, price, quote, discountRate uint64, configCell *gotype.ConfigCell, account DasAccount, isRenew bool) (uint64,error) {
 	registerYearFee := registerFee(price, quote, discountRate) * uint64(years)
 	if isRenew {
-		return registerYearFee
+		return registerYearFee, nil
 	}
-	return registerYearFee + AccountCellRegisterCap(accountCellBaseCap,prepareFeeCap,account)
+	accountRegisterFee,err := AccountCellRegisterCap(configCell,account)
+	return registerYearFee + accountRegisterFee, err
 }
 
-func AccountCellRegisterCap(accountCellBaseCap,prepareFeeCap uint64,account DasAccount) uint64 {
-	return accountCellBaseCap + uint64(len(account.Bytes())) * OneCkb + prepareFeeCap
+func AccountCellRegisterCap(configCell *gotype.ConfigCell,account DasAccount) (uint64,error) {
+	accountCellBaseCap,err := configCell.AccountCellBaseCap()
+	if err != nil {
+		return 0, fmt.Errorf("AccountCellBaseCap err: %s", err.Error())
+	}
+	accountCellPrepareCap,err := configCell.AccountCellPrepareCap()
+	if err != nil {
+		return 0, fmt.Errorf("AccountCellPrepareCap err: %s", err.Error())
+	}
+	return accountCellBaseCap + uint64(len(account.Bytes())) * OneCkb + accountCellPrepareCap, nil
 }
 
 func CalBuyAccountYearSec(years uint) int64 {

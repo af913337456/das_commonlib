@@ -21,6 +21,7 @@ require (
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.8.1
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
+	github.com/shopspring/decimal v1.2.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c
 	github.com/wechatpay-apiv3/wechatpay-go v0.1.3
