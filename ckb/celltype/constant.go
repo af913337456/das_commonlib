@@ -15,8 +15,8 @@ const (
 	witnessDasCharLen = 3
 	witnessDasTableTypeEndIndex = 7
 )
-const oneDaySec = uint64(24 * 3600)
-const oneYearDays = uint64(365)
+const OneDaySec = uint64(24 * 3600)
+const OneYearDays = uint64(365)
 const CellVersionByteLen = 4
 const MoleculeBytesHeaderSize = 4
 const OneCkb = uint64(1e8)

@@ -7,7 +7,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/DeAccountSystems/das_commonlib/ckb/gotype"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
@@ -265,49 +264,6 @@ func CalAccountSpend(account DasAccount) uint64 {
 	return uint64(len([]byte(account))) * OneCkb
 }
 
-func registerFee(price, quote, discount uint64) uint64 {
-	// CKB 年费 = CKB 年费 - (CKB 年费 * 折扣率 / 10000)
-	if discount >= DiscountRateBase {
-		discount = DiscountRateBase - 1
-	}
-	var retVal uint64
-	if price < quote {
-		retVal = (price * OneCkb) / quote
-	} else {
-		retVal = (price / quote) * OneCkb
-	}
-	if discount == 0 {
-		return retVal
-	}
-	retVal = retVal - (retVal*discount)/DiscountRateBase
-	return retVal
-}
-
-func CalPreAccountCellCap(years uint, price, quote, discountRate uint64, configCell *gotype.ConfigCell, account DasAccount, isRenew bool) (uint64,error) {
-	registerYearFee := registerFee(price, quote, discountRate) * uint64(years)
-	if isRenew {
-		return registerYearFee, nil
-	}
-	accountRegisterFee,err := AccountCellRegisterCap(configCell,account)
-	return registerYearFee + accountRegisterFee, err
-}
-
-func AccountCellRegisterCap(configCell *gotype.ConfigCell,account DasAccount) (uint64,error) {
-	accountCellBaseCap,err := configCell.AccountCellBaseCap()
-	if err != nil {
-		return 0, fmt.Errorf("AccountCellBaseCap err: %s", err.Error())
-	}
-	accountCellPrepareCap,err := configCell.AccountCellPrepareCap()
-	if err != nil {
-		return 0, fmt.Errorf("AccountCellPrepareCap err: %s", err.Error())
-	}
-	return accountCellBaseCap + uint64(len(account.Bytes())) * OneCkb + accountCellPrepareCap, nil
-}
-
-func CalBuyAccountYearSec(years uint) int64 {
-	return OneYearSec * int64(years)
-}
-
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)
@@ -513,21 +469,6 @@ func ChangeMoleculeData(changeType DataEntityChangeType, index uint32, originWit
 	newDataBytes := (&newData).AsSlice()
 	newWitnessData := NewDasWitnessData(witnessObj.TableType, newDataBytes)
 	return newWitnessData.ToWitness(), nil
-}
-
-func CalAccountCellExpiredAt(param CalAccountCellExpiredAtParam, registerAt int64) (uint64, error) {
-	// fmt.Println("CalAccountCellExpiredAt Param ====>", param.Json())
-	if param.PreAccountCellCap < param.AccountCellCap+param.RefCellCap {
-		return 0, fmt.Errorf("CalAccountCellExpiredAt invalid cap, preAccCell: %d, accCell: %d", param.PreAccountCellCap, param.AccountCellCap)
-	} else {
-		paid := param.PreAccountCellCap - param.AccountCellCap - param.RefCellCap
-		registerFee := registerFee(param.PriceConfigNew, param.Quote, param.DiscountRate)
-		durationInt := paid * oneYearDays / registerFee * oneDaySec
-		// fmt.Println("CalAccountCellExpiredAt registerFee ====>", registerFee)
-		// fmt.Println("CalAccountCellExpiredAt storageFee ====>", paid)
-		// fmt.Println("CalAccountCellExpiredAt duration   ====>", durationInt)
-		return uint64(registerAt) + durationInt, nil // 1648195213
-	}
 }
 
 func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *types.Script) (LockScriptType, error) {
