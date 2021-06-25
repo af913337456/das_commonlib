@@ -32,6 +32,11 @@ const MinAccountCharsLen = 2
 const DiscountRateBase = 10000
 const DasLockArgsMinBytesLen = 1 + 20 + 1 + 20
 
+const (
+	DasCellDataVersion1 = uint32(1)
+	DasCellDataVersion2 = uint32(2)
+)
+
 var (
 	NullDasLockManagerArg = make([]byte,DasLockArgsMinBytesLen / 2 -1)
 	RootAccountDataAccountByte = make([]byte,29)

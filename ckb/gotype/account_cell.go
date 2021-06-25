@@ -21,8 +21,8 @@ import (
 
 type AccountCell struct {
 	CellCap       uint64                     `json:"cell_cap"`
-	AccountId     celltype.DasAccountId      `json:"account_id"`
 	Status        uint8                      `json:"status"`
+	AccountId     celltype.DasAccountId      `json:"account_id"`
 	Point         types.OutPoint             `json:"point"`
 	WitnessStatus celltype.AccountCellStatus `json:"witness_status"`
 	Data          []byte                     `json:"-"`
@@ -128,7 +128,7 @@ func (a *AccountCell) GetOldAccountCellData() (*celltype.AccountCellData, error)
 	if err != nil {
 		return nil, fmt.Errorf("GetOldAccountCellData DataFromSlice err: %s", err.Error())
 	}
-	cellData, err := data.New().IntoDataEntity()
+	cellData, err := data.New().IntoDataEntity() // outside use it to fill input position, means old data
 	if err != nil {
 		// old no data, get from dep
 		cellData, err = data.Dep().IntoDataEntity()
@@ -136,11 +136,7 @@ func (a *AccountCell) GetOldAccountCellData() (*celltype.AccountCellData, error)
 			return nil, fmt.Errorf("GetOldAccountCellData dep.IntoDataEntity err: %s", err.Error())
 		}
 	}
-	oldAccountCellData, err := celltype.AccountCellDataFromSlice(cellData.Entity().RawData(), false)
-	if err != nil {
-		return nil, fmt.Errorf("GetOldAccountCellData dep AccountCellDataFromSlice err: %s", err.Error())
-	}
-	return oldAccountCellData, nil
+	return compatibleParse(cellData)
 }
 
 func (a *AccountCell) GetNewAccountCellData() (*celltype.AccountCellData, error) {
@@ -154,9 +150,40 @@ func (a *AccountCell) GetNewAccountCellData() (*celltype.AccountCellData, error)
 	if err != nil {
 		return nil, fmt.Errorf("GetNewAccountCellData new.IntoDataEntity err: %s", err.Error())
 	}
-	accountCellData, err := celltype.AccountCellDataFromSlice(cellData.Entity().RawData(), false)
+	return compatibleParse(cellData)
+}
+
+func compatibleParse(cellData *celltype.DataEntity) (*celltype.AccountCellData, error) {
+	var accountCellData *celltype.AccountCellData
+	version,err := celltype.MoleculeU32ToGo(cellData.Version().RawData())
 	if err != nil {
-		return nil, fmt.Errorf("GetNewAccountCellData AccountCellDataFromSlice err: %s", err.Error())
+		return nil, fmt.Errorf("compatibleParse MoleculeU32ToGo index err: %s", err.Error())
+	}
+	switch version {
+	case celltype.DasCellDataVersion1:
+		if accountCellDataV1, err := celltype.AccountCellDataV1FromSlice(cellData.Entity().RawData(), false); err != nil {
+			return nil, fmt.Errorf("compatibleParse AccountCellDataV1FromSlice err: %s", err.Error())
+		} else {
+			cellData := celltype.NewAccountCellDataBuilder().
+				Records(*accountCellDataV1.Records()).
+				Id(*accountCellDataV1.Id()).
+				Status(*accountCellDataV1.Status()).
+				Account(*accountCellDataV1.Account()).
+				RegisteredAt(*accountCellDataV1.RegisteredAt()).
+				LastTransferAccountAt(celltype.TimestampDefault()).
+				LastEditRecordsAt(celltype.TimestampDefault()).
+				LastEditManagerAt(celltype.TimestampDefault()).
+				Build()
+			accountCellData = &cellData
+		}
+		break
+	case celltype.DasCellDataVersion2:
+		if accountCellData, err = celltype.AccountCellDataFromSlice(cellData.Entity().RawData(), false); err != nil {
+			return nil, fmt.Errorf("compatibleParse AccountCellDataFromSlice err: %s", err.Error())
+		}
+		break
+	default:
+		return nil, fmt.Errorf("compatibleParse invalid version: %d",version)
 	}
 	return accountCellData, nil
 }
@@ -331,10 +358,25 @@ func (a *AccountCell) UpdateAccountCellInfos(
 		NewBuilder: builder,
 		ExpiredAt:  &expiredAt,
 	}
-	var newData celltype.AccountCellData
-	if useOld := callback(&cbp); useOld {
-		newData = *oldData
-	} else {
+	var (
+		newData celltype.AccountCellData
+		useOld = false
+	)
+	if callback != nil {
+		cbp.NewBuilder.
+			Id(*cbp.OldData.Id()).
+			Account(*cbp.OldData.Account()).
+			Status(*cbp.OldData.Status()).
+			RegisteredAt(*cbp.OldData.RegisteredAt()).
+			Records(*cbp.OldData.Records()).
+			LastTransferAccountAt(*cbp.OldData.LastTransferAccountAt()).
+			LastEditRecordsAt(*cbp.OldData.LastEditRecordsAt()).
+			LastEditManagerAt(*cbp.OldData.LastEditManagerAt())
+		if useOld = callback(&cbp); useOld {
+			newData = *oldData
+		}
+	}
+	if !useOld {
 		newData = builder.Build()
 	}
 	nextId, err := a.NextAccountId()
@@ -402,6 +444,10 @@ func (a *AccountCell) JudgeExpireStatus(expiredCheck, frozenCheck bool,frozenRan
 		}
 	}
 	return expired, frozen, nil
+}
+
+func VersionCompatibleAccountCellDataFromSlice(cellData *celltype.DataEntity) (*celltype.AccountCellData, error) {
+	return compatibleParse(cellData)
 }
 
 func BytesToAccountCellTxValue(bys []byte) (*AccountCell, error) {
