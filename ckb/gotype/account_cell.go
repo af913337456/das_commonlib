@@ -21,8 +21,8 @@ import (
 
 type AccountCell struct {
 	CellCap       uint64                     `json:"cell_cap"`
-	Status        uint8                      `json:"status"`
 	AccountId     celltype.DasAccountId      `json:"account_id"`
+	Status        uint8                      `json:"status"`
 	Point         types.OutPoint             `json:"point"`
 	WitnessStatus celltype.AccountCellStatus `json:"witness_status"`
 	Data          []byte                     `json:"-"`
