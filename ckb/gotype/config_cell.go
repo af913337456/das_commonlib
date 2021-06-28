@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/DeAccountSystems/das_commonlib/ckb/gotype/configcells"
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
+	"github.com/DeAccountSystems/das_commonlib/ckb/gotype/configcells"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"github.com/shopspring/decimal"
 	"golang.org/x/sync/syncmap"
@@ -166,8 +166,8 @@ func (c *ConfigCell) IncomeCellBaseCap() (uint64, error) {
 	return val, nil
 }
 
-func (c *ConfigCell) IncomeCellMinTransferValue() (uint32, error) {
-	val, err := celltype.MoleculeU32ToGo(c.income().MinTransferCapacity().RawData())
+func (c *ConfigCell) IncomeCellMinTransferValue() (uint64, error) {
+	val, err := celltype.MoleculeU64ToGo(c.income().MinTransferCapacity().RawData())
 	if err != nil {
 		return 0, err
 	}
@@ -350,7 +350,7 @@ func (c *ConfigCell) GetAccountPriceConfig(account celltype.DasAccount) (*cellty
 	return nil, fmt.Errorf("account price not found, account: %s", account)
 }
 
-func (c *ConfigCell) GetAccountPrice(account celltype.DasAccount,isRenew bool) (*celltype.PriceConfig, uint64, error) {
+func (c *ConfigCell) GetAccountPrice(account celltype.DasAccount, isRenew bool) (*celltype.PriceConfig, uint64, error) {
 	price, err := c.GetAccountPriceConfig(account)
 	if err != nil {
 		return nil, 0, err
@@ -395,7 +395,7 @@ type ProfitRate struct {
 	Channel        float64
 	ProposeCreate  float64
 	ProposeConfirm float64
-	MergeRate float64
+	MergeRate      float64
 }
 
 func ParseRegisterProfitConfig(configCell *ConfigCell) (*ProfitRate, error) {
@@ -411,14 +411,14 @@ func ParseRegisterProfitConfig(configCell *ConfigCell) (*ProfitRate, error) {
 	if inviterRate+channelRate+propoCreate+propConfirm+mergeFeeRat > 1 {
 		return nil, fmt.Errorf("invalid profitRate, more than 100,"+
 			" inviter: %f, channel: %f, creator: %f, confirm: %f, merge: %f",
-			inviterRate, channelRate, propoCreate, propConfirm,mergeFeeRat)
+			inviterRate, channelRate, propoCreate, propConfirm, mergeFeeRat)
 	}
 	return &ProfitRate{
 		Invite:         inviterRate,
 		Channel:        channelRate,
 		ProposeCreate:  propoCreate,
 		ProposeConfirm: propConfirm,
-		MergeRate: 		mergeFeeRat,
+		MergeRate:      mergeFeeRat,
 	}, nil
 }
 
