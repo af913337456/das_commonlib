@@ -142,6 +142,22 @@ func (c *ConfigCell) EditRecordsThrottle() (uint32, error) {
 	return val, nil
 }
 
+func (c *ConfigCell) EditManagerThrottle() (uint32, error) {
+	val, err := celltype.MoleculeU32ToGo(c.account().EditManagerThrottle().RawData())
+	if err != nil {
+		return 0, err
+	}
+	return val, nil
+}
+
+func (c *ConfigCell) TransferThrottle() (uint32, error) {
+	val, err := celltype.MoleculeU32ToGo(c.account().TransferAccountThrottle().RawData())
+	if err != nil {
+		return 0, err
+	}
+	return val, nil
+}
+
 func (c *ConfigCell) IncomeCellBaseCap() (uint64, error) {
 	val, err := celltype.MoleculeU64ToGo(c.income().BasicCapacity().RawData())
 	if err != nil {
