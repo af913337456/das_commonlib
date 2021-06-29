@@ -1,4 +1,4 @@
-package chainpool
+package txpool
 
 import (
 	"context"
