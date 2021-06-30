@@ -94,6 +94,22 @@ func (c *ConfigCell) profitRate() *celltype.ConfigCellProfitRate {
 	return (v.(configcells.IConfigChild)).MocluObj().(*celltype.ConfigCellProfitRate)
 }
 
+func (c *ConfigCell) CKBSingleSoCellDepHash() types.Hash {
+	return types.BytesToHash(c.main().DasLockOutPointTable().CkbSignall().TxHash().RawData())
+}
+
+func (c *ConfigCell) CKBMultiSoCellDepHash() types.Hash {
+	return types.BytesToHash(c.main().DasLockOutPointTable().CkbMultisign().TxHash().RawData())
+}
+
+func (c *ConfigCell) ETHSoCellDepHash() types.Hash {
+	return types.BytesToHash(c.main().DasLockOutPointTable().Eth().TxHash().RawData())
+}
+
+func (c *ConfigCell) TRONSoCellDepHash() types.Hash {
+	return types.BytesToHash(c.main().DasLockOutPointTable().Tron().TxHash().RawData())
+}
+
 func (c *ConfigCell) AccountCellBaseCap() (uint64, error) {
 	val, err := celltype.MoleculeU64ToGo(c.account().BasicCapacity().RawData())
 	if err != nil {

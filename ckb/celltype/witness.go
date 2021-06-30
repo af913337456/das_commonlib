@@ -314,23 +314,43 @@ func IsVersion2AccountCell(cellData *AccountCellData) bool {
 	emptyETA := bytes.Compare(cellData.LastTransferAccountAt().RawData(),empty_TS.RawData()) == 0
 	return emptyERA && emptyEMA && emptyETA
 }
-func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolecule, oldMolecule, newMolecule ICellData) (*Data,error) {
+func version(molecule ICellData) (*Uint32,error) {
 	version := GoUint32ToMoleculeU32(DasCellDataVersion1) // default is version 1
-	switch reflect.TypeOf(newMolecule) {
+	if IsInterfaceNil(molecule) {
+		return &version, nil
+	}
+	switch reflect.TypeOf(molecule) {
 	case accountCellType:
-		if accountCellData,err := AccountCellDataFromSlice(newMolecule.AsSlice(),false); err != nil {
+		if accountCellData,err := AccountCellDataFromSlice(molecule.AsSlice(),false); err != nil {
 			return nil, fmt.Errorf("AccountCellDataFromSlice err: %s",err.Error())
 		} else if IsVersion2AccountCell(accountCellData) { // version 2
 			version = GoUint32ToMoleculeU32(DasCellDataVersion2)
 		}
 		break
 	}
+	return &version, nil
+}
+func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolecule, oldMolecule, newMolecule ICellData) (*Data,error) {
+	var (
+		versionDep,depErr = version(depMolecule)
+		versionOld,oldErr = version(oldMolecule)
+		versionNew,newErr = version(newMolecule)
+	)
+	if depErr != nil {
+		return nil, fmt.Errorf("parse version depErr: %s",depErr.Error())
+	}
+	if oldErr != nil {
+		return nil, fmt.Errorf("parse version oldErr: %s",oldErr.Error())
+	}
+	if newErr != nil {
+		return nil, fmt.Errorf("parse version newErr: %s",newErr.Error())
+	}
 	var (
 		depData DataEntity
 		oldData DataEntity
 		newData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(newIndex)).
-			Version(version).
+			Version(*versionNew).
 			Entity(GoBytesToMoleculeBytes(newMolecule.AsSlice())).
 			Build()
 		dataBuilder = NewDataBuilder().
@@ -339,7 +359,7 @@ func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 	if !IsInterfaceNil(depMolecule) {
 		depData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(depIndex)).
-			Version(version).
+			Version(*versionDep).
 			Entity(GoBytesToMoleculeBytes(depMolecule.AsSlice())).
 			Build()
 		dataBuilder.Dep(NewDataEntityOptBuilder().Set(depData).Build())
@@ -349,7 +369,7 @@ func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 	if !IsInterfaceNil(oldMolecule) {
 		oldData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(oldIndex)).
-			Version(version).
+			Version(*versionOld).
 			Entity(GoBytesToMoleculeBytes(oldMolecule.AsSlice())).
 			Build()
 		dataBuilder.Old(NewDataEntityOptBuilder().Set(oldData).Build())
