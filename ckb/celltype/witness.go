@@ -183,22 +183,6 @@ func AccountCharsToAccount(accountChars AccountChars) DasAccount {
 }
 
 func AccountCharsToAccountId(accountChars AccountChars) DasAccountId {
-	/**
-	[
-		{
-			emoji
-			[]byte("🌹")
-		},
-		{
-			en
-			[]byte("a")
-		},
-		{
-			zh
-			[]byte("你")
-		}
-	]
-	*/
 	index := uint(0)
 	accountCharsSize := accountChars.ItemCount()
 	accountRawBytes := []byte{}
