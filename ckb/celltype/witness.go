@@ -342,9 +342,10 @@ func versionAndSlice(molecule ICellData) (*Uint32,[]byte,error) {
 	}
 	switch reflect.TypeOf(molecule) {
 	case versionAccountCellType:
-		versionUint32 := common.BytesToUint32(molecule.AsSlice()[:4])
+		sliceBytes := molecule.AsSlice()
+		versionUint32 := common.BytesToUint32(sliceBytes[:4])
 		version = GoUint32ToMoleculeU32(versionUint32)
-		return &version, molecule.AsSlice()[4:],nil
+		return &version, sliceBytes[4:],nil
 	case accountCellType:
 		if accountCellData,err := AccountCellDataFromSlice(molecule.AsSlice(),false); err != nil {
 			return nil, nil, fmt.Errorf("AccountCellDataFromSlice err: %s",err.Error())
