@@ -37,6 +37,10 @@ func BytesToUint32_LittleEndian(buf []byte) uint32 {
 	return binary.BigEndian.Uint32(buf)
 }
 
+func BytesToUint32(buf []byte) uint32 {
+	return binary.BigEndian.Uint32(buf)
+}
+
 func BytesToInt64(buf []byte) int64 {
 	return int64(binary.BigEndian.Uint64(buf))
 }
