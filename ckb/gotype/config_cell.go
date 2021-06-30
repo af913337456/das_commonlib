@@ -118,6 +118,14 @@ func (c *ConfigCell) AccountCellBaseCap() (uint64, error) {
 	return val, nil
 }
 
+func (c *ConfigCell) PreparedFeeCapacity() (uint64, error) {
+	val, err := celltype.MoleculeU64ToGo(c.account().PreparedFeeCapacity().RawData())
+	if err != nil {
+		return 0, err
+	}
+	return val, nil
+}
+
 func (c *ConfigCell) AccountCellPrepareCap() (uint64, error) {
 	val, err := celltype.MoleculeU64ToGo(c.account().PreparedFeeCapacity().RawData())
 	if err != nil {
