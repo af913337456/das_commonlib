@@ -291,7 +291,7 @@ func (a *AccountCell) TypeInputCell(checkOwnerSign bool) *celltype.TypeInputCell
 type UpdateAccountCellInfo struct {
 	OldData           *celltype.VersionAccountCell
 	OutputAccountCell *celltype.AccountCell
-	NewData           *celltype.VersionAccountCell
+	NewData           *celltype.AccountCellData
 }
 
 func (a *AccountCell) setOwner(indexType celltype.DasLockCodeHashIndexType, args []byte) {
@@ -396,11 +396,7 @@ func (a *AccountCell) UpdateAccountCellInfos(
 	newFullData := &celltype.AccountCellTxDataParam{
 		NextAccountId: nextId,
 		ExpiredAt:     uint64(*cbp.ExpiredAt),
-		AccountInfo:   celltype.VersionAccountCell{
-			Version:     celltype.LatestVersion(),
-			OriginSlice: newData.AsSlice(),
-			CellData:    &newData,
-		},
+		AccountInfo:   newData,
 	}
 	if setOwner != nil {
 		ownerIndexType, args := setOwner()
@@ -416,11 +412,7 @@ func (a *AccountCell) UpdateAccountCellInfos(
 	return &UpdateAccountCellInfo{
 		OldData:           oldData,
 		OutputAccountCell: celltype.NewAccountCell(celltype.DefaultAccountCellParam(testNet,newFullData, a.ToDasLockArgParam(),nil)),
-		NewData: 		   &celltype.VersionAccountCell{
-			Version:     celltype.LatestVersion(),
-			OriginSlice: newData.AsSlice(),
-			CellData:    &newData,
-		},
+		NewData:           &newData,
 	}, nil
 }
 
@@ -435,13 +427,13 @@ func (a *AccountCell) UpdateAccountCellNextId(testNet bool,nextAccountId celltyp
 	}
 	newData := &celltype.AccountCellTxDataParam{
 		NextAccountId: nextAccountId,
-		AccountInfo:   *oldData,
+		AccountInfo:   *oldData.CellData,
 		ExpiredAt:     uint64(expired),
 	}
 	return &UpdateAccountCellInfo{
 		OldData:           oldData,
 		OutputAccountCell: celltype.NewAccountCell(celltype.DefaultAccountCellParam(testNet,newData, a.ToDasLockArgParam(),a.Data)),
-		NewData:           oldData,
+		NewData:           oldData.CellData,
 	}, nil
 }
 
