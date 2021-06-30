@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/DeAccountSystems/das_commonlib/common"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
@@ -56,6 +57,12 @@ func GoUint32ToMoleculeU32(i uint32) Uint32 {
 	bytebuf := bytes.NewBuffer([]byte{})
 	_ = binary.Write(bytebuf, binary.LittleEndian, i)
 	return *Uint32FromSliceUnchecked(bytebuf.Bytes())
+}
+
+func GoUint32ToBytes(i uint32) []byte {
+	bytebuf := bytes.NewBuffer([]byte{})
+	_ = binary.Write(bytebuf, binary.LittleEndian, i)
+	return bytebuf.Bytes()
 }
 
 func GoUint64ToBytes(i uint64) []byte {
@@ -304,8 +311,22 @@ func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, 
 
 var (
 	accountCellType = reflect.TypeOf(&AccountCellData{})
+	versionAccountCellType = reflect.TypeOf(&VersionAccountCell{})
 	accountCellVersion1FieldCount = uint(5)
 )
+type VersionAccountCell struct {
+	Version     uint32
+	OriginSlice []byte
+	CellData    *AccountCellData
+}
+func (v *VersionAccountCell) AsSlice() []byte {
+	versionBys := GoUint32ToBytes(v.Version)
+	tempByte := make([]byte,len(versionBys) +len(v.OriginSlice))
+	srcByte := append(versionBys,v.OriginSlice...)
+	copy(tempByte,srcByte)
+	return tempByte
+}
+
 func IsVersion2AccountCell(cellData *AccountCellData) bool {
 	if cellData.Len() == accountCellVersion1FieldCount {return true}
 	empty_TS := TimestampDefault()
@@ -314,27 +335,31 @@ func IsVersion2AccountCell(cellData *AccountCellData) bool {
 	emptyETA := bytes.Compare(cellData.LastTransferAccountAt().RawData(),empty_TS.RawData()) == 0
 	return emptyERA && emptyEMA && emptyETA
 }
-func version(molecule ICellData) (*Uint32,error) {
+func versionAndSlice(molecule ICellData) (*Uint32,[]byte,error) {
 	version := GoUint32ToMoleculeU32(DasCellDataVersion1) // default is version 1
 	if IsInterfaceNil(molecule) {
-		return &version, nil
+		return &version, nil, nil
 	}
 	switch reflect.TypeOf(molecule) {
+	case versionAccountCellType:
+		versionUint32 := common.BytesToUint32(molecule.AsSlice()[:4])
+		version = GoUint32ToMoleculeU32(versionUint32)
+		return &version, molecule.AsSlice()[4:],nil
 	case accountCellType:
 		if accountCellData,err := AccountCellDataFromSlice(molecule.AsSlice(),false); err != nil {
-			return nil, fmt.Errorf("AccountCellDataFromSlice err: %s",err.Error())
+			return nil, nil, fmt.Errorf("AccountCellDataFromSlice err: %s",err.Error())
 		} else if IsVersion2AccountCell(accountCellData) { // version 2
 			version = GoUint32ToMoleculeU32(DasCellDataVersion2)
 		}
 		break
 	}
-	return &version, nil
+	return &version, molecule.AsSlice(),nil
 }
 func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolecule, oldMolecule, newMolecule ICellData) (*Data,error) {
 	var (
-		versionDep,depErr = version(depMolecule)
-		versionOld,oldErr = version(oldMolecule)
-		versionNew,newErr = version(newMolecule)
+		versionDep,sliceBytesDep,depErr = versionAndSlice(depMolecule)
+		versionOld,sliceBytesOld,oldErr = versionAndSlice(oldMolecule)
+		versionNew,sliceBytesNew,newErr = versionAndSlice(newMolecule)
 	)
 	if depErr != nil {
 		return nil, fmt.Errorf("parse version depErr: %s",depErr.Error())
@@ -351,7 +376,7 @@ func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 		newData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(newIndex)).
 			Version(*versionNew).
-			Entity(GoBytesToMoleculeBytes(newMolecule.AsSlice())).
+			Entity(GoBytesToMoleculeBytes(sliceBytesNew)).
 			Build()
 		dataBuilder = NewDataBuilder().
 				New(NewDataEntityOptBuilder().Set(newData).Build())
@@ -360,7 +385,7 @@ func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 		depData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(depIndex)).
 			Version(*versionDep).
-			Entity(GoBytesToMoleculeBytes(depMolecule.AsSlice())).
+			Entity(GoBytesToMoleculeBytes(sliceBytesDep)).
 			Build()
 		dataBuilder.Dep(NewDataEntityOptBuilder().Set(depData).Build())
 	} else {
@@ -370,7 +395,7 @@ func BuildDasCommonMoleculeDataObj(depIndex, oldIndex, newIndex uint32, depMolec
 		oldData = NewDataEntityBuilder().
 			Index(GoUint32ToMoleculeU32(oldIndex)).
 			Version(*versionOld).
-			Entity(GoBytesToMoleculeBytes(oldMolecule.AsSlice())).
+			Entity(GoBytesToMoleculeBytes(sliceBytesOld)).
 			Build()
 		dataBuilder.Old(NewDataEntityOptBuilder().Set(oldData).Build())
 	} else {
