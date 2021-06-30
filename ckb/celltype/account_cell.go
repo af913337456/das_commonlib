@@ -157,8 +157,8 @@ func (c *AccountCell) accountCellOutputData() ([]byte, error) {
 	dataBytes := []byte{}
 	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
 
-	account := AccountCharsToAccount(*newData.AccountInfo.Account())
-	accountId := newData.AccountInfo.Id()
+	account := AccountCharsToAccount(*newData.AccountInfo.CellData.Account())
+	accountId := newData.AccountInfo.CellData.Id()
 
 	// fmt.Println("accountCellOutputData -------accountId------> ", hex.EncodeToString(accountId.RawData()))
 	// fmt.Println("accountCellOutputData -------account__------> ", account)
