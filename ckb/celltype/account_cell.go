@@ -155,7 +155,7 @@ func DefaultAccountCellDataBytes(accountId, nextAccountId DasAccountId) []byte {
 func (c *AccountCell) accountCellOutputData() ([]byte, error) {
 	newData := c.p.TxDataParam
 	dataBytes := []byte{}
-	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.AsSlice())
+	accountInfoDataBytes, _ := blake2b.Blake256(newData.AccountInfo.OriginSlice)
 
 	account := AccountCharsToAccount(*newData.AccountInfo.CellData.Account())
 	accountId := newData.AccountInfo.CellData.Id()
