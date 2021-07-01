@@ -463,8 +463,9 @@ func BindConfigCellDataFromTx(tx *types.Transaction, configCell *ConfigCell) err
 			},
 			DepType: types.DepTypeCode,
 		}
+		configTableType := witnessParseObj.WitnessObj.TableType
 		cellData := witnessParseObj.MoleculeNewDataEntity.Entity().RawData()
-		v, ok := configCell.ConfigCellChildMap.Load(witnessParseObj.WitnessObj.TableType)
+		v, ok := configCell.ConfigCellChildMap.Load(configTableType)
 		if !ok {
 			return false, nil
 		}
@@ -473,6 +474,12 @@ func BindConfigCellDataFromTx(tx *types.Transaction, configCell *ConfigCell) err
 			WitnessData:  rawWitnessData,
 			MoleculeData: cellData,
 		})
+		if configTableType == celltype.TableType_CONFIG_CELL_MAIN {
+			celltype.CKBSoScriptDep.TxHash  = configCell.CKBSingleSoCellDepHash()
+			celltype.ETHSoScriptDep.TxHash  = configCell.ETHSoCellDepHash()
+			celltype.TRONSoScriptDep.TxHash = configCell.TRONSoCellDepHash()
+			celltype.CKBMultiSoScriptDep.TxHash  = configCell.CKBMultiSoCellDepHash()
+		}
 		return false, nil
 	})
 	return err

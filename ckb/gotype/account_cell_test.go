@@ -28,13 +28,13 @@ func Test_ParseWitnessToAccountCell(t *testing.T) {
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Println(accountCellDataNew.Len(),celltype.IsVersion2AccountCell(accountCellDataNew))
+		fmt.Println(accountCellDataNew.CellData.Len(),celltype.IsVersion2AccountCell(accountCellDataNew.CellData))
 	}
 	accountCellDataOld,err := accountCell.GetOldAccountCellData()
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Println(accountCellDataOld.Len(),celltype.IsVersion2AccountCell(accountCellDataOld))
+		fmt.Println(accountCellDataOld.CellData.Len(),celltype.IsVersion2AccountCell(accountCellDataOld.CellData))
 	}
 }
 
