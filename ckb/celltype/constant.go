@@ -309,6 +309,7 @@ const (
 	Action_Config                = "config"
 	Action_AccountChain          = "init_account_chain"
 	Action_ApplyRegister         = "apply_register"
+	Action_RefundApply           = "apply_apply"
 	Action_PreRegister           = "pre_register"
 	Action_CreateWallet          = "create_wallet"
 	Action_DeleteWallet          = "delete_wallet"
