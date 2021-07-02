@@ -138,15 +138,15 @@ const (
 	TableType_PRE_ACCOUNT_CELL TableType = 5
 	TableType_INCOME_CELL 	   TableType = 6
 
-	TableType_CONFIG_CELL_ACCOUNT       TableType = 100
-	TableType_CONFIG_CELL_APPLY         TableType = 101
-	TableType_CONFIG_CELL_CHARSET         TableType = 102
-	TableType_CONFIG_CELL_INCOME         TableType = 103
+	TableType_CONFIG_CELL_ACCOUNT      TableType = 100
+	TableType_CONFIG_CELL_APPLY        TableType = 101
+	TableType_CONFIG_CELL_CHARSET      TableType = 102
+	TableType_CONFIG_CELL_INCOME       TableType = 103
 
 	TableType_CONFIG_CELL_MAIN         TableType = 104
-	TableType_CONFIG_CELL_PRICE         TableType = 105
-	TableType_CONFIG_CELL_PROPOSAL         TableType = 106
-	TableType_CONFIG_CELL_PROFITRATE         TableType = 107
+	TableType_CONFIG_CELL_PRICE        TableType = 105
+	TableType_CONFIG_CELL_PROPOSAL     TableType = 106
+	TableType_CONFIG_CELL_PROFITRATE   TableType = 107
 
 	TableType_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
 	TableType_CONFIG_CELL_PreservedAccount00     TableType = 150
