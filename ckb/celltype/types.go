@@ -17,6 +17,8 @@ import (
  * Description:
  */
 
+var DasActionWitness = NewDasWitnessData(TableType_ACTION, []byte{})
+
 type TypeInputCell struct {
 	InputIndex uint32          `json:"input_index"`
 	Input      types.CellInput `json:"input"`
@@ -68,8 +70,6 @@ func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
 		TableBys:  tempByte[witnessDasTableTypeEndIndex:],
 	}, nil
 }
-
-var DasActionWitness = NewDasWitnessData(TableType_ACTION, []byte{})
 
 func NewDasWitnessData(tableType TableType, tableBys []byte) *DASWitnessDataObj {
 	return &DASWitnessDataObj{
