@@ -47,6 +47,8 @@ func InitCkbWallet(privateKeyHex string, systemScript *utils.SystemScripts) (*Ck
 	}, nil
 }
 
+// payload = type(01) | code hash index(00) | pubkey Blake160
+// docs: https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0021-ckb-address-format/0021-ckb-address-format.md
 func GetShortAddressFromLockScriptArgs(args string,isTestNet bool) (string,error) {
 	prefix := PREFIX_MAINNET
 	if isTestNet {
@@ -57,8 +59,8 @@ func GetShortAddressFromLockScriptArgs(args string,isTestNet bool) (string,error
 		return "", err
 	}
 	payload := append([]byte{
-		byte(uint8(1)),
-		byte(uint8(0))},
+		byte(uint8(1)), 	// type
+		byte(uint8(0))}, 	// code_hash_index
 		hexStr.Bytes()...)
 	return encodeAddress(prefix,payload)
 }
