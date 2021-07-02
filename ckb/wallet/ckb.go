@@ -54,7 +54,7 @@ func GetShortAddressFromLockScriptArgs(args string,isTestNet bool) (string,error
 	if isTestNet {
 		prefix = PREFIX_TESTNET
 	}
-	hexStr, err := parseHexStr(args)
+	hexStr, err := toHexStrObj(args)
 	if err != nil {
 		return "", err
 	}
@@ -170,18 +170,18 @@ func encodeAddress(prefix string, payload []byte) (string, error) {
 	return addr, nil
 }
 
-type HexStr struct {
+type HexStrObj struct {
 	bytes  []byte
 	hexStr string
 }
 
-func parseHexStr(hexStr string) (*HexStr, error) {
+func toHexStrObj(hexStr string) (*HexStrObj, error) {
 	HexStrPrefix := "0x"
 	if !strings.HasPrefix(hexStr, HexStrPrefix) {
 		hexStr = HexStrPrefix + hexStr
 	}
 	if len(hexStr) == 2 {
-		return &HexStr{
+		return &HexStrObj{
 			bytes:  []byte{},
 			hexStr: HexStrPrefix,
 		}, nil
@@ -196,12 +196,12 @@ func parseHexStr(hexStr string) (*HexStr, error) {
 	if err != nil {
 		return nil, fmt.Errorf("DecodeString err: %s",err.Error())
 	}
-	return &HexStr{
+	return &HexStrObj{
 		bytes:  b,
 		hexStr: HexStrPrefix + body,
 	}, nil
 }
 
-func (hs *HexStr) Bytes() []byte {
+func (hs *HexStrObj) Bytes() []byte {
 	return hs.bytes
 }
