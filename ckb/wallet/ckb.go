@@ -161,7 +161,7 @@ func genCkbAddr(prefix string, blake160Addr []byte) (string,error) {
 func encodeAddress(prefix string, payload []byte) (string, error) {
 	payload, err := bech32.ConvertBits(payload, 8, 5, true)
 	if err != nil {
-		return "", fmt.Errorf("ConvertBits err: %s",err.Error())
+		return "", fmt.Errorf("bech32.ConvertBits err: %s",err.Error())
 	}
 	addr, err := bech32.Encode(prefix, payload)
 	if err != nil {
