@@ -1,9 +1,11 @@
 package gotype
 
 import (
+	"context"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
 	ckbTypes "github.com/nervosnetwork/ckb-sdk-go/types"
@@ -103,4 +105,69 @@ func PayTypeLockScripts(sysWallet *ckbTypes.Script, sysScripts *utils.SystemScri
 		return PayTypeLockScriptsRet{nil, nil, -1, dasLockParam, errors.New("invalid payType")}
 	}
 	return PayTypeLockScriptsRet{feeCellProviderScript, userScript, scriptType, dasLockParam, err}
+}
+
+func GetScriptTypeFromLockScript(ckbSysScript *utils.SystemScripts, lockScript *ckbTypes.Script) (celltype.LockScriptType, error) {
+	lockCodeHash := lockScript.CodeHash
+	switch lockCodeHash {
+	case ckbSysScript.SecpSingleSigCell.CellHash:
+		return celltype.ScriptType_User, nil
+	case celltype.DasAnyOneCanSendCellInfo.Out.CodeHash:
+		return celltype.ScriptType_Any, nil
+	case celltype.DasETHLockCellInfo.Out.CodeHash:
+		return celltype.ScriptType_ETH, nil
+	case celltype.DasBTCLockCellInfo.CodeHash:
+		return celltype.ScriptType_BTC, nil
+	default:
+		return -1, errors.New("invalid lockScript")
+	}
+}
+
+type ReqFindTargetTypeScriptParam struct {
+	Ctx       context.Context
+	RpcClient rpc.Client
+	InputList []*ckbTypes.CellInput
+	IsLock    bool
+	CodeHash  ckbTypes.Hash
+}
+type FindTargetTypeScriptRet struct {
+	Output *ckbTypes.CellOutput
+	Data   []byte
+	Tx     *ckbTypes.Transaction
+}
+
+func FindTargetTypeScriptByInputList(p *ReqFindTargetTypeScriptParam) (*FindTargetTypeScriptRet, error) {
+	codeHash := p.CodeHash
+	for _, item := range p.InputList {
+		tx, err := p.RpcClient.GetTransaction(p.Ctx, item.PreviousOutput.TxHash)
+		if err != nil {
+			return nil, fmt.Errorf("FindSenderLockScriptByInputList err: %s", err.Error())
+		}
+		size := len(tx.Transaction.Outputs)
+		for i := 0; i < size; i++ {
+			output := tx.Transaction.Outputs[i]
+			if p.IsLock {
+				if output.Lock != nil && output.Lock.CodeHash == codeHash &&
+					output.Lock.HashType == ckbTypes.HashTypeType && item.PreviousOutput.Index == uint(i) {
+					return &FindTargetTypeScriptRet{
+						Output: output,
+						Data:   tx.Transaction.OutputsData[i],
+						Tx:     tx.Transaction,
+					}, nil
+				}
+			} else {
+				if output.Type != nil &&
+					output.Type.CodeHash == codeHash &&
+					output.Type.HashType == ckbTypes.HashTypeType &&
+					item.PreviousOutput.Index == uint(i) {
+					return &FindTargetTypeScriptRet{
+						Output: output,
+						Data:   tx.Transaction.OutputsData[i],
+						Tx:     tx.Transaction,
+					}, nil
+				}
+			}
+		}
+	}
+	return nil, errors.New("FindSenderLockScriptByInputList not found")
 }

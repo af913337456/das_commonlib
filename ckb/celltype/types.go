@@ -51,7 +51,7 @@ type DASWitnessDataObj struct {
 func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
 	tempByte := make([]byte,len(rawData))
 	copy(tempByte,rawData)
-	if size := len(tempByte); size <= 8 { // header'size + min(data)'size
+	if size := len(tempByte); size <= 8 { // header's size + min(data)'s size
 		return nil, fmt.Errorf("invalid rawData size: %d", size)
 	}
 	dasStrTag := string(tempByte[:witnessDasCharLen])
