@@ -217,17 +217,6 @@ func MoleculeU32ToGoPercentage(bys []byte) (float64, error) {
 	return r, nil
 }
 
-func CalDasAwardCap(cap uint64, rate float64) (uint64, error) {
-	a := new(big.Rat).SetFloat64(float64(cap))
-	b := new(big.Rat).SetFloat64(rate)
-	r, _ := new(big.Rat).Mul(a, b).Float64()
-	return uint64(r), nil
-}
-
-func CalAccountSpend(account DasAccount) uint64 {
-	return uint64(len([]byte(account))) * OneCkb
-}
-
 func ParseTxWitnessToDasWitnessObj(rawData []byte) (*ParseDasWitnessBysDataObj, error) {
 	ret := &ParseDasWitnessBysDataObj{}
 	dasWitnessObj, err := NewDasWitnessDataFromSlice(rawData)
