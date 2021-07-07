@@ -126,7 +126,7 @@ const ConfigCellPreservedAccount00 = 150,
 func (t TableType) ValidateType() bool {
 	return t <= TableType_INCOME_CELL ||
 		(t >= TableType_CONFIG_CELL_ACCOUNT && t <= TableType_CONFIG_CELL_RECORD_NAMESPACE) ||
-		t == TableType_CONFIG_CELL_PreservedAccount00 ||
+		(t >= TableType_CONFIG_CELL_PreservedAccount00 && t <= TableType_CONFIG_CELL_PreservedAccount19) ||
 		(t >=TableType_CONFIG_CELL_CharSetEmoji && t <= TableType_CONFIG_CELL_CharSetHanT)
 }
 const (
@@ -149,7 +149,27 @@ const (
 	TableType_CONFIG_CELL_PROFITRATE         TableType = 107
 
 	TableType_CONFIG_CELL_RECORD_NAMESPACE       TableType = 108
-	TableType_CONFIG_CELL_PreservedAccount00     TableType = 150
+
+	TableType_CONFIG_CELL_PreservedAccount00     TableType = 10000
+	TableType_CONFIG_CELL_PreservedAccount01     TableType = 10001
+	TableType_CONFIG_CELL_PreservedAccount02     TableType = 10002
+	TableType_CONFIG_CELL_PreservedAccount03     TableType = 10003
+	TableType_CONFIG_CELL_PreservedAccount04     TableType = 10004
+	TableType_CONFIG_CELL_PreservedAccount05     TableType = 10005
+	TableType_CONFIG_CELL_PreservedAccount06     TableType = 10006
+	TableType_CONFIG_CELL_PreservedAccount07     TableType = 10007
+	TableType_CONFIG_CELL_PreservedAccount08     TableType = 10008
+	TableType_CONFIG_CELL_PreservedAccount09     TableType = 10009
+	TableType_CONFIG_CELL_PreservedAccount10     TableType = 10010
+	TableType_CONFIG_CELL_PreservedAccount11     TableType = 10011
+	TableType_CONFIG_CELL_PreservedAccount12     TableType = 10012
+	TableType_CONFIG_CELL_PreservedAccount13     TableType = 10013
+	TableType_CONFIG_CELL_PreservedAccount14     TableType = 10014
+	TableType_CONFIG_CELL_PreservedAccount15     TableType = 10015
+	TableType_CONFIG_CELL_PreservedAccount16     TableType = 10016
+	TableType_CONFIG_CELL_PreservedAccount17     TableType = 10017
+	TableType_CONFIG_CELL_PreservedAccount18     TableType = 10018
+	TableType_CONFIG_CELL_PreservedAccount19     TableType = 10019
 
 	TableType_CONFIG_CELL_CharSetEmoji TableType = 100000
 	TableType_CONFIG_CELL_CharSetDigit TableType = 100001
