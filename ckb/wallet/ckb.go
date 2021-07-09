@@ -3,6 +3,7 @@ package wallet
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/minio/blake2b-simd"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/bech32"
@@ -69,6 +70,11 @@ type NewWalletObj struct {
 	PriKeyHex  string
 	PubKeyHex  string
 	AddressHex string
+}
+
+func (n *NewWalletObj) Json() string {
+	bys,_ := json.Marshal(n)
+	return string(bys)
 }
 func CreateCKBWallet(isTestNet bool) (*NewWalletObj,error) {
 	seed := rand.Reader

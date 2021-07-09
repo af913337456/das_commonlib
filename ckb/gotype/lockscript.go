@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/DeAccountSystems/das_commonlib/chain/tron_chain"
 	"github.com/nervosnetwork/ckb-sdk-go/rpc"
 
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
@@ -43,7 +44,7 @@ func GetOwnerArgsFromDasLockArgs(args []byte) (celltype.ChainType, string) {
 	case celltype.DasLockCodeHashIndexType_ETH_Normal:
 		return celltype.ChainType_ETH, "0x" + hex.EncodeToString(ownerArgsBytes)
 	case celltype.DasLockCodeHashIndexType_TRON_Normal:
-		return celltype.ChainType_TRON, "41" + hex.EncodeToString(ownerArgsBytes)
+		return celltype.ChainType_TRON, tron_chain.TronAddrHexPrefix + hex.EncodeToString(ownerArgsBytes)
 	default:
 		return 0, ""
 	}
