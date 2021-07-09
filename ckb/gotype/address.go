@@ -25,6 +25,10 @@ func (r Address) Str() string {
 	return strings.ToLower(string(r))
 }
 
+func (r Address) OriginStr() string {
+	return string(r)
+}
+
 func (r Address) HexBys(singleSigCellHash types.Hash) ([]byte, error) {
 	addrStr := r.Str()
 	if len(addrStr) < 3 {
@@ -44,13 +48,13 @@ func (r Address) HexBys(singleSigCellHash types.Hash) ([]byte, error) {
 		}
 		return args, nil
 	default:
-		pubkeyHex,err := tron_chain.PubkeyHexFromBase58(addrStr)
+		pubkeyHex,err := tron_chain.PubkeyHexFromBase58(r.OriginStr())
 		if err != nil {
 			return nil, fmt.Errorf("tron PubkeyHexFromBase58 err: %s",err.Error())
 		}
 		switch pubkeyHex[0:2] {
 		case tron_chain.TronAddrHexPrefix:
-			args, err := hex.DecodeString(addrStr[2:])
+			args, err := hex.DecodeString(pubkeyHex[2:])
 			if err != nil {
 				return nil, err
 			}
