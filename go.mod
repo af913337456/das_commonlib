@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/Andrew-M-C/go.emoji v0.0.0-20210303022417-b8fefdaedb50
 	github.com/Shopify/sarama v1.27.2
+	github.com/af913337456/blockparser v0.0.0-20210623092134-6f2aea800ad9
 	github.com/elazarl/goproxy v0.0.0-20210110162100-a92cc753f88e // indirect
 	github.com/ethereum/go-ethereum v1.9.14
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
