@@ -11,7 +11,7 @@ import (
  * Copyright (C), 2019-2021
  * FileName: code_scipt_test
  * Author:   LinGuanHong
- * Date:     2021/6/8 4:07 下午
+ * Date:     2021/6/8 4:07
  * Description:
  */
 

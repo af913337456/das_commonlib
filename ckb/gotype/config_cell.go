@@ -54,6 +54,7 @@ func NewDefaultConfigCell() *ConfigCell {
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Proposal, &configcells.CfgProposal{})
 	c.ConfigCellChildMap.Store(celltype.TableType_IncomeCell, &configcells.CfgIncome{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_RecordNamespace, &configcells.CfgNameSpace{})
+	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Release, &configcells.CfgNameSpace{})
 
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount00,"PreservedAccount00"))
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount01,"PreservedAccount01"))
@@ -116,6 +117,11 @@ func (c *ConfigCell) income() *celltype.ConfigCellIncome {
 func (c *ConfigCell) profitRate() *celltype.ConfigCellProfitRate {
 	v, _ := c.ConfigCellChildMap.Load(celltype.TableType_ConfigCell_ProfitRate)
 	return (v.(configcells.IConfigChild)).MocluObj().(*celltype.ConfigCellProfitRate)
+}
+
+func (c *ConfigCell) release() *celltype.ConfigCellRelease {
+	v, _ := c.ConfigCellChildMap.Load(celltype.TableType_ConfigCell_Release)
+	return (v.(configcells.IConfigChild)).MocluObj().(*celltype.ConfigCellRelease)
 }
 
 func (c *ConfigCell) CKBSingleSoCellDepHash() types.Hash {
@@ -349,6 +355,33 @@ func (c *ConfigCell) AccountTTL() (uint32, error) {
 		return 0, err
 	}
 	return val, nil
+}
+
+type ReleaseRuleItem struct {
+	StartTimestamp uint64
+	EndTimestamp   uint64
+}
+func (c *ConfigCell) ReleaseRules() ([]ReleaseRuleItem,error) {
+	releaseRules := c.release().ReleaseRules()
+	total := releaseRules.ItemCount()
+	ruleIndex := uint(0)
+	retList := make([]ReleaseRuleItem, 0, total)
+	for ; ruleIndex < total; ruleIndex++ {
+		item := releaseRules.Get(ruleIndex)
+		start,err := celltype.MoleculeU64ToGo(item.ReleaseStart().RawData())
+		if err != nil {
+			return nil,err
+		}
+		end,err := celltype.MoleculeU64ToGo(item.ReleaseEnd().RawData())
+		if err != nil {
+			return nil,err
+		}
+		retList = append(retList, ReleaseRuleItem{
+			StartTimestamp: start,
+			EndTimestamp:   end,
+		})
+	}
+	return retList, nil
 }
 
 // func (c *ConfigCell) MaxSellingTime() (uint32, error) {
