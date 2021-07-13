@@ -80,6 +80,10 @@ func NewDefaultConfigCell() *ConfigCell {
 	return c
 }
 
+func (c *ConfigCell) RemoveConfigFromMap(tableType celltype.TableType) {
+	c.ConfigCellChildMap.Delete(tableType)
+}
+
 func (c *ConfigCell) StorePreservedAccountMap(xx *configcells.CfgPreservedAccountXX) {
 	c.ConfigCellChildMap.Store(xx.TableType,xx)
 }
