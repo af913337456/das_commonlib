@@ -54,8 +54,8 @@ func NewDefaultConfigCell() *ConfigCell {
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Proposal, &configcells.CfgProposal{})
 	c.ConfigCellChildMap.Store(celltype.TableType_IncomeCell, &configcells.CfgIncome{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_RecordNamespace, &configcells.CfgNameSpace{})
-	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Release, &configcells.CfgNameSpace{})
-
+	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Release, &configcells.CfgRelease{})
+	
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount00,"PreservedAccount00"))
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount01,"PreservedAccount01"))
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount02,"PreservedAccount02"))
