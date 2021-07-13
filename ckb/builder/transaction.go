@@ -75,7 +75,7 @@ func NewTransactionBuilder3(action string,params []byte, fromScript *types.Scrip
 		actionBuilder.Params(celltype.GoBytesToMoleculeBytes(params))
 	}
 	actionData := actionBuilder.Build()
-	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
+	witnessBys := celltype.NewDasWitnessData(celltype.TableType_Action, actionData.AsSlice()).ToWitness()
 	builder.customWitnessList = append(builder.customWitnessList, witnessBys)
 	return builder
 }

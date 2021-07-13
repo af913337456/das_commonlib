@@ -23,7 +23,7 @@ func Test_ActionTx(t *testing.T) {
 		actionBuilder.Params(celltype.GoBytesToMoleculeBytes(params))
 	}
 	actionData := actionBuilder.Build()
-	witnessBys := celltype.NewDasWitnessData(celltype.TableType_ACTION, actionData.AsSlice()).ToWitness()
+	witnessBys := celltype.NewDasWitnessData(celltype.TableType_Action, actionData.AsSlice()).ToWitness()
 	fmt.Println(hex.EncodeToString(witnessBys))
 }
 
