@@ -1,13 +1,11 @@
 package celltype
 
 import (
-	"context"
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
-	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
 	"strings"
 	"testing"
@@ -24,42 +22,6 @@ import (
 
 func Test_BuildDasCommonMoleculeDataObj(t *testing.T) {
 	BuildDasCommonMoleculeDataObj(0,0,0,nil,nil,&AccountCellData{})
-}
-
-func Test_FindTargetTypeScriptByInputList(t *testing.T) {
-	inputList := []*types.CellInput{
-		{
-			Since: 0,
-			PreviousOutput: &types.OutPoint{
-				TxHash: types.HexToHash("0xd6590562d4b6ac365399575611e83c8ab86e09429d6fb36846ee15d8febcc8c4"),
-				Index:  0,
-			},
-		},
-	}
-	ret,err := FindTargetTypeScriptByInputList(&ReqFindTargetTypeScriptParam{
-		Ctx:       context.TODO(),
-		RpcClient: rpcClient(),
-		InputList: inputList,
-		IsLock:    false,
-		CodeHash:  DasProposeCellScript.Out.CodeHash,
-	})
-	if err != nil {
-		panic(err)
-	}
-	err = GetTargetCellFromWitness(ret.Tx, func(rawWitnessData []byte, witnessParseObj *ParseDasWitnessBysDataObj) (bool, error) {
-		witnessDataObj := witnessParseObj.WitnessObj
-		switch witnessDataObj.TableType {
-		case TableType_PROPOSE_CELL:
-			t.Log("found!",hex.EncodeToString(rawWitnessData))
-			return true, nil
-		}
-		return false, nil
-	}, func(err error) {
-		t.Log(err.Error())
-	})
-	if err != nil {
-		panic(err)
-	}
 }
 
 func Test_ParseCellData(t *testing.T) {
