@@ -56,26 +56,26 @@ func NewDefaultConfigCell() *ConfigCell {
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_RecordNamespace, &configcells.CfgNameSpace{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Release, &configcells.CfgRelease{})
 
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount00,"PreservedAccount00"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount01,"PreservedAccount01"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount02,"PreservedAccount02"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount03,"PreservedAccount03"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount04,"PreservedAccount04"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount05,"PreservedAccount05"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount06,"PreservedAccount06"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount07,"PreservedAccount07"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount08,"PreservedAccount08"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount09,"PreservedAccount09"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount10,"PreservedAccount10"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount11,"PreservedAccount11"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount12,"PreservedAccount12"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount13,"PreservedAccount13"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount14,"PreservedAccount14"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount15,"PreservedAccount15"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount16,"PreservedAccount16"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount17,"PreservedAccount17"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount18,"PreservedAccount18"))
-	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount19,"PreservedAccount19"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount00, "PreservedAccount00"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount01, "PreservedAccount01"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount02, "PreservedAccount02"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount03, "PreservedAccount03"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount04, "PreservedAccount04"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount05, "PreservedAccount05"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount06, "PreservedAccount06"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount07, "PreservedAccount07"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount08, "PreservedAccount08"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount09, "PreservedAccount09"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount10, "PreservedAccount10"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount11, "PreservedAccount11"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount12, "PreservedAccount12"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount13, "PreservedAccount13"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount14, "PreservedAccount14"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount15, "PreservedAccount15"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount16, "PreservedAccount16"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount17, "PreservedAccount17"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount18, "PreservedAccount18"))
+	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount19, "PreservedAccount19"))
 
 	return c
 }
@@ -85,7 +85,7 @@ func (c *ConfigCell) RemoveConfigFromMap(tableType celltype.TableType) {
 }
 
 func (c *ConfigCell) StorePreservedAccountMap(xx *configcells.CfgPreservedAccountXX) {
-	c.ConfigCellChildMap.Store(xx.TableType,xx)
+	c.ConfigCellChildMap.Store(xx.TableType, xx)
 }
 
 func (c *ConfigCell) main() *celltype.ConfigCellMain {
@@ -362,25 +362,32 @@ func (c *ConfigCell) AccountTTL() (uint32, error) {
 }
 
 type ReleaseRuleItem struct {
+	Length         uint32
 	StartTimestamp uint64
 	EndTimestamp   uint64
 }
-func (c *ConfigCell) ReleaseRules() ([]ReleaseRuleItem,error) {
+
+func (c *ConfigCell) ReleaseRules() ([]ReleaseRuleItem, error) {
 	releaseRules := c.release().ReleaseRules()
 	total := releaseRules.ItemCount()
 	ruleIndex := uint(0)
 	retList := make([]ReleaseRuleItem, 0, total)
 	for ; ruleIndex < total; ruleIndex++ {
 		item := releaseRules.Get(ruleIndex)
-		start,err := celltype.MoleculeU64ToGo(item.ReleaseStart().RawData())
+		length, err := celltype.MoleculeU32ToGo(item.Length().RawData())
 		if err != nil {
-			return nil,err
+			return nil, err
 		}
-		end,err := celltype.MoleculeU64ToGo(item.ReleaseEnd().RawData())
+		start, err := celltype.MoleculeU64ToGo(item.ReleaseStart().RawData())
 		if err != nil {
-			return nil,err
+			return nil, err
+		}
+		end, err := celltype.MoleculeU64ToGo(item.ReleaseEnd().RawData())
+		if err != nil {
+			return nil, err
 		}
 		retList = append(retList, ReleaseRuleItem{
+			Length:         length,
 			StartTimestamp: start,
 			EndTimestamp:   end,
 		})
@@ -536,10 +543,10 @@ func BindConfigCellDataFromTx(tx *types.Transaction, configCell *ConfigCell) err
 			MoleculeData: cellData,
 		})
 		if configTableType == celltype.TableType_ConfigCell_Main {
-			celltype.CKBSoScriptDep.TxHash  = configCell.CKBSingleSoCellDepHash()
-			celltype.ETHSoScriptDep.TxHash  = configCell.ETHSoCellDepHash()
+			celltype.CKBSoScriptDep.TxHash = configCell.CKBSingleSoCellDepHash()
+			celltype.ETHSoScriptDep.TxHash = configCell.ETHSoCellDepHash()
 			celltype.TRONSoScriptDep.TxHash = configCell.TRONSoCellDepHash()
-			celltype.CKBMultiSoScriptDep.TxHash  = configCell.CKBMultiSoCellDepHash()
+			celltype.CKBMultiSoScriptDep.TxHash = configCell.CKBMultiSoCellDepHash()
 		}
 		return false, nil
 	})
