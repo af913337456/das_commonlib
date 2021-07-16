@@ -28,7 +28,11 @@ func Test_ActionTx(t *testing.T) {
 }
 
 func Test_BuildTransaction(t *testing.T) {
-	txBuilder := NewTransactionBuilder0("", nil, 0)
+	txBuilder := NewTransactionBuilder0("", nil, 1)
+	_, _ = txBuilder.AddCellDep(nil).
+		AddCellDep(nil).
+		AddCellDep(nil).
+		AddWitnessCellDep(nil)
 	i1 := &celltype.TypeInputCell{
 		InputIndex: 0,
 		Input:      types.CellInput{},
@@ -36,35 +40,37 @@ func Test_BuildTransaction(t *testing.T) {
 		CellCap:    0,
 	}
 	i2 := &celltype.TypeInputCell{
-		InputIndex: 0,
+		InputIndex: 3,
 		Input:      types.CellInput{},
 		LockType:   1,
 		CellCap:    0,
 	}
 	i3 := &celltype.TypeInputCell{
-		InputIndex: 0,
+		InputIndex: 8,
 		Input:      types.CellInput{},
 		LockType:   2,
 		CellCap:    0,
 	}
 	i4 := &celltype.TypeInputCell{
-		InputIndex: 0,
+		InputIndex: 5,
 		Input:      types.CellInput{},
 		LockType:   2,
 		CellCap:    0,
 	}
 	i5 := &celltype.TypeInputCell{
-		InputIndex: 0,
+		InputIndex: 1,
 		Input:      types.CellInput{},
 		LockType:   3,
 		CellCap:    0,
 	}
-	txBuilder.inputList = append(txBuilder.inputList, i1)
-	txBuilder.inputList = append(txBuilder.inputList, i2)
-	txBuilder.inputList = append(txBuilder.inputList, i3)
-	txBuilder.inputList = append(txBuilder.inputList, i4)
-	txBuilder.inputList = append(txBuilder.inputList, i5)
-	_ = txBuilder.BuildTransaction()
+	txBuilder.AddInput(i1).
+		AddInput(i2).
+		AddInput(i3).
+		AddInput(i4).
+		AddInput(i5)
+	if err := txBuilder.BuildTransaction(); err != nil {
+		panic(err) // err: not enough capacity
+	}
 	t.Log(i1.InputIndex)
 	t.Log(i2.InputIndex)
 	t.Log(i3.InputIndex)

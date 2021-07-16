@@ -84,8 +84,8 @@ func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWi
 	if cellDep == nil {
 		return builder, nil
 	}
-	// 如果已经存在，那么不再重复添加
 	for _, item := range builder.tx.CellDeps {
+		// exist, skip
 		if item.OutPoint.TxHash == cellDep.CellDep.OutPoint.TxHash && item.OutPoint.Index == cellDep.CellDep.OutPoint.Index {
 			return builder, nil
 		}
@@ -144,11 +144,6 @@ func (builder *TransactionBuilder) AddInputs(cellInputs []*celltype.TypeInputCel
 	}
 	return builder, nil
 }
-
-// func (builder *TransactionBuilder) AddWitnessInput(cellInput *celltype.TypeInputCell) (*TransactionBuilder, error) {
-// 	builder.AddInput(cellInput)
-// 	return builder, nil
-// }
 
 func (builder *TransactionBuilder) OutputIndex() uint32 {
 	return uint32(len(builder.tx.Outputs) - 1)
@@ -224,7 +219,6 @@ func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, cal
 	builder.AddCellDep(cell.LockDepCell())
 	builder.AddCellDep(cell.TypeDepCell())
 	dataBys, _ := cell.Data()
-	// witnessBys := celltype.NewDasWitnessData(cell.TableType(), cell.TableData()).ToWitness()
 	builder.addOutputAutoComputeCap(cell.LockScript(), cell.TypeScript(), dataBys, callback, custom, increment)
 	return builder
 }
@@ -255,12 +249,12 @@ func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 		if totalSpend := builder.totalOutputCap + builder.fee; totalSpend > builder.totalInputCap {
 			return totalSpend - builder.totalInputCap
 		} else if left := builder.totalInputCap - totalSpend; left > celltype.CkbTxMinOutputCKBValue {
-			return left // 直接返回 left
+			return left
 		} else {
 			return 0
 		}
 	} else {
-		return min // 最少 61 kb + fee
+		return min // min == 61 kb + fee
 	}
 }
 
@@ -268,7 +262,7 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 	return builder.fromAddress
 }
 
-// call this method after add inputs && add outputs
+// NOTE: call this method after add inputs && add outputs
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
 	builder.AddCellDep(&types.CellDep{
 		OutPoint: signCell.OutPoint,
@@ -286,7 +280,7 @@ func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signC
 		Lock:     receiver,
 		Type:     nil,
 	})
-	// NOTE: need append data, or 'OutputsDataLengthMismatch: expected outputs data length (wrongLen) = outputs length (outputLen)'
+	// NOTE: need append data, or 'err: OutputsDataLengthMismatch: expected outputs data length (wrongLen) = outputs length (outputLen)'
 	builder.tx.OutputsData = append(builder.tx.OutputsData, []byte{})
 	return builder
 }

@@ -38,7 +38,7 @@ type CellDepWithWitnessFunc func(inputIndex uint32) ([]byte, error)
 
 type CellDepWithWitness struct {
 	CellDep        *types.CellDep
-	GetWitnessData CellDepWithWitnessFunc
+	GetWitnessData CellDepWithWitnessFunc // callback func
 }
 
 type CellWitnessFunc func(inputIndex uint32) ([]byte, error)
