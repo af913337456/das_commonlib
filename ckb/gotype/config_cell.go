@@ -144,6 +144,10 @@ func (c *ConfigCell) TRONSoCellDepHash() types.Hash {
 	return types.BytesToHash(c.main().DasLockOutPointTable().Tron().TxHash().RawData())
 }
 
+func (c *ConfigCell) OpenStatus() (uint8, error) {
+	return celltype.MoleculeU8ToGo(c.main().Status().RawData())
+}
+
 func (c *ConfigCell) AccountCellBaseCap() (uint64, error) {
 	val, err := celltype.MoleculeU64ToGo(c.account().BasicCapacity().RawData())
 	if err != nil {
