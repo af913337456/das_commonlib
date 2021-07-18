@@ -153,6 +153,7 @@ type ApplyRegisterCellParam struct {
 	PubkeyHashBytes      []byte          `json:"pubkey_hash_bytes"`
 	Account              DasAccount      `json:"account"`
 	Height               uint64          `json:"height"`
+	TimeUnix             uint64  	     `json:"time_unix"`
 	CellCodeInfo         DASCellBaseInfo `json:"cell_code_info"`
 	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`
 }
