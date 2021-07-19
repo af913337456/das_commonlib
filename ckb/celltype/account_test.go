@@ -57,7 +57,7 @@ func Test_DasAccountIdFromBytes(t *testing.T) {
 
 func Test_EchoTypeId(t *testing.T) {
 	t.Log(hexToArgsBytes("0x"))
-	bys,_ := hex.DecodeString("d5eee5a3ac9d65658535b4bdad25e22a81c032f5bbdf5ace45605a33482eeb45")
+	bys,_ := hex.DecodeString("67df6b5183e29a9d4f63f7682746ac66f3f944b5df8bacbf23415dfd91e1001f")
 	script := types.Script{
 		CodeHash: types.HexToHash("0x00000000000000000000000000000000000000000000000000545950455f4944"),
 		HashType: types.HashTypeType,
