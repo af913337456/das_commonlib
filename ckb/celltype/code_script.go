@@ -399,6 +399,12 @@ func UseVersionReleaseSystemScriptCodeHash() {
 	DasLockCellScript.Out.CodeHash = types.HexToHash("0x9376c3b5811942960a846691e16e477cf43d7c7fa654067c9948dfcd09a32137")
 	DasConfigCellScript.Out.CodeHash = types.HexToHash("0x903bff0221b72b2f5d549236b631234b294f10f53e6cc7328af07776e32a6640")
 	DasIncomeCellScript.Out.CodeHash = types.HexToHash("0x6c1d69a358954fc471a2ffa82a98aed5a4912e6002a5e761524f2304ab53bf39")
+
+	DasAnyOneCanSendCellInfo.Dep = DASCellBaseInfoDep{
+		TxHash:  types.HexToHash("0xcfd3350aa2a5a9277cba3cd784262d206646a10244c9ae924fd39cb4005dd653"),
+		TxIndex: 0,
+		DepType: types.DepTypeCode,
+	}
 	DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0x303ead37be5eebfcf3504847155538cb623a26f237609df24bd296750c123078")
 
 	DasHeightCellScript.Out.CodeHash = types.HexToHash("0x2e0e5b790cfb346bddc0e82a70f785e90d1537bbfdbdd25f6a3617cc760f887b")
