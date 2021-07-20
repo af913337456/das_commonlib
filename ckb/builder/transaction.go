@@ -282,6 +282,7 @@ func (builder *TransactionBuilder) AddChargeOutputFeeSafe(receiver *types.Script
 			for i :=0; i< outputSize; i++ {
 				if builder.tx.Outputs[i].Lock.Equals(receiver) {
 					builder.tx.Outputs[i].Capacity = builder.tx.Outputs[i].Capacity + chargeCap
+					break
 				}
 			}
 		}
