@@ -264,6 +264,10 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 
 // NOTE: call this method after add inputs && add outputs
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
+	return builder.AddChargeOutputFeeSafe(receiver,signCell,false)
+}
+
+func (builder *TransactionBuilder) AddChargeOutputFeeSafe(receiver *types.Script, signCell *utils.SystemScriptCell,appendToCharge bool) *TransactionBuilder {
 	builder.AddCellDep(&types.CellDep{
 		OutPoint: signCell.OutPoint,
 		DepType:  types.DepTypeDepGroup,
@@ -273,6 +277,14 @@ func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signC
 	}
 	chargeCap := builder.totalInputCap - (builder.totalOutputCap + builder.fee)
 	if chargeCap < celltype.CkbTxMinOutputCKBValue {
+		if appendToCharge {
+			outputSize := len(builder.tx.Outputs)
+			for i :=0; i< outputSize; i++ {
+				if builder.tx.Outputs[i].Lock.Equals(receiver) {
+					builder.tx.Outputs[i].Capacity = builder.tx.Outputs[i].Capacity + chargeCap
+				}
+			}
+		}
 		return builder // give it all to miner
 	}
 	builder.tx.Outputs = append(builder.tx.Outputs, &types.CellOutput{
