@@ -286,7 +286,8 @@ func (builder *TransactionBuilder) AddChargeOutputFeeSafe(receiver *types.Script
 				}
 			}
 		}
-		return builder // give it all to miner
+		// appendToCharge = false, give it all to miner
+		return builder
 	}
 	builder.tx.Outputs = append(builder.tx.Outputs, &types.CellOutput{
 		Capacity: chargeCap,
