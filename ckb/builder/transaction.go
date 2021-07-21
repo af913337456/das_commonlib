@@ -151,7 +151,9 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 
 // auto calculate inputs
 func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) ([]*types.OutPoint, error) {
-	needCap := builder.NeedCapacityValue()
+	return builder.AddInputAutoComputeItemsCustomNeeCap(liveCells,lockType,builder.NeedCapacityValue())
+}
+func (builder *TransactionBuilder) AddInputAutoComputeItemsCustomNeeCap(liveCells []indexer.LiveCell, lockType celltype.LockScriptType,needCap uint64) ([]*types.OutPoint, error) {
 	if needCap == 0 {
 		return nil, nil
 	}
