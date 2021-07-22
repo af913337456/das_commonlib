@@ -27,7 +27,7 @@ type NormalCellRepeater struct {
 }
 
 func NewNormalCellRepeater(secsOverdue int64) *NormalCellRepeater {
-	recorder, _ := lru.New(1000)
+	recorder, _ := lru.New(20000)
 	return &NormalCellRepeater{
 		syncLocker:          sync.Mutex{},
 		secsOverdue:         secsOverdue,
