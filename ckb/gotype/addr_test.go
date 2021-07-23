@@ -2,6 +2,7 @@ package gotype
 
 import (
 	"encoding/hex"
+	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"testing"
 )
@@ -21,5 +22,9 @@ func Test_Addr(t *testing.T) {
 		panic(e)
 	}
 	t.Log(hex.EncodeToString(b))
+}
+
+func Test_PubkeyHashToAddress(t *testing.T) {
+	t.Log(PubkeyHashToAddress(celltype.ChainType_TRON,""))
 }
 
