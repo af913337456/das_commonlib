@@ -16,6 +16,8 @@ import (
 func Test_RecoverAddrFromLockScriptArgs(t *testing.T) {
 	fmt.Println(GetShortAddressFromLockScriptArgs("",false))
 	fmt.Println(GetShortAddressFromLockScriptArgs("",true))
+	address,_ := GetLockScriptArgsFromShortAddress("")
+	fmt.Println(address)
 }
 
 func Test_CreateWallet(t *testing.T) {
