@@ -351,6 +351,16 @@ func (c *ConfigCell) GetProfitOfInviter() (decimal.Decimal, error) {
 	return dec.Div(decimal.NewFromInt(int64(celltype.DiscountRateBase))), nil
 }
 
+func (c *ConfigCell) GetProfitOfChannel() (decimal.Decimal, error) {
+	profit := c.GetRegisterProfitConfig()
+	profitRateOfChannel, err := celltype.MoleculeU32ToGo(profit.Channel().RawData())
+	if err != nil {
+		return decimal.Zero, err
+	}
+	dec := decimal.NewFromInt(int64(profitRateOfChannel))
+	return dec.Div(decimal.NewFromInt(int64(celltype.DiscountRateBase))), nil
+}
+
 func (c *ConfigCell) InvitedDiscountFormatDiscountObj() (float64, error) {
 	val, err := celltype.MoleculeU32ToGo(c.price().Discount().InvitedDiscount().RawData())
 	if err != nil {
