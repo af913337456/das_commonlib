@@ -407,9 +407,9 @@ func UseVersionReleaseSystemScriptCodeHash() {
 	}
 	DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0x303ead37be5eebfcf3504847155538cb623a26f237609df24bd296750c123078")
 
-	DasHeightCellScript.Out.CodeHash = types.HexToHash("0x2e0e5b790cfb346bddc0e82a70f785e90d1537bbfdbdd25f6a3617cc760f887b")
-	DasTimeCellScript.Out.CodeHash = types.HexToHash("0x2e0e5b790cfb346bddc0e82a70f785e90d1537bbfdbdd25f6a3617cc760f887b")
-	DasQuoteCellScript.Out.CodeHash = types.HexToHash("0x2e0e5b790cfb346bddc0e82a70f785e90d1537bbfdbdd25f6a3617cc760f887b")
+	DasHeightCellScript.Out.CodeHash = types.HexToHash("0x9e537bf5b8ec044ca3f53355e879f3fd8832217e4a9b41d9994cf0c547241a79")
+	DasTimeCellScript.Out.CodeHash = types.HexToHash("0x9e537bf5b8ec044ca3f53355e879f3fd8832217e4a9b41d9994cf0c547241a79")
+	DasQuoteCellScript.Out.CodeHash = types.HexToHash("0x9e537bf5b8ec044ca3f53355e879f3fd8832217e4a9b41d9994cf0c547241a79")
 
 	initMap()
 }
