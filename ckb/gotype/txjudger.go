@@ -139,7 +139,7 @@ func IsStartAccountSaleTx(tx types.Transaction) (bool,int) {
 		}
 		if celltype.DasAccountCellScript.Out.SameScript(output.Type) {
 			foundAccountCell = true
-		} else if celltype.DasOnSaleCellScript.Out.SameScript(output.Type) {
+		} else if celltype.DasAccountSaleCellScript.Out.SameScript(output.Type) {
 			foundOnSaleCell = true
 			onSaleIndex = index
 		}
