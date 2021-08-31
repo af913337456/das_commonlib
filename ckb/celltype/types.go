@@ -219,7 +219,7 @@ type AccountSaleCellParam struct {
 	Price                     uint64          `json:"price"`
 	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
 	DasLock                   DASCellBaseInfo `json:"das_lock"`
-	DasLockParam *DasLockParam `json:"das_lock_param"`
+	DasLockArgs []byte `json:"das_lock_args"`
 }
 
 type IncomeCellParam struct {

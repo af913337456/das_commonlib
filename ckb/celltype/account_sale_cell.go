@@ -13,19 +13,20 @@ import (
  * Description:
  */
 
-var DefaultAccountSaleCellParam = func(startedAt,price uint64,description string, accountId DasAccountId,dasLockParam *DasLockParam) *AccountSaleCellParam {
+var DefaultAccountSaleCellParam = func(startedAt,price uint64,description string, accountId DasAccountId,dasLockArgs []byte) *AccountSaleCellParam {
 	mAccountId := NewAccountIdBuilder().Set(GoBytesToMoleculeAccountBytes(accountId.Bytes())).Build()
 	mDescription := GoStrToMoleculeBytes(description)
 	return &AccountSaleCellParam{
-		Version:        2,
-		Price:          price,
-		SaleCellData:   NewAccountSaleCellDataBuilder().
+		Version: 2,
+		SaleCellData: NewAccountSaleCellDataBuilder().
 			AccountId(mAccountId).
 			Description(mDescription).
 			StartedAt(GoUint64ToMoleculeU64(startedAt)).
 			Price(GoUint64ToMoleculeU64(price)).Build(),
+		Price:        price,
 		CellCodeInfo: DasAccountSaleCellScript,
-		DasLock: DasLockCellScript,
+		DasLock:      DasLockCellScript,
+		DasLockArgs:   dasLockArgs,
 	}
 }
 
@@ -68,8 +69,8 @@ func (c *AccountSaleCell) LockScript() *types.Script {
 		CodeHash: c.p.DasLock.Out.CodeHash,
 		HashType: c.p.DasLock.Out.CodeHashType,
 	}
-	if c.p.DasLockParam != nil {
-		lockScript.Args = c.p.DasLockParam.Bytes()
+	if c.p.DasLockArgs != nil {
+		lockScript.Args = c.p.DasLockArgs
 	}
 	return lockScript
 }
