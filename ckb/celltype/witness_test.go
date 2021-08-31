@@ -398,3 +398,17 @@ func Test_NewDasWitnessData(t *testing.T) {
 		t.Log(das.Tag, das.TableType)
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

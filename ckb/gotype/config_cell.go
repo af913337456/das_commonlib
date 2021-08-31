@@ -23,12 +23,15 @@ type ConfigCell struct {
 	ConfigCellChildMap syncmap.Map
 }
 
-func (c *ConfigCell) Ready() bool {
+func (c *ConfigCell) Ready(unReadyCallback func(item configcells.IConfigChild)) bool {
 	ready := true
 	c.ConfigCellChildMap.Range(func(key, value interface{}) bool {
 		item := value.(configcells.IConfigChild)
 		if !item.Ready() {
 			ready = false
+			if unReadyCallback != nil {
+				unReadyCallback(item)
+			}
 			return false
 		}
 		return true
