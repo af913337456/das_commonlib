@@ -392,8 +392,6 @@ const (
 	Action_CloseBidding          = "close_bidding"
 	Action_RefundRegister        = "refund_register"
 	Action_QuotePriceForCkb      = "quote_price_for_ckb"
-	Action_StartAccountSale      = "start_account_sale"
-	Action_CancelAccountSale     = "cancel_account_sale"
 	Action_StartAccountAuction   = "start_account_auction"
 	Action_CancelAccountAuction  = "cancel_account_auction"
 	Action_AccuseAccountRepeat   = "accuse_account_repeat"
@@ -402,4 +400,10 @@ const (
 	Action_CancelSaleByKeeper    = "cancel_sale_by_keeper"
 	Action_CreateIncome          = "create_income"
 	Action_ConsolidateIncome     = "consolidate_income"
+
+	Action_SellAccount           = "sell_account"
+	Action_CancelAccountSale     = "cancel_account_sale"
+	Action_BuyAccount            = "buy_account"
+	Action_EditAccountSale       = "edit_account_sale"
+
 )
