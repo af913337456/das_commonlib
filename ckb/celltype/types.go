@@ -190,36 +190,36 @@ type:
   code_hash: <on_sale_script>
   type: type
   args: [id] // AccountCell 的 ID
-data: hash(data: OnSaleCellData)
+data: hash(data: AccountSaleCellData)
 
 witness:
   table Data {
     old: table DataEntityOpt {
     	index: Uint32,
     	version: Uint32,
-    	entity: OnSaleCellData
+    	entity: AccountSaleCellData
     },
     new: table DataEntityOpt {
       index: Uint32,
       version: Uint32,
-      entity: OnSaleCellData
+      entity: AccountSaleCellData
     },
   }
 
 ======
-table OnSaleCellData {
+table AccountSaleCellData {
     // the price of account
     price: Uint64,
 }
 */
-type OnSaleCellParam struct {
+type AccountSaleCellParam struct {
 	Version uint32 `json:"version"`
 	// Data                      Data            `json:"data"`
-	OnSaleCellData            OnSaleCellData  `json:"-"`
+	SaleCellData              AccountSaleCellData  `json:"-"`
 	Price                     uint64          `json:"price"`
-	AccountId                 DasAccountId    `json:"account_id"`
 	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+	DasLock                   DASCellBaseInfo `json:"das_lock"`
+	DasLockParam *DasLockParam `json:"das_lock_param"`
 }
 
 type IncomeCellParam struct {

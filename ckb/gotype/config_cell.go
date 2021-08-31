@@ -57,6 +57,7 @@ func NewDefaultConfigCell(neyType celltype.DasNetType) *ConfigCell {
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Income, &configcells.CfgIncome{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_RecordNamespace, &configcells.CfgNameSpace{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Release, &configcells.CfgRelease{})
+	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_SecondaryMarket, &configcells.CfgSecondaryMarket{})
 
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount00, "PreservedAccount00"))
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount01, "PreservedAccount01"))
@@ -128,6 +129,36 @@ func (c *ConfigCell) profitRate() *celltype.ConfigCellProfitRate {
 func (c *ConfigCell) release() *celltype.ConfigCellRelease {
 	v, _ := c.ConfigCellChildMap.Load(celltype.TableType_ConfigCell_Release)
 	return (v.(configcells.IConfigChild)).MocluObj().(*celltype.ConfigCellRelease)
+}
+
+
+func (c *ConfigCell) secondaryMarket() *celltype.ConfigCellSecondaryMarket {
+	v, _ := c.ConfigCellChildMap.Load(celltype.TableType_ConfigCell_SecondaryMarket)
+	return (v.(configcells.IConfigChild)).MocluObj().(*celltype.ConfigCellSecondaryMarket)
+}
+
+func (c *ConfigCell) AccountSaleMinPrice() (uint64, error) {
+	val, err := celltype.MoleculeU64ToGo(c.secondaryMarket().MinSalePrice().RawData())
+	if err != nil {
+		return 0, err
+	}
+	return val, nil
+}
+
+func (c *ConfigCell) SaleExpirationLimit() (uint64, error) {
+	val, err := celltype.MoleculeU64ToGo(c.secondaryMarket().SaleExpirationLimit().RawData())
+	if err != nil {
+		return 0, err
+	}
+	return val, nil
+}
+
+func (c *ConfigCell) SaleDescriptionBytesLimit() (uint32, error) {
+	val, err := celltype.MoleculeU32ToGo(c.secondaryMarket().SaleDescriptionBytesLimit().RawData())
+	if err != nil {
+		return 0, err
+	}
+	return val, nil
 }
 
 func (c *ConfigCell) CKBSingleSoCellDepHash() types.Hash {
