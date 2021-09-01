@@ -255,7 +255,12 @@ var (
 		Out: DASCellBaseInfoOut{
 			CodeHash:     types.HexToHash("0x123"),
 			CodeHashType: types.HashTypeType,
-			Args:         types.HexToHash(AccountCellCodeArgs).Bytes(),
+			Args:         emptyHexToArgsBytes(),
+		},
+		ContractTypeScript: types.Script{
+			CodeHash: types.HexToHash(ContractCodeHash),
+			HashType: types.HashTypeType,
+			Args:     types.HexToHash(AccountCellCodeArgs).Bytes(),
 		},
 	}
 	DasIncomeCellScript = DASCellBaseInfo{
