@@ -363,7 +363,8 @@ func UseVersion2_AccountSale_SystemScriptCodeHash() {
 	DasLockCellScript.Out.CodeHash = types.HexToHash("0x326df166e3f0a900a0aee043e31a4dea0f01ea3307e6e235f09d1b4220b75fbd")
 	DasConfigCellScript.Out.CodeHash = types.HexToHash("0x44a18479eec3cef7a161e8861c019d195a84c4f318d032ee523d1f662de883be")
 	DasIncomeCellScript.Out.CodeHash = types.HexToHash("0x55faf1d18e77c640de0e4a1e0193884ed7bda3ebdf1f34281e4f83f198d96096")
-	DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0xacd0cfbbc4d4ebab7620a98fc0e8a35245c8d5fb7e24dd787178d9564808deb8")
+	// DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0xacd0cfbbc4d4ebab7620a98fc0e8a35245c8d5fb7e24dd787178d9564808deb8")
+	DasAnyOneCanSendCellInfo.Out.CodeHash = types.HexToHash("0xf1ef61b6977508d9ec56fe43399a01e576086a76cf0f7c687d1418335e8c401f")
 	DasAccountSaleCellScript.Out.CodeHash = types.HexToHash("0x19ff9b7d2956f4b59ef30b196949d7fc0a284c3472c716bc95ea07c7bec38cbe")
 
 	initMap()
