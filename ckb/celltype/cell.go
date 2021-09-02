@@ -266,7 +266,7 @@ func (s *ConfigCellMain) AsSlice() []byte {
             
 
 func ConfigCellMainDefault() ConfigCellMain {
-    return *ConfigCellMainFromSliceUnchecked([]byte{ 221,1,0,0,16,0,0,0,17,0,0,0,17,1,0,0,0,0,1,0,0,32,0,0,0,64,0,0,0,96,0,0,0,128,0,0,0,160,0,0,0,192,0,0,0,224,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,204,0,0,0,24,0,0,0,60,0,0,0,96,0,0,0,132,0,0,0,168,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *ConfigCellMainFromSliceUnchecked([]byte{ 1,2,0,0,16,0,0,0,17,0,0,0,53,1,0,0,0,36,1,0,0,36,0,0,0,68,0,0,0,100,0,0,0,132,0,0,0,164,0,0,0,196,0,0,0,228,0,0,0,4,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,204,0,0,0,24,0,0,0,60,0,0,0,96,0,0,0,132,0,0,0,168,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -415,14 +415,15 @@ income_cell Hash
 on_sale_cell Hash
 pre_account_cell Hash
 proposal_cell Hash
+account_sale_cell Hash
 }
         
 
 func (s *TypeIdTableBuilder) Build() TypeIdTable {
     b := new(bytes.Buffer)
 
-    totalSize := HeaderSizeUint * (7 + 1)
-    offsets := make([]uint32, 0, 7)
+    totalSize := HeaderSizeUint * (8 + 1)
+    offsets := make([]uint32, 0, 8)
 
     offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.account_cell.AsSlice()))
@@ -438,6 +439,8 @@ offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.pre_account_cell.AsSlice()))
 offsets = append(offsets, totalSize)
 totalSize += uint32(len(s.proposal_cell.AsSlice()))
+offsets = append(offsets, totalSize)
+totalSize += uint32(len(s.account_sale_cell.AsSlice()))
 
     b.Write(packNumber(Number(totalSize)))
 
@@ -452,6 +455,7 @@ b.Write(s.income_cell.AsSlice())
 b.Write(s.on_sale_cell.AsSlice())
 b.Write(s.pre_account_cell.AsSlice())
 b.Write(s.proposal_cell.AsSlice())
+b.Write(s.account_sale_cell.AsSlice())
     return TypeIdTable{inner: b.Bytes()}
 }
                 
@@ -498,8 +502,14 @@ func (s *TypeIdTableBuilder) ProposalCell(v Hash) *TypeIdTableBuilder {
 }
             
 
+func (s *TypeIdTableBuilder) AccountSaleCell(v Hash) *TypeIdTableBuilder {
+    s.account_sale_cell = v
+    return s
+}
+            
+
 func NewTypeIdTableBuilder() *TypeIdTableBuilder {
-	return &TypeIdTableBuilder{ account_cell: HashDefault(),apply_register_cell: HashDefault(),bidding_cell: HashDefault(),income_cell: HashDefault(),on_sale_cell: HashDefault(),pre_account_cell: HashDefault(),proposal_cell: HashDefault() }
+	return &TypeIdTableBuilder{ account_cell: HashDefault(),apply_register_cell: HashDefault(),bidding_cell: HashDefault(),income_cell: HashDefault(),on_sale_cell: HashDefault(),pre_account_cell: HashDefault(),proposal_cell: HashDefault(),account_sale_cell: HashDefault() }
 }
     
 
@@ -517,7 +527,7 @@ func (s *TypeIdTable) AsSlice() []byte {
             
 
 func TypeIdTableDefault() TypeIdTable {
-    return *TypeIdTableFromSliceUnchecked([]byte{ 0,1,0,0,32,0,0,0,64,0,0,0,96,0,0,0,128,0,0,0,160,0,0,0,192,0,0,0,224,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
+    return *TypeIdTableFromSliceUnchecked([]byte{ 36,1,0,0,36,0,0,0,68,0,0,0,100,0,0,0,132,0,0,0,164,0,0,0,196,0,0,0,228,0,0,0,4,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 })
 }
             
 
@@ -534,7 +544,7 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
         return nil, errors.New(errMsg)
     }
 
-    if uint32(sliceLen) == HeaderSizeUint && 7 == 0 {
+    if uint32(sliceLen) == HeaderSizeUint && 8 == 0 {
         return &TypeIdTable{inner: slice}, nil
     }
 
@@ -550,9 +560,9 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
     }
 
     fieldCount := offsetFirst/4 - 1
-    if fieldCount < 7 {
+    if fieldCount < 8 {
         return nil, errors.New("FieldCountNotMatch")
-    } else if !compatible && fieldCount > 7 {
+    } else if !compatible && fieldCount > 8 {
         return nil, errors.New("FieldCountNotMatch")
     }
 
@@ -619,6 +629,12 @@ if err != nil {
 }
                 
 
+_, err = HashFromSlice(slice[offsets[7]:offsets[8]], compatible)
+if err != nil {
+    return nil, err
+}
+                
+
     return &TypeIdTable{inner: slice}, nil
 }
             
@@ -641,11 +657,11 @@ func (s *TypeIdTable) IsEmpty() bool {
     return s.Len() == 0
 }
 func (s *TypeIdTable) CountExtraFields() uint {
-    return s.FieldCount() - 7
+    return s.FieldCount() - 8
 }
 
 func (s *TypeIdTable) HasExtraFields() bool {
-    return 7 != s.FieldCount()
+    return 8 != s.FieldCount()
 }
             
 
@@ -692,10 +708,17 @@ func (s *TypeIdTable) PreAccountCell() *Hash {
                
 
 func (s *TypeIdTable) ProposalCell() *Hash {
-    var ret *Hash
     start := unpackNumber(s.inner[28:])
+    end := unpackNumber(s.inner[32:])
+    return HashFromSliceUnchecked(s.inner[start:end])
+}
+               
+
+func (s *TypeIdTable) AccountSaleCell() *Hash {
+    var ret *Hash
+    start := unpackNumber(s.inner[32:])
     if s.HasExtraFields() {
-        end := unpackNumber(s.inner[32:])
+        end := unpackNumber(s.inner[36:])
         ret = HashFromSliceUnchecked(s.inner[start:end])
     } else {
         ret = HashFromSliceUnchecked(s.inner[start:])
@@ -705,7 +728,7 @@ func (s *TypeIdTable) ProposalCell() *Hash {
                         
 
 func (s *TypeIdTable) AsBuilder() TypeIdTableBuilder {
-    ret := NewTypeIdTableBuilder().AccountCell(*s.AccountCell()).ApplyRegisterCell(*s.ApplyRegisterCell()).BiddingCell(*s.BiddingCell()).IncomeCell(*s.IncomeCell()).OnSaleCell(*s.OnSaleCell()).PreAccountCell(*s.PreAccountCell()).ProposalCell(*s.ProposalCell())
+    ret := NewTypeIdTableBuilder().AccountCell(*s.AccountCell()).ApplyRegisterCell(*s.ApplyRegisterCell()).BiddingCell(*s.BiddingCell()).IncomeCell(*s.IncomeCell()).OnSaleCell(*s.OnSaleCell()).PreAccountCell(*s.PreAccountCell()).ProposalCell(*s.ProposalCell()).AccountSaleCell(*s.AccountSaleCell())
     return *ret
 }
         
