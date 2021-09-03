@@ -1,6 +1,7 @@
-package builder
+package rule712
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
 	"github.com/DeAccountSystems/das_commonlib/ckb/gotype"
@@ -63,14 +64,39 @@ var MMJsonA = `{
   }
 }`
 
+type ActionParam712 struct {
+	Action string `json:"action"`
+	Params string `json:"params"`
+}
+func Create712Action(action string,isOwner bool) ActionParam712 {
+	param := "0x01"
+	if isOwner {
+		param = "0x00"
+	}
+	return ActionParam712{
+		Action: action,
+		Params: param,
+	}
+}
+
 // Transfer the account xxxxxxxxxx.bit from ETH:0x11111111111111 to TRX:0x22222222222222.
 var transferAccountPlainText = "Transfer the account %s from %s:%s to %s:%s."
-func CreateTransferAccountPlainText(accountCell gotype.AccountCell,owner celltype.DasLockArgsPairParam) string {
-	celltype.DasLockCodeHashIndexType(accountCell.DasLockArgs[0])
+func CreateTransferAccountPlainText(accountCell gotype.AccountCell,newOwnerParam celltype.DasLockArgsPairParam) string {
+	originOwnerIndexType := celltype.DasLockCodeHashIndexType(accountCell.DasLockArgs[0])
+	originOwnerAddrBytes := accountCell.DasLockArgs[1:celltype.DasLockArgsMinBytesLen/2]
+	newOwnerAddrBytes := newOwnerParam.Script.Args[1:celltype.DasLockArgsMinBytesLen/2]
 	return fmt.Sprintf(
 		transferAccountPlainText,
 		celltype.AccountFromOutputData(accountCell.Data),
-		accountCell.DasLockArgs)
+		originOwnerIndexType.ChainType().String(),
+		hex.EncodeToString(originOwnerAddrBytes),
+		newOwnerParam.HashIndexType.ChainType().String(),
+		hex.EncodeToString(newOwnerAddrBytes))
+}
+
+// Transfer from ckb1xxxx(111.111 CKB), ckb1yyyy(222.222 CKB) to ckb1zzzz(333 CKB), ckb1zzzz(0.333 CKB).
+func CreateWithdrawPlainText(text string) string {
+	return fmt.Sprintf("Transfer from %s.",text)
 }
 
 func CreateMMJsonB(txDigestHexStr string) string {
