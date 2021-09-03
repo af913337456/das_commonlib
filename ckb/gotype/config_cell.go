@@ -57,6 +57,7 @@ func NewDefaultConfigCell(neyType celltype.DasNetType) *ConfigCell {
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Income, &configcells.CfgIncome{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_RecordNamespace, &configcells.CfgNameSpace{})
 	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Release, &configcells.CfgRelease{})
+	c.ConfigCellChildMap.Store(celltype.TableType_ConfigCell_Unavailable, &configcells.CfgUnavailable{})
 
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount00, "PreservedAccount00"))
 	c.StorePreservedAccountMap(configcells.NewCfgPreservedAccount(celltype.TableType_ConfigCell_PreservedAccount01, "PreservedAccount01"))
