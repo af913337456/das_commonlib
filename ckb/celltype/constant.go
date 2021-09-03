@@ -152,6 +152,7 @@ const (
 
 	TableType_ConfigCell_RecordNamespace TableType = 108
 	TableType_ConfigCell_Release         TableType = 109
+	TableType_ConfigCell_Unavailable     TableType = 110
 
 	TableType_ConfigCell_PreservedAccount00 TableType = 10000
 	TableType_ConfigCell_PreservedAccount01 TableType = 10001
