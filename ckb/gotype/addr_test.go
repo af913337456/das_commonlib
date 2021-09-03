@@ -25,6 +25,7 @@ func Test_Addr(t *testing.T) {
 }
 
 func Test_PubkeyHashToAddress(t *testing.T) {
-	t.Log(PubkeyHashToAddress(celltype.ChainType_TRON,""))
+	t.Log(PubkeyHashToAddress(true, celltype.ChainType_CKB,"dc36477cf2434288a5502120ef0fd919ae37c155"))
+	t.Log(PubkeyHashToAddress(false, celltype.ChainType_TRON,""))
 }
 
