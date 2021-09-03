@@ -1,5 +1,11 @@
 package builder
 
+import (
+	"fmt"
+	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
+	"github.com/DeAccountSystems/das_commonlib/ckb/gotype"
+)
+
 /**
  * Copyright (C), 2019-2021
  * FileName: 712
@@ -56,6 +62,16 @@ var MMJsonA = `{
     "digest": %s
   }
 }`
+
+// Transfer the account xxxxxxxxxx.bit from ETH:0x11111111111111 to TRX:0x22222222222222.
+var transferAccountPlainText = "Transfer the account %s from %s:%s to %s:%s."
+func CreateTransferAccountPlainText(accountCell gotype.AccountCell,owner celltype.DasLockArgsPairParam) string {
+	celltype.DasLockCodeHashIndexType(accountCell.DasLockArgs[0])
+	return fmt.Sprintf(
+		transferAccountPlainText,
+		celltype.AccountFromOutputData(accountCell.Data),
+		accountCell.DasLockArgs)
+}
 
 func CreateMMJsonB(txDigestHexStr string) string {
 	return MMJsonA
