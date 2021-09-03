@@ -80,6 +80,13 @@ func NewTransactionBuilder3(action string,params []byte, fromScript *types.Scrip
 	return builder
 }
 
+func (builder *TransactionBuilder) InputsOutputsFeeCapacity() (uint64,uint64,uint64,error) {
+	if builder.totalInputCap != builder.totalOutputCap + builder.fee {
+		return 0, 0, 0, errors.New("capacity error, not equal")
+	}
+	return builder.fee,builder.totalInputCap,builder.totalOutputCap, nil
+}
+
 func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWithWitness) (*TransactionBuilder, error) {
 	if cellDep == nil {
 		return builder, nil
