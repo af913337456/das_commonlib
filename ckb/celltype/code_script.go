@@ -86,7 +86,7 @@ var (
 	}
 
 	DasLockCellScript = DASCellBaseInfo{
-		Name: "das_lock_cell",
+		Name: "das-lock",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0x22b7e4a537b107b32d3e1c5704455b30e04a63f0e97347b32155be49510ae0d0"),
 			TxIndex: 0,
@@ -145,7 +145,7 @@ var (
 	// 	},
 	// }
 	DasApplyRegisterCellScript = DASCellBaseInfo{
-		Name: "apply_register_cell",
+		Name: "apply-register-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0xbc4dec1c2a3b1a9bf76df3a66357c62ec4b543abb595b3ed10fe64e126efc509"),
 			TxIndex: 0,
@@ -181,7 +181,7 @@ var (
 	// 	},
 	// }
 	DasPreAccountCellScript = DASCellBaseInfo{
-		Name: "preAccount_cell",
+		Name: "pre-account-cell-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0xb4353dd3ada2b41b8932edbd853a853e81d50b4c8648c1afd93384b946425d15"), //"0x21b25ab337cbbc7aad691f0f767ec5a852bbb8f6b9ff53dd00e0505f72f1f89a"
 			TxIndex: 0,
@@ -199,7 +199,7 @@ var (
 		},
 	}
 	DasProposeCellScript = DASCellBaseInfo{
-		Name: "propose_cell",
+		Name: "propose-cell-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0xf3cf92357436e6b6438e33c5d68521cac816baff6ef60e9bfc733453a335a8d4"),
 			TxIndex: 0,
@@ -217,7 +217,7 @@ var (
 		},
 	}
 	DasAccountCellScript = DASCellBaseInfo{
-		Name: "account_cell",
+		Name: "account-cell-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0x9e867e0b7bcbd329b8fe311c8839e10bacac7303280b8124932c66f726c38d8a"),
 			TxIndex: 0,
@@ -235,6 +235,7 @@ var (
 		},
 	}
 	DasBiddingCellScript = DASCellBaseInfo{
+		Name: "bidding-cell-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0x123"),
 			TxIndex: 0,
@@ -259,7 +260,7 @@ var (
 		},
 	}
 	DasIncomeCellScript = DASCellBaseInfo{
-		Name: "income_cell",
+		Name: "income-cell-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0xa411dc40662eaf2c43d165c071947e7440e5ec01193954dbf06670bc6bf221c4"),
 			TxIndex: 0,
@@ -277,7 +278,7 @@ var (
 		},
 	}
 	DasConfigCellScript = DASCellBaseInfo{
-		Name: "config_cell",
+		Name: "config-cell-type",
 		Dep: DASCellBaseInfoDep{
 			TxHash:  types.HexToHash("0x97cf78ef50809505bba4ac78d8ee7908eccd1119aa08775814202e7801f4895b"),
 			TxIndex: 0,
@@ -328,7 +329,6 @@ func initMap() {
 	SystemCodeScriptMap.Store(DasPreAccountCellScript.Out.CodeHash, &DasPreAccountCellScript)
 	SystemCodeScriptMap.Store(DasAccountCellScript.Out.CodeHash, &DasAccountCellScript)
 	SystemCodeScriptMap.Store(DasBiddingCellScript.Out.CodeHash, &DasBiddingCellScript)
-	SystemCodeScriptMap.Store(DasOnSaleCellScript.Out.CodeHash, &DasOnSaleCellScript)
 	SystemCodeScriptMap.Store(DasProposeCellScript.Out.CodeHash, &DasProposeCellScript)
 	SystemCodeScriptMap.Store(DasConfigCellScript.Out.CodeHash, &DasConfigCellScript)
 	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash, &DasIncomeCellScript)
