@@ -141,6 +141,7 @@ func (m *MMJson) FillOutputs(outputList InputOutputParam712List,accountData *cel
 func (m *MMJson) Build() (*MMJsonObj,error) {
 	tmp := fmt.Sprintf(MMJsonA,m.plainText,m.inputsCapacity,m.outputsCapacity,m.fee,m.action,m.inputs,m.outputs,m.digest)
 	ret := MMJsonObj{}
+	fmt.Println(tmp)
 	if err := json.Unmarshal([]byte(tmp),&ret); err != nil {
 		return nil, err
 	}
@@ -308,7 +309,7 @@ func (m *MMJson) Fill712Action(action string,isOwner bool) {
 	if isOwner {
 		param = "0x00"
 	}
-	m.action = fmt.Sprintf(`{"action": %s,"params": %s}`, action, param)
+	m.action = fmt.Sprintf(`{"action": "%s","params": "%s"}`, action, param)
 }
 
 func (m *MMJson) Fill712Capacity(txBuilder *builder.TransactionBuilder) error {
