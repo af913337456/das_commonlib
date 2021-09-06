@@ -141,9 +141,9 @@ func (m *MMJson) FillOutputs(outputList InputOutputParam712List,accountData *cel
 func (m *MMJson) Build() (*MMJsonObj,error) {
 	tmp := fmt.Sprintf(MMJsonA,
 		m.plainText,
-		ckbValueStr(m.inputsCapacity),
-		ckbValueStr(m.outputsCapacity),
-		ckbValueStr(m.fee),m.action,
+		removeSuffixZeroChar(ckbValueStr(m.inputsCapacity)),
+		removeSuffixZeroChar(ckbValueStr(m.outputsCapacity)),
+		removeSuffixZeroChar(ckbValueStr(m.fee)),m.action,
 		m.inputs,m.outputs,m.digest)
 	ret := MMJsonObj{}
 	if err := json.Unmarshal([]byte(tmp),&ret); err != nil {
