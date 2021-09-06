@@ -123,5 +123,10 @@ func Test_QuoCkbValue(t *testing.T) {
 			new(big.Rat).SetInt(new(big.Int).SetUint64(11020001)),
 			new(big.Rat).SetInt(new(big.Int).SetUint64(celltype.OneCkb))).
 		FloatString(8)))
+	fmt.Println(removeSuffixZeroChar(new(big.Rat).
+		Quo(
+			new(big.Rat).SetInt(new(big.Int).SetUint64(10 * celltype.OneCkb)),
+			new(big.Rat).SetInt(new(big.Int).SetUint64(celltype.OneCkb))).
+		FloatString(8)))
 }
 
