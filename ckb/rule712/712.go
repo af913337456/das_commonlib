@@ -155,6 +155,7 @@ type InputOutputParam712 struct {
 	Type *types.Script `json:"-"`
 	Data []byte `json:"-"`
 }
+
 type inputOutputParam712 struct {
 	Capacity string `json:"capacity"`
 	LockStr string `json:"lock,omitempty"`
@@ -216,6 +217,29 @@ func parseScript(script *types.Script,dasCellInfo *celltype.DASCellBaseInfo) str
 	}
 	parseStr := fmt.Sprintf("%s,0x01,%s",dasCellInfo.Name,suffix)
 	return parseStr
+}
+func (list *InputOutputParam712List) AppendAccountCellInput(accountCell *gotype.AccountCell) {
+	*list = append(*list, InputOutputParam712{
+		Capacity: accountCell.CellCap,
+		Lock:     &types.Script{
+			CodeHash: celltype.DasLockCellScript.Out.CodeHash,
+			HashType: types.HashTypeType,
+			Args:     accountCell.DasLockArgs,
+		},
+		Type:     &types.Script{
+			CodeHash: celltype.DasAccountCellScript.Out.CodeHash,
+			HashType: types.HashTypeType,
+		},
+		Data: accountCell.Data,
+	})
+}
+func (list *InputOutputParam712List) AppendAccountCellOutput(cellCap uint64,data []byte,accountCell *celltype.AccountCell) {
+	*list = append(*list, InputOutputParam712{
+		Capacity: cellCap,
+		Lock:     accountCell.LockScript(),
+		Type:     accountCell.TypeScript(),
+		Data: data,
+	})
 }
 func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountCellData) (string,error) {
 	size := len(list)

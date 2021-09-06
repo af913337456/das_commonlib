@@ -19,6 +19,21 @@ import (
  * Description:
  */
 
+func Test_AppendAccountCellInput(t *testing.T) {
+	list := InputOutputParam712List{}
+	list.AppendAccountCellInput(&gotype.AccountCell{
+		CellCap:       123,
+		AccountId:     celltype.DasAccountId{},
+		Status:        0,
+		Point:         types.OutPoint{},
+		WitnessStatus: 0,
+		Data:          nil,
+		WitnessData:   nil,
+		DasLockArgs:   nil,
+	})
+	fmt.Println(list[0].Capacity)
+}
+
 func Test_MMJsonBuild(t *testing.T) {
 	inputs := InputOutputParam712List{
 		{
