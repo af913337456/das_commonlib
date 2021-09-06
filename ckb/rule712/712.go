@@ -59,9 +59,9 @@ var MMJsonA = `{
   },
   "message": {
     "plainText": "%s",
-    "inputsCapacity": "%d CKB",
-    "outputsCapacity": "%d CKB",
-    "fee": "%d CKB",
+    "inputsCapacity": "%s CKB",
+    "outputsCapacity": "%s CKB",
+    "fee": "%s CKB",
     "action": %s,
     "inputs": %s,
     "outputs": %s,
@@ -139,9 +139,13 @@ func (m *MMJson) FillOutputs(outputList InputOutputParam712List,accountData *cel
 }
 
 func (m *MMJson) Build() (*MMJsonObj,error) {
-	tmp := fmt.Sprintf(MMJsonA,m.plainText,m.inputsCapacity,m.outputsCapacity,m.fee,m.action,m.inputs,m.outputs,m.digest)
+	tmp := fmt.Sprintf(MMJsonA,
+		m.plainText,
+		ckbValueStr(m.inputsCapacity),
+		ckbValueStr(m.outputsCapacity),
+		ckbValueStr(m.fee),m.action,
+		m.inputs,m.outputs,m.digest)
 	ret := MMJsonObj{}
-	fmt.Println(tmp)
 	if err := json.Unmarshal([]byte(tmp),&ret); err != nil {
 		return nil, err
 	}
