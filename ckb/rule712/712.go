@@ -10,7 +10,6 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
-	"strings"
 )
 
 /**
@@ -297,22 +296,19 @@ func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountC
 	return string(jsonBytes), nil
 }
 
-func (m *MMJson) FillDigest(digest string){
-	if !strings.HasPrefix(digest,"0x") {
-		digest = "0x" + digest
-	}
-	m.digest = digest
-}
+// func (m *MMJson) FillDigest(digest string){
+// 	if !strings.HasPrefix(digest,"0x") {
+// 		digest = "0x" + digest
+// 	}
+// 	m.digest = digest
+// }
 
 func (m *MMJson) Fill712Action(action string,isOwner bool) {
 	param := "0x01"
 	if isOwner {
 		param = "0x00"
 	}
-	m.action = fmt.Sprintf(`{
-		"action": %s,
-		"params": %s
-	}`, action, param)
+	m.action = fmt.Sprintf(`{"action": %s,"params": %s}`, action, param)
 }
 
 func (m *MMJson) Fill712Capacity(txBuilder *builder.TransactionBuilder) error {
