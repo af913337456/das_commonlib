@@ -238,6 +238,7 @@ const (
 	ScriptType_DasManager_User LockScriptType = 4
 	ScriptType_DasOwner_User   LockScriptType = 5
 	ScriptType_TRON            LockScriptType = 6
+	ScriptType_712             LockScriptType = 7
 )
 
 func (l LockScriptType) ToDasLockCodeHashIndexType() DasLockCodeHashIndexType {
@@ -290,6 +291,7 @@ const (
 	DasLockCodeHashIndexType_CKB_AnyOne  DasLockCodeHashIndexType = 2
 	DasLockCodeHashIndexType_ETH_Normal  DasLockCodeHashIndexType = 3
 	DasLockCodeHashIndexType_TRON_Normal DasLockCodeHashIndexType = 4
+	DasLockCodeHashIndexType_712_Normal  DasLockCodeHashIndexType = 5
 )
 
 func (t DasLockCodeHashIndexType) Bytes() []byte {
@@ -325,6 +327,8 @@ func (t DasLockCodeHashIndexType) ToScriptType(fromOwner bool) LockScriptType {
 		return ScriptType_ETH
 	case DasLockCodeHashIndexType_TRON_Normal:
 		return ScriptType_TRON
+	case DasLockCodeHashIndexType_712_Normal:
+		return ScriptType_712
 	default:
 		return ScriptType_User
 	}
