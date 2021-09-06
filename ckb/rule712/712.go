@@ -398,6 +398,10 @@ func removeSuffixZeroChar(ckbValueStr string) string {
 			break
 		}
 	}
-	return ckbValueStr[0:size-index]
+	last := size-index
+	if ckbValueStr[last-1] == '.' {
+		last = last - 1
+	}
+	return ckbValueStr[0:last]
 }
 
