@@ -343,7 +343,7 @@ func Test_EchoAction(t *testing.T) {
 	s1  := ScriptDefault()
 	s12 := ScriptDefault()
 	action := NewActionDataBuilder().
-		Action(GoStrToMoleculeBytes(Action_BuyAccount)).
+		Action(GoStrToMoleculeBytes(Action_EditManager)).
 		Params(GoBytesToMoleculeBytes(append(s1.AsSlice(),s12.AsSlice()...))).
 		Build()
 	// 646173000000001f0000000c0000001b0000000b0000006275795f6163636f756e7400000000
