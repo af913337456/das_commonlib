@@ -41,7 +41,7 @@ func GetOwnerArgsFromDasLockArgs(args []byte) (celltype.ChainType, string) {
 		return celltype.ChainType_CKB, hex.EncodeToString(ownerArgsBytes)
 	case celltype.DasLockCodeHashIndexType_CKB_AnyOne:
 		return celltype.ChainType_CKB, hex.EncodeToString(ownerArgsBytes)
-	case celltype.DasLockCodeHashIndexType_ETH_Normal:
+	case celltype.DasLockCodeHashIndexType_ETH_Normal, celltype.DasLockCodeHashIndexType_712_Normal:
 		return celltype.ChainType_ETH, "0x" + hex.EncodeToString(ownerArgsBytes)
 	case celltype.DasLockCodeHashIndexType_TRON_Normal:
 		return celltype.ChainType_TRON, tron_chain.TronAddrHexPrefix + hex.EncodeToString(ownerArgsBytes)
@@ -56,6 +56,20 @@ func GetDasLockScript(chainType celltype.ChainType, address Address) (*ckbTypes.
 		return address.DasLockScript_CKB()
 	case celltype.ChainType_ETH:
 		return address.DasLockScript(celltype.DasLockCodeHashIndexType_ETH_Normal)
+	case celltype.ChainType_BTC:
+		return address.DasLockScript(celltype.ScriptType_BTC.ToDasLockCodeHashIndexType())
+	case celltype.ChainType_TRON:
+		return address.DasLockScript(celltype.DasLockCodeHashIndexType_TRON_Normal)
+	}
+	return nil, fmt.Errorf("unknow chain type:%d %s", chainType, address)
+}
+
+func GetDasLockScript712(chainType celltype.ChainType, address Address) (*ckbTypes.Script, error) {
+	switch chainType {
+	case celltype.ChainType_CKB:
+		return address.DasLockScript_CKB()
+	case celltype.ChainType_ETH:
+		return address.DasLockScript(celltype.DasLockCodeHashIndexType_712_Normal)
 	case celltype.ChainType_BTC:
 		return address.DasLockScript(celltype.ScriptType_BTC.ToDasLockCodeHashIndexType())
 	case celltype.ChainType_TRON:
@@ -132,9 +146,9 @@ type ReqFindTargetTypeScriptParam struct {
 	CodeHash  ckbTypes.Hash
 }
 type FindTargetTypeScriptRet struct {
-	Output *ckbTypes.CellOutput
-	Data   []byte
-	Tx     *ckbTypes.Transaction
+	Output        *ckbTypes.CellOutput
+	Data          []byte
+	Tx            *ckbTypes.Transaction
 	PreviousIndex uint
 }
 
@@ -152,9 +166,9 @@ func FindTargetTypeScriptByInputList(p *ReqFindTargetTypeScriptParam) (*FindTarg
 				if output.Lock != nil && output.Lock.CodeHash == codeHash &&
 					output.Lock.HashType == ckbTypes.HashTypeType && item.PreviousOutput.Index == uint(i) {
 					return &FindTargetTypeScriptRet{
-						Output: output,
-						Data:   tx.Transaction.OutputsData[i],
-						Tx:     tx.Transaction,
+						Output:        output,
+						Data:          tx.Transaction.OutputsData[i],
+						Tx:            tx.Transaction,
 						PreviousIndex: item.PreviousOutput.Index,
 					}, nil
 				}
@@ -164,9 +178,9 @@ func FindTargetTypeScriptByInputList(p *ReqFindTargetTypeScriptParam) (*FindTarg
 					output.Type.HashType == ckbTypes.HashTypeType &&
 					item.PreviousOutput.Index == uint(i) {
 					return &FindTargetTypeScriptRet{
-						Output: output,
-						Data:   tx.Transaction.OutputsData[i],
-						Tx:     tx.Transaction,
+						Output:        output,
+						Data:          tx.Transaction.OutputsData[i],
+						Tx:            tx.Transaction,
 						PreviousIndex: item.PreviousOutput.Index,
 					}, nil
 				}
