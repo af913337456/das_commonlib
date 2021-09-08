@@ -248,7 +248,8 @@ func (l LockScriptType) ToDasLockCodeHashIndexType() DasLockCodeHashIndexType {
 	case ScriptType_Any:
 		return DasLockCodeHashIndexType_CKB_AnyOne
 	case ScriptType_ETH:
-		return DasLockCodeHashIndexType_ETH_Normal
+		//return DasLockCodeHashIndexType_ETH_Normal
+		return DasLockCodeHashIndexType_712_Normal
 	case ScriptType_TRON:
 		return DasLockCodeHashIndexType_TRON_Normal
 	default:
@@ -304,7 +305,7 @@ func (t DasLockCodeHashIndexType) ChainType() ChainType {
 		return ChainType_CKB
 	case DasLockCodeHashIndexType_CKB_AnyOne:
 		return ChainType_CKB
-	case DasLockCodeHashIndexType_ETH_Normal:
+	case DasLockCodeHashIndexType_ETH_Normal, DasLockCodeHashIndexType_712_Normal:
 		return ChainType_ETH
 	case DasLockCodeHashIndexType_TRON_Normal:
 		return ChainType_TRON
