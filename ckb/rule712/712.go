@@ -91,37 +91,37 @@ type MMJsonObj struct {
 		} `json:"Transaction"`
 	} `json:"types"`
 	PrimaryType string `json:"primaryType"`
-	Domain struct {
-		ChainID int `json:"chainId"`
-		Name string `json:"name"`
+	Domain      struct {
+		ChainID           int    `json:"chainId"`
+		Name              string `json:"name"`
 		VerifyingContract string `json:"verifyingContract"`
-		Version string `json:"version"`
+		Version           string `json:"version"`
 	} `json:"domain"`
 	Message struct {
-		PlainText string `json:"plainText"`
-		InputsCapacity string `json:"inputsCapacity"`
-		OutputsCapacity string `json:"outputsCapacity"`
-		Fee string `json:"fee"`
-		Action  interface{} `json:"action"`
-		Inputs  interface{} `json:"inputs"`
-		Outputs interface{} `json:"outputs"`
-		Digest string `json:"digest"`
+		PlainText       string      `json:"plainText"`
+		InputsCapacity  string      `json:"inputsCapacity"`
+		OutputsCapacity string      `json:"outputsCapacity"`
+		Fee             string      `json:"fee"`
+		Action          interface{} `json:"action"`
+		Inputs          interface{} `json:"inputs"`
+		Outputs         interface{} `json:"outputs"`
+		Digest          string      `json:"digest"`
 	} `json:"message"`
 }
 
 type MMJson struct {
-	action string `json:"action"`
-	fee uint64
+	plainText       string
 	inputsCapacity  uint64
 	outputsCapacity uint64
-	plainText string
-	digest  string
-	inputs  string
-	outputs string
+	fee             uint64
+	action          string `json:"action"`
+	inputs          string
+	outputs         string
+	digest          string
 }
 
-func (m *MMJson) FillInputs(inputList InputOutputParam712List,accountData *celltype.AccountCellData) error {
-	inputStr,err := inputList.To712Json(accountData)
+func (m *MMJson) FillInputs(inputList InputOutputParam712List, accountData *celltype.AccountCellData) error {
+	inputStr, err := inputList.To712Json(accountData)
 	if err != nil {
 		return err
 	}
@@ -129,8 +129,8 @@ func (m *MMJson) FillInputs(inputList InputOutputParam712List,accountData *cellt
 	return nil
 }
 
-func (m *MMJson) FillOutputs(outputList InputOutputParam712List,accountData *celltype.AccountCellData) error {
-	outputStr,err := outputList.To712Json(accountData)
+func (m *MMJson) FillOutputs(outputList InputOutputParam712List, accountData *celltype.AccountCellData) error {
+	outputStr, err := outputList.To712Json(accountData)
 	if err != nil {
 		return err
 	}
@@ -138,15 +138,15 @@ func (m *MMJson) FillOutputs(outputList InputOutputParam712List,accountData *cel
 	return nil
 }
 
-func (m *MMJson) Build() (*MMJsonObj,error) {
+func (m *MMJson) Build() (*MMJsonObj, error) {
 	tmp := fmt.Sprintf(MMJsonA,
 		m.plainText,
 		removeSuffixZeroChar(ckbValueStr(m.inputsCapacity)),
 		removeSuffixZeroChar(ckbValueStr(m.outputsCapacity)),
-		removeSuffixZeroChar(ckbValueStr(m.fee)),m.action,
-		m.inputs,m.outputs,m.digest)
+		removeSuffixZeroChar(ckbValueStr(m.fee)), m.action,
+		m.inputs, m.outputs, m.digest)
 	ret := MMJsonObj{}
-	if err := json.Unmarshal([]byte(tmp),&ret); err != nil {
+	if err := json.Unmarshal([]byte(tmp), &ret); err != nil {
 		return nil, err
 	}
 	return &ret, nil
@@ -154,17 +154,17 @@ func (m *MMJson) Build() (*MMJsonObj,error) {
 
 type InputOutputParam712List []InputOutputParam712
 type InputOutputParam712 struct {
-	Capacity uint64 `json:"-"`
-	Lock *types.Script `json:"-"`
-	Type *types.Script `json:"-"`
-	Data []byte `json:"-"`
+	Capacity uint64        `json:"-"`
+	Lock     *types.Script `json:"-"`
+	Type     *types.Script `json:"-"`
+	Data     []byte        `json:"-"`
 }
 
 type inputOutputParam712 struct {
-	Capacity string `json:"capacity"`
-	LockStr string `json:"lock,omitempty"`
-	TypeStr string `json:"type,omitempty"`
-	Data string `json:"data"`
+	Capacity  string `json:"capacity"`
+	LockStr   string `json:"lock,omitempty"`
+	TypeStr   string `json:"type,omitempty"`
+	Data      string `json:"data"`
 	ExtraData string `json:"extraData"`
 }
 
@@ -175,7 +175,7 @@ func append0xEncode(b []byte) string {
 func (i InputOutputParam712) parseData() string {
 	if len(i.Data) > maxHashLen {
 		return append0xEncode(i.Data[:maxHashLen]) + "..."
-	} else{
+	} else {
 		if len(i.Data) == 0 {
 			return ""
 		}
@@ -212,43 +212,43 @@ func (i InputOutputParam712) parseData() string {
   "extraData": "{ status: 0, records_hash: 55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }"
 }
 */
-func parseScript(script *types.Script,dasCellInfo *celltype.DASCellBaseInfo) string {
+func parseScript(script *types.Script, dasCellInfo *celltype.DASCellBaseInfo) string {
 	suffix := ""
 	if len(script.Args) > maxHashLen {
 		suffix = append0xEncode(script.Args[:maxHashLen]) + "..."
 	} else {
 		suffix = append0xEncode(script.Args[:])
 	}
-	parseStr := fmt.Sprintf("%s,0x01,%s",dasCellInfo.Name,suffix)
+	parseStr := fmt.Sprintf("%s,0x01,%s", dasCellInfo.Name, suffix)
 	return parseStr
 }
 func (list *InputOutputParam712List) AppendAccountCellInput(accountCell *gotype.AccountCell) {
 	*list = append(*list, InputOutputParam712{
 		Capacity: accountCell.CellCap,
-		Lock:     &types.Script{
+		Lock: &types.Script{
 			CodeHash: celltype.DasLockCellScript.Out.CodeHash,
 			HashType: types.HashTypeType,
 			Args:     accountCell.DasLockArgs,
 		},
-		Type:     &types.Script{
+		Type: &types.Script{
 			CodeHash: celltype.DasAccountCellScript.Out.CodeHash,
 			HashType: types.HashTypeType,
 		},
 		Data: accountCell.Data,
 	})
 }
-func (list *InputOutputParam712List) AppendAccountCellOutput(cellCap uint64,data []byte,accountCell *celltype.AccountCell) {
+func (list *InputOutputParam712List) AppendAccountCellOutput(cellCap uint64, data []byte, accountCell *celltype.AccountCell) {
 	*list = append(*list, InputOutputParam712{
 		Capacity: cellCap,
 		Lock:     accountCell.LockScript(),
 		Type:     accountCell.TypeScript(),
-		Data: data,
+		Data:     data,
 	})
 }
-func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountCellData) (string,error) {
+func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountCellData) (string, error) {
 	size := len(list)
 	retList := make([]inputOutputParam712, 0, size)
-	for i :=0; i<size; i++ {
+	for i := 0; i < size; i++ {
 		item := list[i]
 		if item.Data == nil && item.Type == nil {
 			continue
@@ -259,29 +259,29 @@ func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountC
 			if item.Type != nil {
 				if typeInfo, ok := celltype.SystemCodeScriptMap.Load(item.Type.CodeHash); ok {
 					// das-type
-					retItem.TypeStr = parseScript(item.Type,typeInfo.(*celltype.DASCellBaseInfo))
+					retItem.TypeStr = parseScript(item.Type, typeInfo.(*celltype.DASCellBaseInfo))
 					if item.Lock != nil {
 						if lockInfo, ok := celltype.SystemCodeScriptMap.Load(item.Lock.CodeHash); ok {
 							// das-lock
-							retItem.LockStr = parseScript(item.Lock,lockInfo.(*celltype.DASCellBaseInfo))
+							retItem.LockStr = parseScript(item.Lock, lockInfo.(*celltype.DASCellBaseInfo))
 						}
 					}
 					if item.Type.CodeHash == celltype.DasAccountCellScript.Out.CodeHash {
-						expiredAt,err := celltype.ExpiredAtFromOutputData(item.Data)
+						expiredAt, err := celltype.ExpiredAtFromOutputData(item.Data)
 						if err != nil {
-							return "", fmt.Errorf("ExpiredAtFromOutputData err: %s",err.Error())
+							return "", fmt.Errorf("ExpiredAtFromOutputData err: %s", err.Error())
 						}
 						status, err := celltype.MoleculeU8ToGo(accountCellData.Status().RawData())
 						if err != nil {
 							return "", fmt.Errorf("parse accountCell's status err: %s", err.Error())
 						}
 						rawAccount := celltype.AccountCharsToAccount(*accountCellData.Account())
-						retItem.Data = fmt.Sprintf("{ account: %s, expired_at: %d }",rawAccount,expiredAt)
-						recordsHashBytes,err := blake2b.Blake256(accountCellData.Records().AsSlice())
+						retItem.Data = fmt.Sprintf("{ account: %s, expired_at: %d }", rawAccount, expiredAt)
+						recordsHashBytes, err := blake2b.Blake256(accountCellData.Records().AsSlice())
 						if err != nil {
 							return "", fmt.Errorf("parse accountCell's Records err: %s", err.Error())
 						}
-						retItem.ExtraData = fmt.Sprintf("{ status: %d, records_hash: %s }",status,types.BytesToHash(recordsHashBytes).String())
+						retItem.ExtraData = fmt.Sprintf("{ status: %d, records_hash: %s }", status, types.BytesToHash(recordsHashBytes).String())
 					}
 				} else {
 					// not das-type
@@ -291,10 +291,10 @@ func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountC
 				// type is nil, but data not empty
 				retItem.Data = item.parseData()
 			}
-			retList = append(retList,retItem)
+			retList = append(retList, retItem)
 		}
 	}
-	jsonBytes,err := json.Marshal(retList)
+	jsonBytes, err := json.Marshal(retList)
 	if err != nil {
 		return "", err
 	}
@@ -308,7 +308,7 @@ func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountC
 // 	m.digest = digest
 // }
 
-func (m *MMJson) Fill712Action(action string,isOwner bool) {
+func (m *MMJson) Fill712Action(action string, isOwner bool) {
 	param := "0x01"
 	if isOwner {
 		param = "0x00"
@@ -317,9 +317,9 @@ func (m *MMJson) Fill712Action(action string,isOwner bool) {
 }
 
 func (m *MMJson) Fill712Capacity(txBuilder *builder.TransactionBuilder) error {
-	fee,inputCap,outputCap,err := txBuilder.InputsOutputsFeeCapacity()
+	fee, inputCap, outputCap, err := txBuilder.InputsOutputsFeeCapacity()
 	if err != nil {
-		return fmt.Errorf("InputsOutputsFeeCapacity err: %s",err.Error())
+		return fmt.Errorf("InputsOutputsFeeCapacity err: %s", err.Error())
 	}
 	m.fee = fee
 	m.inputsCapacity = inputCap
@@ -329,13 +329,14 @@ func (m *MMJson) Fill712Capacity(txBuilder *builder.TransactionBuilder) error {
 
 // Transfer the account xxxxxxxxxx.bit from ETH:0x11111111111111 to TRX:0x22222222222222.
 var transferAccountPlainText = "Transfer the account %s from %s:%s to %s:%s."
-func (m *MMJson) FillTransferAccountPlainText(isTestNet bool,accountCell *gotype.AccountCell,newOwnerParam celltype.DasLockArgsPairParam) {
+
+func (m *MMJson) FillTransferAccountPlainText(isTestNet bool, accountCell *gotype.AccountCell, newOwnerParam celltype.DasLockArgsPairParam) {
 	originOwnerIndexType := celltype.DasLockCodeHashIndexType(accountCell.DasLockArgs[0])
-	originOwnerAddrBytes := accountCell.DasLockArgs[1:celltype.DasLockArgsMinBytesLen/2]
-	newOwnerAddrBytes := newOwnerParam.Script.Args[1:celltype.DasLockArgsMinBytesLen/2]
-	account,_ := celltype.AccountFromOutputData(accountCell.Data)
-	originOwnerAddr := gotype.PubkeyHashToAddress(isTestNet,originOwnerIndexType.ChainType(),hex.EncodeToString(originOwnerAddrBytes))
-	newOwnerAddr := gotype.PubkeyHashToAddress(isTestNet,newOwnerParam.HashIndexType.ChainType(),hex.EncodeToString(newOwnerAddrBytes))
+	originOwnerAddrBytes := accountCell.DasLockArgs[1 : celltype.DasLockArgsMinBytesLen/2]
+	newOwnerAddrBytes := newOwnerParam.Script.Args[1 : celltype.DasLockArgsMinBytesLen/2]
+	account, _ := celltype.AccountFromOutputData(accountCell.Data)
+	originOwnerAddr := gotype.PubkeyHashToAddress(isTestNet, originOwnerIndexType.ChainType(), hex.EncodeToString(originOwnerAddrBytes))
+	newOwnerAddr := gotype.PubkeyHashToAddress(isTestNet, newOwnerParam.HashIndexType.ChainType(), hex.EncodeToString(newOwnerAddrBytes))
 	m.plainText = fmt.Sprintf(
 		transferAccountPlainText,
 		account,
@@ -348,40 +349,41 @@ func (m *MMJson) FillTransferAccountPlainText(isTestNet bool,accountCell *gotype
 // Transfer from ckb1xxxx(111.111 CKB), ckb1yyyy(222.222 CKB) to ckb1zzzz(333 CKB), ckb1zzzz(0.333 CKB).
 type WithdrawPlainTextOutputParam struct {
 	ReceiverCkbScript types.Script
-	Amount  uint64
+	Amount            uint64
 }
 
 func ckbValueStr(cellCap uint64) string {
-	first  := new(big.Rat).SetInt(new(big.Int).SetUint64(cellCap))
+	first := new(big.Rat).SetInt(new(big.Int).SetUint64(cellCap))
 	second := new(big.Rat).SetInt(new(big.Int).SetUint64(celltype.OneCkb))
-	return new(big.Rat).Quo(first,second).FloatString(8)
+	return new(big.Rat).Quo(first, second).FloatString(8)
 }
+
 // now, always withdraw all the money, so there is no change cell
-func (m *MMJson) FillWithdrawPlainText(isTestNet bool,inputs []gotype.WithdrawDasLockCell, output WithdrawPlainTextOutputParam) {
+func (m *MMJson) FillWithdrawPlainText(isTestNet bool, inputs []gotype.WithdrawDasLockCell, output WithdrawPlainTextOutputParam) {
 	inputStr := ""
 	inputSize := len(inputs)
-	for i :=0; i<inputSize; i++ {
+	for i := 0; i < inputSize; i++ {
 		item := inputs[i]
 		hashIndex := celltype.DasLockCodeHashIndexType(item.LockScriptArgs[0])
-		str := gotype.PubkeyHashToAddress(isTestNet,hashIndex.ChainType(),hex.EncodeToString(item.LockScriptArgs[1:celltype.DasLockArgsMinBytesLen/2]))
+		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(item.LockScriptArgs[1:celltype.DasLockArgsMinBytesLen/2]))
 		ckbValueStr := ckbValueStr(item.CellCap)
-		if i == inputSize - 1 {
-			inputStr = inputStr + fmt.Sprintf("%s(%s CKB) ",str,removeSuffixZeroChar(ckbValueStr))
+		if i == inputSize-1 {
+			inputStr = inputStr + fmt.Sprintf("%s(%s CKB) ", str, removeSuffixZeroChar(ckbValueStr))
 		} else {
-			inputStr = inputStr + fmt.Sprintf("%s(%s CKB), ",str,removeSuffixZeroChar(ckbValueStr))
+			inputStr = inputStr + fmt.Sprintf("%s(%s CKB), ", str, removeSuffixZeroChar(ckbValueStr))
 		}
 	}
-	receiverAddr := gotype.PubkeyHashToAddress(isTestNet,celltype.ChainType_CKB,hex.EncodeToString(output.ReceiverCkbScript.Args))
-	inputStr = inputStr + fmt.Sprintf("to %s(%s CKB)",receiverAddr,ckbValueStr(output.Amount))
-	m.plainText = fmt.Sprintf("Transfer from %s.",inputStr)
+	receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
+	inputStr = inputStr + fmt.Sprintf("to %s(%s CKB)", receiverAddr, ckbValueStr(output.Amount))
+	m.plainText = fmt.Sprintf("Transfer from %s.", inputStr)
 }
 
-func (m *MMJson) FillEditRecordPlainText(account celltype.DasAccount)  {
-	m.plainText = fmt.Sprintf("Edit records of account %s .",account)
+func (m *MMJson) FillEditRecordPlainText(account celltype.DasAccount) {
+	m.plainText = fmt.Sprintf("Edit records of account %s .", account)
 }
 
-func (m *MMJson) FillEditManagerPlainText(account celltype.DasAccount)  {
-	m.plainText = fmt.Sprintf("Edit manager of account %s .",account)
+func (m *MMJson) FillEditManagerPlainText(account celltype.DasAccount) {
+	m.plainText = fmt.Sprintf("Edit manager of account %s .", account)
 }
 
 func CreateMMJsonB(txDigestHexStr string) string {
@@ -391,17 +393,16 @@ func CreateMMJsonB(txDigestHexStr string) string {
 func removeSuffixZeroChar(ckbValueStr string) string {
 	size := len(ckbValueStr)
 	index := 0
-	for i :=size-1; i >= 0; i-- {
+	for i := size - 1; i >= 0; i-- {
 		if ckbValueStr[i] == '0' {
-			index ++
+			index++
 		} else {
 			break
 		}
 	}
-	last := size-index
+	last := size - index
 	if ckbValueStr[last-1] == '.' {
 		last = last - 1
 	}
 	return ckbValueStr[0:last]
 }
-
