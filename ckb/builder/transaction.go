@@ -2,6 +2,7 @@ package builder
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
@@ -45,7 +46,7 @@ type TransactionBuilder struct {
 }
 
 func NewTransactionBuilder0(action string, fromScript *types.Script, fee uint64) *TransactionBuilder {
-	return NewTransactionBuilder3(action,nil,fromScript,fee)
+	return NewTransactionBuilder3(action, nil, fromScript, fee)
 }
 
 func NewTransactionBuilder1(from string, fee uint64) (*TransactionBuilder, error) {
@@ -68,7 +69,7 @@ func NewTransactionBuilder2(fromScript *types.Script, fee uint64) *TransactionBu
 	}
 }
 
-func NewTransactionBuilder3(action string,params []byte, fromScript *types.Script, fee uint64) *TransactionBuilder {
+func NewTransactionBuilder3(action string, params []byte, fromScript *types.Script, fee uint64) *TransactionBuilder {
 	builder := NewTransactionBuilder2(fromScript, fee)
 	actionBuilder := celltype.NewActionDataBuilder().Action(celltype.GoStrToMoleculeBytes(action))
 	if params != nil {
@@ -80,11 +81,11 @@ func NewTransactionBuilder3(action string,params []byte, fromScript *types.Scrip
 	return builder
 }
 
-func (builder *TransactionBuilder) InputsOutputsFeeCapacity() (uint64,uint64,uint64,error) {
-	if builder.totalInputCap != builder.totalOutputCap + builder.fee {
+func (builder *TransactionBuilder) InputsOutputsFeeCapacity() (uint64, uint64, uint64, error) {
+	if builder.totalInputCap != builder.totalOutputCap+builder.fee {
 		return 0, 0, 0, errors.New("capacity error, not equal")
 	}
-	return builder.fee,builder.totalInputCap,builder.totalOutputCap, nil
+	return builder.fee, builder.totalInputCap, builder.totalOutputCap, nil
 }
 
 func (builder *TransactionBuilder) AddWitnessCellDep(cellDep *celltype.CellDepWithWitness) (*TransactionBuilder, error) {
@@ -158,9 +159,9 @@ func (builder *TransactionBuilder) OutputIndex() uint32 {
 
 // auto calculate inputs
 func (builder *TransactionBuilder) AddInputAutoComputeItems(liveCells []indexer.LiveCell, lockType celltype.LockScriptType) ([]*types.OutPoint, error) {
-	return builder.AddInputAutoComputeItemsCustomNeeCap(liveCells,lockType,builder.NeedCapacityValue())
+	return builder.AddInputAutoComputeItemsCustomNeeCap(liveCells, lockType, builder.NeedCapacityValue())
 }
-func (builder *TransactionBuilder) AddInputAutoComputeItemsCustomNeeCap(liveCells []indexer.LiveCell, lockType celltype.LockScriptType,needCap uint64) ([]*types.OutPoint, error) {
+func (builder *TransactionBuilder) AddInputAutoComputeItemsCustomNeeCap(liveCells []indexer.LiveCell, lockType celltype.LockScriptType, needCap uint64) ([]*types.OutPoint, error) {
 	if needCap == 0 {
 		return nil, nil
 	}
@@ -215,13 +216,13 @@ func (builder *TransactionBuilder) AddDasSpecOutputWithCustomCellCap(cell cellty
 	return builder.addDasSpecOutput(cell, nil, cellCap, 0)
 }
 
-func (builder *TransactionBuilder) AddDasSpecOutputWithCallBackCustomCellCap(cell celltype.ICellType, cellCap uint64,callback celltype.AddDasOutputCallback) *TransactionBuilder {
+func (builder *TransactionBuilder) AddDasSpecOutputWithCallBackCustomCellCap(cell celltype.ICellType, cellCap uint64, callback celltype.AddDasOutputCallback) *TransactionBuilder {
 	return builder.addDasSpecOutput(cell, callback, cellCap, 0)
 }
 
 func (builder *TransactionBuilder) addDasSpecOutput(cell celltype.ICellType, callback celltype.AddDasOutputCallback, custom, increment uint64) *TransactionBuilder {
 	if soDeps := cell.SoDeps(); len(soDeps) > 0 {
-		for i :=0; i< len(soDeps); i++ {
+		for i := 0; i < len(soDeps); i++ {
 			builder.AddCellDep(&soDeps[i])
 		}
 	}
@@ -273,10 +274,10 @@ func (builder *TransactionBuilder) FromScript() *types.Script {
 
 // NOTE: call this method after add inputs && add outputs
 func (builder *TransactionBuilder) AddChargeOutput(receiver *types.Script, signCell *utils.SystemScriptCell) *TransactionBuilder {
-	return builder.AddChargeOutputFeeSafe(receiver,signCell,false)
+	return builder.AddChargeOutputFeeSafe(receiver, signCell, false)
 }
 
-func (builder *TransactionBuilder) AddChargeOutputFeeSafe(receiver *types.Script, signCell *utils.SystemScriptCell,appendToCharge bool) *TransactionBuilder {
+func (builder *TransactionBuilder) AddChargeOutputFeeSafe(receiver *types.Script, signCell *utils.SystemScriptCell, appendToCharge bool) *TransactionBuilder {
 	builder.AddCellDep(&types.CellDep{
 		OutPoint: signCell.OutPoint,
 		DepType:  types.DepTypeDepGroup,
@@ -288,7 +289,7 @@ func (builder *TransactionBuilder) AddChargeOutputFeeSafe(receiver *types.Script
 	if chargeCap < celltype.CkbTxMinOutputCKBValue {
 		if appendToCharge {
 			outputSize := len(builder.tx.Outputs)
-			for i :=0; i< outputSize; i++ {
+			for i := 0; i < outputSize; i++ {
 				if builder.tx.Outputs[i].Lock.Equals(receiver) {
 					builder.tx.Outputs[i].Capacity = builder.tx.Outputs[i].Capacity + chargeCap
 					break
@@ -420,8 +421,11 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		return nil, err
 	}
 	message := append(hash.Bytes())
+	fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(message))
 	message = append(message, length...)
+	fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(message))
 	message = append(message, data...)
+	fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(message))
 
 	// hash the other witnesses in the group
 	if len(group) > 1 {
@@ -431,6 +435,7 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 			binary.LittleEndian.PutUint64(length, uint64(len(data)))
 			message = append(message, length...)
 			message = append(message, data...)
+			fmt.Println("BuildTxMessageWithoutSign--group:  ", hex.EncodeToString(message))
 		}
 	}
 	// hash witnesses which do not in any input group
@@ -439,7 +444,9 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		binary.LittleEndian.PutUint64(length, uint64(len(witness)))
 		message = append(message, length...)
 		message = append(message, witness...)
+		fmt.Println("BuildTxMessageWithoutSign--witness:  ", hex.EncodeToString(message))
 	}
+	fmt.Println("BuildTxMessageWithoutSign--res:", hex.EncodeToString(message))
 
 	switch chainType {
 	case celltype.ChainType_ETH:
