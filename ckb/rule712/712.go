@@ -40,7 +40,7 @@ var MMJsonA = `{
       {"name": "extraData", "type": "string"}
     ],
     "Transaction": [
-      {"name": "plainText", "type": "string"},
+      {"name": "DAS_MESSAGE", "type": "string"},
       {"name": "inputsCapacity", "type": "string"},
       {"name": "outputsCapacity", "type": "string"},
       {"name": "fee", "type": "string"},
