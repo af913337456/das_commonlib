@@ -2,7 +2,6 @@ package builder
 
 import (
 	"encoding/binary"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
@@ -421,11 +420,11 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		return nil, err
 	}
 	message := append(hash.Bytes())
-	fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(hash.Bytes()))
+	//fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(hash.Bytes()))
 	message = append(message, length...)
-	fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(length))
+	//fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(length))
 	message = append(message, data...)
-	fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(data))
+	//fmt.Println("BuildTxMessageWithoutSign:", hex.EncodeToString(data))
 
 	// hash the other witnesses in the group
 	if len(group) > 1 {
@@ -434,9 +433,9 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 			length := make([]byte, 8)
 			binary.LittleEndian.PutUint64(length, uint64(len(data)))
 			message = append(message, length...)
-			fmt.Println("BuildTxMessageWithoutSign--group:  ", hex.EncodeToString(length))
+			//fmt.Println("BuildTxMessageWithoutSign--group:  ", hex.EncodeToString(length))
 			message = append(message, data...)
-			fmt.Println("BuildTxMessageWithoutSign--group:  ", hex.EncodeToString(data))
+			//fmt.Println("BuildTxMessageWithoutSign--group:  ", hex.EncodeToString(data))
 		}
 	}
 	// hash witnesses which do not in any input group
@@ -444,11 +443,11 @@ func BuildTxMessageWithoutSign(tx *types.Transaction, group []int, witnessArgs *
 		length := make([]byte, 8)
 		binary.LittleEndian.PutUint64(length, uint64(len(witness)))
 		message = append(message, length...)
-		fmt.Println("BuildTxMessageWithoutSign--witness:  ", hex.EncodeToString(length))
+		//fmt.Println("BuildTxMessageWithoutSign--witness:  ", hex.EncodeToString(length))
 		message = append(message, witness...)
-		fmt.Println("BuildTxMessageWithoutSign--witness:  ", hex.EncodeToString(witness))
+		//fmt.Println("BuildTxMessageWithoutSign--witness:  ", hex.EncodeToString(witness))
 	}
-	fmt.Println("BuildTxMessageWithoutSign--res:", hex.EncodeToString(message))
+	//fmt.Println("BuildTxMessageWithoutSign--res:", hex.EncodeToString(message))
 
 	switch chainType {
 	case celltype.ChainType_ETH:

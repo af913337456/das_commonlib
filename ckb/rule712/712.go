@@ -98,8 +98,7 @@ type MMJsonObj struct {
 		Version           string `json:"version"`
 	} `json:"domain"`
 	Message struct {
-		DasMessage string `json:"DAS_MESSAGE"`
-		//PlainText       string                `json:"plainText"`
+		DasMessage      string                `json:"DAS_MESSAGE"`
 		InputsCapacity  string                `json:"inputsCapacity"`
 		OutputsCapacity string                `json:"outputsCapacity"`
 		Fee             string                `json:"fee"`
@@ -111,8 +110,7 @@ type MMJsonObj struct {
 }
 
 type MMJson struct {
-	dasMessage string `json:"DAS_MESSAGE"`
-	//plainText       string `json:"plainText"`
+	dasMessage      string `json:"DAS_MESSAGE"`
 	inputsCapacity  uint64 `json:"inputsCapacity"`
 	outputsCapacity uint64 `json:"outputsCapacity"`
 	fee             uint64 `json:"fee"`
@@ -330,25 +328,6 @@ func (m *MMJson) Fill712Capacity(txBuilder *builder.TransactionBuilder) error {
 	return nil
 }
 
-// Transfer the account xxxxxxxxxx.bit from ETH:0x11111111111111 to TRX:0x22222222222222.
-//var transferAccountPlainText = "Transfer the account %s from %s:%s to %s:%s."
-//
-//func (m *MMJson) FillTransferAccountPlainText(isTestNet bool, accountCell *gotype.AccountCell, newOwnerParam celltype.DasLockArgsPairParam) {
-//	originOwnerIndexType := celltype.DasLockCodeHashIndexType(accountCell.DasLockArgs[0])
-//	originOwnerAddrBytes := accountCell.DasLockArgs[1 : celltype.DasLockArgsMinBytesLen/2]
-//	newOwnerAddrBytes := newOwnerParam.Script.Args[1 : celltype.DasLockArgsMinBytesLen/2]
-//	account, _ := celltype.AccountFromOutputData(accountCell.Data)
-//	originOwnerAddr := gotype.PubkeyHashToAddress(isTestNet, originOwnerIndexType.ChainType(), hex.EncodeToString(originOwnerAddrBytes))
-//	newOwnerAddr := gotype.PubkeyHashToAddress(isTestNet, newOwnerParam.HashIndexType.ChainType(), hex.EncodeToString(newOwnerAddrBytes))
-//	m.plainText = fmt.Sprintf(
-//		transferAccountPlainText,
-//		account,
-//		originOwnerIndexType.ChainType().String(),
-//		originOwnerAddr,
-//		newOwnerParam.HashIndexType.ChainType().String(),
-//		newOwnerAddr)
-//}
-
 var transferAccountDasMessage = "TRANSFER THE ACCOUNT %s TO %s:%s"
 
 func (m *MMJson) FillTransferAccountDasMessage(isTestNet bool, accountCell *gotype.AccountCell, newOwnerParam celltype.DasLockArgsPairParam) {
@@ -378,25 +357,6 @@ func ckbValueStr(cellCap uint64) string {
 }
 
 // now, always withdraw all the money, so there is no change cell
-//func (m *MMJson) FillWithdrawPlainText(isTestNet bool, inputs []gotype.WithdrawDasLockCell, output WithdrawPlainTextOutputParam) {
-//	inputStr := ""
-//	inputSize := len(inputs)
-//	for i := 0; i < inputSize; i++ {
-//		item := inputs[i]
-//		hashIndex := celltype.DasLockCodeHashIndexType(item.LockScriptArgs[0])
-//		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(item.LockScriptArgs[1:celltype.DasLockArgsMinBytesLen/2]))
-//		ckbValueStr := ckbValueStr(item.CellCap)
-//		if i == inputSize-1 {
-//			inputStr = inputStr + fmt.Sprintf("%s(%s CKB) ", str, removeSuffixZeroChar(ckbValueStr))
-//		} else {
-//			inputStr = inputStr + fmt.Sprintf("%s(%s CKB), ", str, removeSuffixZeroChar(ckbValueStr))
-//		}
-//	}
-//	receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
-//	inputStr = inputStr + fmt.Sprintf("to %s(%s CKB)", receiverAddr, ckbValueStr(output.Amount))
-//	m.plainText = fmt.Sprintf("Transfer from %s.", inputStr)
-//}
-
 func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.WithdrawDasLockCell, output WithdrawPlainTextOutputParam) {
 	inputStr := ""
 	inputSize := len(inputs)
@@ -416,17 +376,9 @@ func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.Withdraw
 	m.dasMessage = fmt.Sprintf("TRANSFER FROM %s", inputStr)
 }
 
-//func (m *MMJson) FillEditRecordPlainText(account celltype.DasAccount) {
-//	m.plainText = fmt.Sprintf("Edit records of account %s .", account)
-//}
-
 func (m *MMJson) FillEditRecordDasMessage(account celltype.DasAccount) {
 	m.dasMessage = fmt.Sprintf("EDIT RECORDS OF ACCOUNT %s", account)
 }
-
-//func (m *MMJson) FillEditManagerPlainText(account celltype.DasAccount) {
-//	m.plainText = fmt.Sprintf("Edit manager of account %s .", account)
-//}
 
 func (m *MMJson) FillEditManagerDasMessage(account celltype.DasAccount) {
 	m.dasMessage = fmt.Sprintf("EDIT MANAGER OF ACCOUNT %s", account)
