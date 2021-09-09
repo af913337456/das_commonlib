@@ -110,14 +110,14 @@ type MMJsonObj struct {
 }
 
 type MMJson struct {
-	plainText       string
-	inputsCapacity  uint64
-	outputsCapacity uint64
-	fee             uint64
+	plainText       string `json:"plainText"`
+	inputsCapacity  uint64 `json:"inputsCapacity"`
+	outputsCapacity uint64 `json:"outputsCapacity"`
+	fee             uint64 `json:"fee"`
 	action          string `json:"action"`
-	inputs          string
-	outputs         string
-	digest          string
+	inputs          string `json:"inputs"`
+	outputs         string `json:"outputs"`
+	digest          string `json:"digest"`
 }
 
 func (m *MMJson) FillInputs(inputList InputOutputParam712List, accountData *celltype.AccountCellData) error {
