@@ -52,7 +52,7 @@ var MMJsonA = `{
   },
   "primaryType": "Transaction",
   "domain": {
-    "chainId": 1,
+    "chainId": 5,
     "name": "da.systems",
     "verifyingContract": "0x0000000000000000000000000000000020210722",
     "version": "1"
