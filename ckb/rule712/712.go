@@ -98,14 +98,14 @@ type MMJsonObj struct {
 		Version           string `json:"version"`
 	} `json:"domain"`
 	Message struct {
-		PlainText       string      `json:"plainText"`
-		InputsCapacity  string      `json:"inputsCapacity"`
-		OutputsCapacity string      `json:"outputsCapacity"`
-		Fee             string      `json:"fee"`
-		Action          interface{} `json:"action"`
-		Inputs          interface{} `json:"inputs"`
-		Outputs         interface{} `json:"outputs"`
-		Digest          string      `json:"digest"`
+		PlainText       string                `json:"plainText"`
+		InputsCapacity  string                `json:"inputsCapacity"`
+		OutputsCapacity string                `json:"outputsCapacity"`
+		Fee             string                `json:"fee"`
+		Action          interface{}           `json:"action"`
+		Inputs          []inputOutputParam712 `json:"inputs"`
+		Outputs         []inputOutputParam712 `json:"outputs"`
+		Digest          string                `json:"digest"`
 	} `json:"message"`
 }
 
