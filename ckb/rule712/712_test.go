@@ -37,10 +37,10 @@ func Test_AppendAccountCellInput(t *testing.T) {
 func Test_MMJsonBuild(t *testing.T) {
 	inputs := InputOutputParam712List{
 		{
-			Capacity:  1212121212121,
-			Lock:      nil,
-			Type:      nil,
-			Data:      []byte("123424232"),
+			Capacity: 1212121212121,
+			Lock:     nil,
+			Type:     nil,
+			Data:     []byte("123424232"),
 		},
 	}
 	m := &MMJson{
@@ -53,16 +53,16 @@ func Test_MMJsonBuild(t *testing.T) {
 		inputs:          "[{\"capacity\":\"221. CKB\",\"lock\":\"das-lock,0x01,0x0019b04faf5b6e76e6d6640344b23dc16ffd9010...\",\"type\":\"account-cell-type,0x01,0x\",\"data\":\"{ account: linguaniii.bit, expired_at: 1661877499 }\",\"extraData\":\"{ status: 0, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }\"}]",
 		outputs:         "[{\"capacity\":\"220.9999 CKB\",\"lock\":\"das-lock,0x01,0x0019b04faf5b6e76e6d6640344b23dc16ffd9010...\",\"type\":\"account-cell-type,0x01,0x\",\"data\":\"{ account: linguaniii.bit, expired_at: 1661877499 }\",\"extraData\":\"{ status: 0, records_hash: 0xa34bb356af1a5260ff86dfbba27d74bf697a453ee6d44a6517cfe62cf8f0e94a }\"}]",
 	}
-	_ = m.FillInputs(inputs,nil)
-	_ = m.FillOutputs(inputs,nil)
-	obj,err := m.Build()
-	fmt.Println("build err:",err)
-	bys,_ := json.MarshalIndent(obj," "," ")
+	_ = m.FillInputs(inputs, nil)
+	_ = m.FillOutputs(inputs, nil)
+	obj, err := m.Build()
+	fmt.Println("build err:", err)
+	bys, _ := json.MarshalIndent(obj, " ", " ")
 	fmt.Println(string(bys))
 }
 
 func Test_CreateWithdrawPlainText(t *testing.T) {
-	bys,_ := hex.DecodeString("00dc36477cf2434288a5502120ef0fd919ae37c15500dc36477cf2434288a5502120ef0fd919ae37c155")
+	bys, _ := hex.DecodeString("00dc36477cf2434288a5502120ef0fd919ae37c15500dc36477cf2434288a5502120ef0fd919ae37c155")
 	inputs := []gotype.WithdrawDasLockCell{
 		{
 			OutPoint:       nil,
@@ -85,7 +85,7 @@ func Test_CreateWithdrawPlainText(t *testing.T) {
 			CellCap:        12345678,
 		},
 	}
-	bys2,_ := hex.DecodeString("dc36477cf2434288a5502120ef0fd919ae37c155")
+	bys2, _ := hex.DecodeString("dc36477cf2434288a5502120ef0fd919ae37c155")
 	output := WithdrawPlainTextOutputParam{
 		ReceiverCkbScript: types.Script{
 			CodeHash: types.Hash{},
@@ -94,7 +94,7 @@ func Test_CreateWithdrawPlainText(t *testing.T) {
 		},
 		Amount: 9863781321,
 	}
-	new(MMJson).FillWithdrawPlainText(true,inputs,output)
+	new(MMJson).FillWithdrawPlainText(true, inputs, output)
 }
 
 func Test_QuoCkbValue(t *testing.T) {
@@ -125,8 +125,27 @@ func Test_QuoCkbValue(t *testing.T) {
 		FloatString(8)))
 	fmt.Println(removeSuffixZeroChar(new(big.Rat).
 		Quo(
-			new(big.Rat).SetInt(new(big.Int).SetUint64(10 * celltype.OneCkb)),
+			new(big.Rat).SetInt(new(big.Int).SetUint64(10*celltype.OneCkb)),
 			new(big.Rat).SetInt(new(big.Int).SetUint64(celltype.OneCkb))).
 		FloatString(8)))
 }
 
+func TestJson(t *testing.T) {
+	//{
+	//	"capacity":"225 CKB",
+	//	"data":"{ account: tangzhihong005.bit, expired_at: 1662629612 }",
+	//	"extraData":"{ status: 0, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }",
+	//	"lock":"das-lock,0x01,0x0515a33588908cf8edb27d1abe3852bf287abd38...",
+	//	"type":"account-cell-type,0x01,0x"
+	//}
+	var retList []inputOutputParam712
+	var ijson inputOutputParam712
+	ijson.Capacity = "225 CKB"
+	ijson.Data = "{ account: tangzhihong005.bit, expired_at: 1662629612 }"
+	ijson.ExtraData = "{ status: 0, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }"
+	ijson.LockStr = "das-lock,0x01,0x0515a33588908cf8edb27d1abe3852bf287abd38..."
+	ijson.TypeStr = "account-cell-type,0x01,0x"
+	retList = append(retList, ijson, ijson)
+	data, _ := json.Marshal(retList)
+	fmt.Println(string(data))
+}

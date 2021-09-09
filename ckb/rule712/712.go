@@ -162,8 +162,8 @@ type InputOutputParam712 struct {
 
 type inputOutputParam712 struct {
 	Capacity  string `json:"capacity"`
-	LockStr   string `json:"lock,omitempty"`
-	TypeStr   string `json:"type,omitempty"`
+	LockStr   string `json:"lock"`
+	TypeStr   string `json:"type"`
 	Data      string `json:"data"`
 	ExtraData string `json:"extraData"`
 }
@@ -298,6 +298,7 @@ func (list InputOutputParam712List) To712Json(accountCellData *celltype.AccountC
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("jsonBytes:", string(jsonBytes))
 	return string(jsonBytes), nil
 }
 
