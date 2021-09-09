@@ -54,7 +54,7 @@ var MMJsonA = `{
   "domain": {
     "chainId": 1,
     "name": "da.systems",
-    "verifyingContract": "0xb3dc32341ee4bae03c85cd663311de0b1b122955",
+    "verifyingContract": "0x0000000000000000000000000000000020210722",
     "version": "1"
   },
   "message": {
