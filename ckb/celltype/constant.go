@@ -74,6 +74,7 @@ var (
 	ProposeCellCodeArgs       = "0xe789cf86f36fe1c67c04b2aad300867d1fc2778511365ce0b169d0518e860175"
 	AccountCellCodeArgs       = "0x37844013d5230454359d93dea9074d653f94dadc1a36fbe88fc01ac8456cddc7"
 	IncomeCellCodeArgs        = "0x54d53b0db02b7ca2ecaf1cf6bbe5a9011c8ae6e1dba6d45444e1f3f79eb13896"
+	BalanceCellCodeArgs       = "0x27560fe2daa6150b771621300d1d4ea127832b7b326f2d70eed63f5333b4a8a9"
 )
 
 var (
