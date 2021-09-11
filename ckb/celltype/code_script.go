@@ -350,7 +350,7 @@ func initMap() {
 	SystemCodeScriptMap.Store(DasProposeCellScript.Out.CodeHash, &DasProposeCellScript)
 	SystemCodeScriptMap.Store(DasConfigCellScript.Out.CodeHash, &DasConfigCellScript)
 	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash, &DasIncomeCellScript)
-	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash, &DasBalanceCellScript)
+	SystemCodeScriptMap.Store(DasBalanceCellScript.Out.CodeHash, &DasBalanceCellScript)
 }
 
 // testnet version 2
