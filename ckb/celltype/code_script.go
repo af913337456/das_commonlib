@@ -280,7 +280,7 @@ var (
 	DasBalanceCellScript = DASCellBaseInfo{
 		Name: "balance-cell-type",
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x095bf8c1ee627ee2cb9e333e02203680488284fe3d74ff6ccc20def262243e06"),
+			TxHash:  types.HexToHash("0x5049031c4d0399d466151a5d243f4fe08189b7e8a85f121fd5baebb70038bd19"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
@@ -350,7 +350,7 @@ func initMap() {
 	SystemCodeScriptMap.Store(DasProposeCellScript.Out.CodeHash, &DasProposeCellScript)
 	SystemCodeScriptMap.Store(DasConfigCellScript.Out.CodeHash, &DasConfigCellScript)
 	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash, &DasIncomeCellScript)
-
+	SystemCodeScriptMap.Store(DasIncomeCellScript.Out.CodeHash, &DasBalanceCellScript)
 }
 
 // testnet version 2
