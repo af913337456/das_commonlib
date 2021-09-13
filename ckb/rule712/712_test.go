@@ -48,7 +48,7 @@ func Test_MMJsonBuild(t *testing.T) {
 		fee:             10000201021,
 		inputsCapacity:  45621163888,
 		outputsCapacity: 2978378266,
-		plainText:       "123",
+		dasMessage:      "123",
 		digest:          "123",
 		inputs:          "[{\"capacity\":\"221. CKB\",\"lock\":\"das-lock,0x01,0x0019b04faf5b6e76e6d6640344b23dc16ffd9010...\",\"type\":\"account-cell-type,0x01,0x\",\"data\":\"{ account: linguaniii.bit, expired_at: 1661877499 }\",\"extraData\":\"{ status: 0, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }\"}]",
 		outputs:         "[{\"capacity\":\"220.9999 CKB\",\"lock\":\"das-lock,0x01,0x0019b04faf5b6e76e6d6640344b23dc16ffd9010...\",\"type\":\"account-cell-type,0x01,0x\",\"data\":\"{ account: linguaniii.bit, expired_at: 1661877499 }\",\"extraData\":\"{ status: 0, records_hash: 0xa34bb356af1a5260ff86dfbba27d74bf697a453ee6d44a6517cfe62cf8f0e94a }\"}]",
@@ -94,7 +94,7 @@ func Test_CreateWithdrawPlainText(t *testing.T) {
 		},
 		Amount: 9863781321,
 	}
-	new(MMJson).FillWithdrawPlainText(true, inputs, output)
+	new(MMJson).FillWithdrawDasMessage(true, inputs, output)
 }
 
 func Test_QuoCkbValue(t *testing.T) {
@@ -148,4 +148,10 @@ func TestJson(t *testing.T) {
 	retList = append(retList, ijson, ijson)
 	data, _ := json.Marshal(retList)
 	fmt.Println(string(data))
+}
+
+func TestCkbValueStr(t *testing.T) {
+	capStr := ckbValueStr(15450790000)
+	fmt.Println(capStr)
+	fmt.Println(removeSuffixZeroChar(capStr))
 }

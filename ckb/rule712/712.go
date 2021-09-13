@@ -356,6 +356,18 @@ func ckbValueStr(cellCap uint64) string {
 	return new(big.Rat).Quo(first, second).FloatString(8)
 }
 
+func getChainStr(ct celltype.ChainType) string {
+	switch ct {
+	case celltype.ChainType_ETH:
+		return "ETH"
+	case celltype.ChainType_CKB:
+		return "CKB"
+	case celltype.ChainType_TRON:
+		return "TRON"
+	}
+	return "ETH"
+}
+
 // now, always withdraw all the money, so there is no change cell
 func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.WithdrawDasLockCell, output WithdrawPlainTextOutputParam) {
 	inputStr := ""
@@ -364,15 +376,17 @@ func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.Withdraw
 		item := inputs[i]
 		hashIndex := celltype.DasLockCodeHashIndexType(item.LockScriptArgs[0])
 		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(item.LockScriptArgs[1:celltype.DasLockArgsMinBytesLen/2]))
+		ChainStr := getChainStr(hashIndex.ChainType())
+
 		ckbValueStr := ckbValueStr(item.CellCap)
 		if i == inputSize-1 {
-			inputStr = inputStr + fmt.Sprintf("%s(%s CKB) ", str, removeSuffixZeroChar(ckbValueStr))
+			inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB) ", ChainStr, str, removeSuffixZeroChar(ckbValueStr))
 		} else {
-			inputStr = inputStr + fmt.Sprintf("%s(%s CKB), ", str, removeSuffixZeroChar(ckbValueStr))
+			inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB), ", ChainStr, str, removeSuffixZeroChar(ckbValueStr))
 		}
 	}
 	receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
-	inputStr = inputStr + fmt.Sprintf("TO %s(%s CKB)", receiverAddr, ckbValueStr(output.Amount))
+	inputStr = inputStr + fmt.Sprintf("TO CKB:%s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
 	m.dasMessage = fmt.Sprintf("TRANSFER FROM %s", inputStr)
 }
 
