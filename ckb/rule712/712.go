@@ -385,8 +385,15 @@ func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.Withdraw
 			inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB), ", ChainStr, str, removeSuffixZeroChar(ckbValueStr))
 		}
 	}
-	receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
-	inputStr = inputStr + fmt.Sprintf("TO CKB:%s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
+	if output.ReceiverCkbScript.CodeHash == celltype.DasLockCellScript.Out.CodeHash {
+		hashIndex := celltype.DasLockCodeHashIndexType(output.ReceiverCkbScript.Args[0])
+		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(output.ReceiverCkbScript.Args[1:celltype.DasLockArgsMinBytesLen/2]))
+		ChainStr := getChainStr(hashIndex.ChainType())
+		inputStr = inputStr + fmt.Sprintf("TO %s:%s(%s CKB)", ChainStr, str, removeSuffixZeroChar(ckbValueStr(output.Amount)))
+	} else {
+		receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
+		inputStr = inputStr + fmt.Sprintf("TO CKB:%s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
+	}
 	m.dasMessage = fmt.Sprintf("TRANSFER FROM %s", inputStr)
 }
 
