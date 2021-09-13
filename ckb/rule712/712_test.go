@@ -63,6 +63,7 @@ func Test_MMJsonBuild(t *testing.T) {
 
 func Test_CreateWithdrawPlainText(t *testing.T) {
 	bys, _ := hex.DecodeString("00dc36477cf2434288a5502120ef0fd919ae37c15500dc36477cf2434288a5502120ef0fd919ae37c155")
+	bys3, _ := hex.DecodeString("001c36477cf2434288a5502120ef0fd919ae37c15500dc36477cf2434288a5502120ef0fd919ae37c155")
 	inputs := []gotype.WithdrawDasLockCell{
 		{
 			OutPoint:       nil,
@@ -71,7 +72,7 @@ func Test_CreateWithdrawPlainText(t *testing.T) {
 		},
 		{
 			OutPoint:       nil,
-			LockScriptArgs: bys,
+			LockScriptArgs: bys3,
 			CellCap:        12345678,
 		},
 		{
@@ -94,7 +95,9 @@ func Test_CreateWithdrawPlainText(t *testing.T) {
 		},
 		Amount: 9863781321,
 	}
-	new(MMJson).FillWithdrawDasMessage(true, inputs, output)
+	mmjson := new(MMJson)
+	mmjson.FillWithdrawDasMessage(true, inputs, output)
+	fmt.Println(mmjson)
 }
 
 func Test_QuoCkbValue(t *testing.T) {
