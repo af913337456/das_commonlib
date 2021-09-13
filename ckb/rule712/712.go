@@ -10,6 +10,7 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
+	"strings"
 )
 
 /**
@@ -371,20 +372,25 @@ func getChainStr(ct celltype.ChainType) string {
 // now, always withdraw all the money, so there is no change cell
 func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.WithdrawDasLockCell, output WithdrawPlainTextOutputParam) {
 	inputStr := ""
-	inputSize := len(inputs)
-	for i := 0; i < inputSize; i++ {
-		item := inputs[i]
+	var mapInputs = make(map[string]gotype.WithdrawDasLockCell)
+	for i, v := range inputs {
+		args := hex.EncodeToString(v.LockScriptArgs)
+		if mi, ok := mapInputs[args]; ok {
+			mi.CellCap += v.CellCap
+			mapInputs[args] = mi
+		} else {
+			mapInputs[args] = inputs[i]
+		}
+	}
+	for _, v := range mapInputs {
+		item := v
 		hashIndex := celltype.DasLockCodeHashIndexType(item.LockScriptArgs[0])
 		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(item.LockScriptArgs[1:celltype.DasLockArgsMinBytesLen/2]))
 		ChainStr := getChainStr(hashIndex.ChainType())
-
-		ckbValueStr := ckbValueStr(item.CellCap)
-		if i == inputSize-1 {
-			inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB) ", ChainStr, str, removeSuffixZeroChar(ckbValueStr))
-		} else {
-			inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB), ", ChainStr, str, removeSuffixZeroChar(ckbValueStr))
-		}
+		inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB), ", ChainStr, str, removeSuffixZeroChar(ckbValueStr(item.CellCap)))
 	}
+	inputStr = strings.TrimSuffix(inputStr, ", ") + " "
+
 	if output.ReceiverCkbScript.CodeHash == celltype.DasLockCellScript.Out.CodeHash {
 		hashIndex := celltype.DasLockCodeHashIndexType(output.ReceiverCkbScript.Args[0])
 		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(output.ReceiverCkbScript.Args[1:celltype.DasLockArgsMinBytesLen/2]))
