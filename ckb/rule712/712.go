@@ -363,7 +363,7 @@ func getChainStr(ct celltype.ChainType) string {
 	case celltype.ChainType_CKB:
 		return "CKB"
 	case celltype.ChainType_TRON:
-		return "TRON"
+		return "TRX"
 	}
 	return "ETH"
 }
