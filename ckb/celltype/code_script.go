@@ -429,6 +429,8 @@ func UseVersionReleaseSystemScriptCodeHash() {
 	DasTimeCellScript.Out.CodeHash = types.HexToHash("0x9e537bf5b8ec044ca3f53355e879f3fd8832217e4a9b41d9994cf0c547241a79")
 	DasQuoteCellScript.Out.CodeHash = types.HexToHash("0x9e537bf5b8ec044ca3f53355e879f3fd8832217e4a9b41d9994cf0c547241a79")
 
+	DasBalanceCellScript.Out.CodeHash = types.HexToHash("0x4ff58f2c76b4ac26fdf675aa82541e02e4cf896279c6d6982d17b959788b2f0c")
+
 	initMap()
 }
 
