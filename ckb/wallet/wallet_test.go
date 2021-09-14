@@ -20,11 +20,6 @@ func Test_RecoverAddrFromLockScriptArgs(t *testing.T) {
 	fmt.Println(address)
 }
 
-func Test_CreateWallet(t *testing.T) {
-	j,_ := CreateCKBWallet(false)
-	t.Log(j.Json())
-}
-
 
 
 
