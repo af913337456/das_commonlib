@@ -280,12 +280,12 @@ var (
 	DasBalanceCellScript = DASCellBaseInfo{
 		Name: "balance-cell-type",
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x5049031c4d0399d466151a5d243f4fe08189b7e8a85f121fd5baebb70038bd19"),
+			TxHash:  types.HexToHash("0xccceb579d41539fba16e5fd874c41d6370d51782e5336143bbf6c91c4b805dc3"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
 		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0x4ff58f2c76b4ac26fdf675aa82541e02e4cf896279c6d6982d17b959788b2f0c"),
+			CodeHash:     types.HexToHash("0xebafc1ebe95b88cac426f984ed5fce998089ecad0cd2f8b17755c9de4cb02162"),
 			CodeHashType: types.HashTypeType,
 			Args:         emptyHexToArgsBytes(),
 		},
