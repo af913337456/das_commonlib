@@ -37,14 +37,6 @@ const (
 	DasCellDataVersion2 = uint32(2)
 )
 
-type DasNetType int
-
-const (
-	DasNetType_Testnet2 DasNetType = 2
-	DasNetType_Testnet3 DasNetType = 3
-	DasNetType_Mainnet  DasNetType = 1
-)
-
 func LatestVersion() uint32 {
 	return DasCellDataVersion2
 }
