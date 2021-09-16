@@ -147,6 +147,14 @@ func IsStartAccountSaleTx(tx types.Transaction) (bool,int) {
 	return foundAccountCell && foundOnSaleCell, onSaleIndex
 }
 
+func IsEditAccountSaleTx(tx types.Transaction) (bool,int) {
+	return IsStartAccountSaleTx(tx)
+}
+
+func IsBuyAccountSaleTx(tx types.Transaction) bool {
+	return IsCancelAccountSaleTx(tx)
+}
+
 func IsCancelAccountSaleTx(tx types.Transaction) bool {
 	foundAccountCell := false
 	for _, output := range tx.Outputs {
