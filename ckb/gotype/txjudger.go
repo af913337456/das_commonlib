@@ -147,16 +147,22 @@ func IsStartAccountSaleTx(tx types.Transaction) (bool,int) {
 	return foundAccountCell && foundOnSaleCell, onSaleIndex
 }
 
+func IsEditAccountSaleTx(tx types.Transaction) (bool,int) {
+	return IsStartAccountSaleTx(tx)
+}
+
 func IsCancelAccountSaleTx(tx types.Transaction) bool {
 	foundAccountCell := false
+	foundOnSaleCell  := false
 	for _, output := range tx.Outputs {
 		if output.Type == nil {
 			continue
 		}
 		if celltype.DasAccountCellScript.Out.SameScript(output.Type) {
 			foundAccountCell = true
-			break
+		} else if celltype.DasAccountSaleCellScript.Out.SameScript(output.Type) {
+			foundOnSaleCell = true
 		}
 	}
-	return foundAccountCell
+	return foundAccountCell && !foundOnSaleCell
 }
