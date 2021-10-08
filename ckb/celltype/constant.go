@@ -75,6 +75,7 @@ var (
 	AccountCellCodeArgs       = "0x37844013d5230454359d93dea9074d653f94dadc1a36fbe88fc01ac8456cddc7"
 	IncomeCellCodeArgs        = "0x54d53b0db02b7ca2ecaf1cf6bbe5a9011c8ae6e1dba6d45444e1f3f79eb13896"
 	BalanceCellCodeArgs       = "0x27560fe2daa6150b771621300d1d4ea127832b7b326f2d70eed63f5333b4a8a9"
+	AccountSaleCodeArgs       = "0xed5d7fc00a3f8605bfe3f6717747bb0ed529fa064c2b8ce56e9677a0c46c2c1c"
 )
 
 var (
@@ -414,7 +415,9 @@ const (
 	Action_QuotePriceForCkb      = "quote_price_for_ckb"
 	Action_StartAccountSale      = "start_account_sale"
 	Action_CancelAccountSale     = "cancel_account_sale"
+	Action_BuyAccount            = "buy_account"
 	Action_StartAccountAuction   = "start_account_auction"
+	Action_EditAccountSale       = "edit_account_sale"
 	Action_CancelAccountAuction  = "cancel_account_auction"
 	Action_AccuseAccountRepeat   = "accuse_account_repeat"
 	Action_AccuseAccountIllegal  = "accuse_account_illegal"
