@@ -2600,8 +2600,8 @@ type ConfigCellProfitRateBuilder struct {
 	proposal_create        Uint32
 	proposal_confirm       Uint32
 	income_consolidate     Uint32
-	sale_inviter           Uint32
-	sale_channel           Uint32
+	sale_buyer_inviter     Uint32
+	sale_buyer_channel     Uint32
 	sale_das               Uint32
 	auction_bidder_inviter Uint32
 	auction_bidder_channel Uint32
@@ -2626,9 +2626,9 @@ func (s *ConfigCellProfitRateBuilder) Build() ConfigCellProfitRate {
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.income_consolidate.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.sale_inviter.AsSlice()))
+	totalSize += uint32(len(s.sale_buyer_inviter.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.sale_channel.AsSlice()))
+	totalSize += uint32(len(s.sale_buyer_channel.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.sale_das.AsSlice()))
 	offsets = append(offsets, totalSize)
@@ -2651,8 +2651,8 @@ func (s *ConfigCellProfitRateBuilder) Build() ConfigCellProfitRate {
 	b.Write(s.proposal_create.AsSlice())
 	b.Write(s.proposal_confirm.AsSlice())
 	b.Write(s.income_consolidate.AsSlice())
-	b.Write(s.sale_inviter.AsSlice())
-	b.Write(s.sale_channel.AsSlice())
+	b.Write(s.sale_buyer_inviter.AsSlice())
+	b.Write(s.sale_buyer_channel.AsSlice())
 	b.Write(s.sale_das.AsSlice())
 	b.Write(s.auction_bidder_inviter.AsSlice())
 	b.Write(s.auction_bidder_channel.AsSlice())
@@ -2686,13 +2686,13 @@ func (s *ConfigCellProfitRateBuilder) IncomeConsolidate(v Uint32) *ConfigCellPro
 	return s
 }
 
-func (s *ConfigCellProfitRateBuilder) SaleInviter(v Uint32) *ConfigCellProfitRateBuilder {
-	s.sale_inviter = v
+func (s *ConfigCellProfitRateBuilder) SaleBuyerInviter(v Uint32) *ConfigCellProfitRateBuilder {
+	s.sale_buyer_inviter = v
 	return s
 }
 
-func (s *ConfigCellProfitRateBuilder) SaleChannel(v Uint32) *ConfigCellProfitRateBuilder {
-	s.sale_channel = v
+func (s *ConfigCellProfitRateBuilder) SaleBuyerChannel(v Uint32) *ConfigCellProfitRateBuilder {
+	s.sale_buyer_channel = v
 	return s
 }
 
@@ -2722,7 +2722,7 @@ func (s *ConfigCellProfitRateBuilder) AuctionPrevBidder(v Uint32) *ConfigCellPro
 }
 
 func NewConfigCellProfitRateBuilder() *ConfigCellProfitRateBuilder {
-	return &ConfigCellProfitRateBuilder{inviter: Uint32Default(), channel: Uint32Default(), proposal_create: Uint32Default(), proposal_confirm: Uint32Default(), income_consolidate: Uint32Default(), sale_inviter: Uint32Default(), sale_channel: Uint32Default(), sale_das: Uint32Default(), auction_bidder_inviter: Uint32Default(), auction_bidder_channel: Uint32Default(), auction_das: Uint32Default(), auction_prev_bidder: Uint32Default()}
+	return &ConfigCellProfitRateBuilder{inviter: Uint32Default(), channel: Uint32Default(), proposal_create: Uint32Default(), proposal_confirm: Uint32Default(), income_consolidate: Uint32Default(), sale_buyer_inviter: Uint32Default(), sale_buyer_channel: Uint32Default(), sale_das: Uint32Default(), auction_bidder_inviter: Uint32Default(), auction_bidder_channel: Uint32Default(), auction_das: Uint32Default(), auction_prev_bidder: Uint32Default()}
 }
 
 type ConfigCellProfitRate struct {
@@ -2913,13 +2913,13 @@ func (s *ConfigCellProfitRate) IncomeConsolidate() *Uint32 {
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellProfitRate) SaleInviter() *Uint32 {
+func (s *ConfigCellProfitRate) SaleBuyerInviter() *Uint32 {
 	start := unpackNumber(s.inner[24:])
 	end := unpackNumber(s.inner[28:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ConfigCellProfitRate) SaleChannel() *Uint32 {
+func (s *ConfigCellProfitRate) SaleBuyerChannel() *Uint32 {
 	start := unpackNumber(s.inner[28:])
 	end := unpackNumber(s.inner[32:])
 	return Uint32FromSliceUnchecked(s.inner[start:end])
@@ -2962,7 +2962,7 @@ func (s *ConfigCellProfitRate) AuctionPrevBidder() *Uint32 {
 }
 
 func (s *ConfigCellProfitRate) AsBuilder() ConfigCellProfitRateBuilder {
-	ret := NewConfigCellProfitRateBuilder().Inviter(*s.Inviter()).Channel(*s.Channel()).ProposalCreate(*s.ProposalCreate()).ProposalConfirm(*s.ProposalConfirm()).IncomeConsolidate(*s.IncomeConsolidate()).SaleInviter(*s.SaleInviter()).SaleChannel(*s.SaleChannel()).SaleDas(*s.SaleDas()).AuctionBidderInviter(*s.AuctionBidderInviter()).AuctionBidderChannel(*s.AuctionBidderChannel()).AuctionDas(*s.AuctionDas()).AuctionPrevBidder(*s.AuctionPrevBidder())
+	ret := NewConfigCellProfitRateBuilder().Inviter(*s.Inviter()).Channel(*s.Channel()).ProposalCreate(*s.ProposalCreate()).ProposalConfirm(*s.ProposalConfirm()).IncomeConsolidate(*s.IncomeConsolidate()).SaleBuyerInviter(*s.SaleBuyerInviter()).SaleBuyerChannel(*s.SaleBuyerChannel()).SaleDas(*s.SaleDas()).AuctionBidderInviter(*s.AuctionBidderInviter()).AuctionBidderChannel(*s.AuctionBidderChannel()).AuctionDas(*s.AuctionDas()).AuctionPrevBidder(*s.AuctionPrevBidder())
 	return *ret
 }
 
