@@ -51,14 +51,14 @@ type DASWitnessDataObj struct {
 }
 
 func NewDasWitnessDataFromSlice(rawData []byte) (*DASWitnessDataObj, error) {
-	tempByte := make([]byte,len(rawData))
-	copy(tempByte,rawData)
+	tempByte := make([]byte, len(rawData))
+	copy(tempByte, rawData)
 	if size := len(tempByte); size <= 8 { // header's size + min(data)'s size
 		return nil, fmt.Errorf("invalid rawData size: %d", size)
 	}
 	dasStrTag := string(tempByte[:witnessDasCharLen])
 	if dasStrTag != witnessDas {
-		return nil, fmt.Errorf("invalid dasStrTag, your: %s, want: %s", dasStrTag,witnessDas)
+		return nil, fmt.Errorf("invalid dasStrTag, your: %s, want: %s", dasStrTag, witnessDas)
 	}
 	tableType, err := MoleculeU32ToGo(tempByte[witnessDasCharLen:witnessDasTableTypeEndIndex])
 	if err != nil {
@@ -136,10 +136,10 @@ func (c DASCellBaseInfoOut) SameScript(script *types.Script) bool {
 }
 
 type DASCellBaseInfo struct {
-	Name string `json:"name"`
-	Dep  DASCellBaseInfoDep `json:"dep"`
-	Out  DASCellBaseInfoOut `json:"out"`
-	ContractTypeScript types.Script `json:"contract_type_script"`
+	Name               string             `json:"name"`
+	Dep                DASCellBaseInfoDep `json:"dep"`
+	Out                DASCellBaseInfoOut `json:"out"`
+	ContractTypeScript types.Script       `json:"contract_type_script"`
 }
 
 type WalletCellParam struct {
@@ -153,7 +153,7 @@ type ApplyRegisterCellParam struct {
 	PubkeyHashBytes      []byte          `json:"pubkey_hash_bytes"`
 	Account              DasAccount      `json:"account"`
 	Height               uint64          `json:"height"`
-	TimeUnix             uint64  	     `json:"time_unix"`
+	TimeUnix             uint64          `json:"time_unix"`
 	CellCodeInfo         DASCellBaseInfo `json:"cell_code_info"`
 	SenderLockScriptInfo DASCellBaseInfo `json:"sender_lock_script_info"`
 }
@@ -180,8 +180,8 @@ type RefcellParam struct {
 }
 
 type QuoteCellParam struct {
-	Price uint64 `json:"price"`
-	CellCodeInfo              DASCellBaseInfo         `json:"cell_code_info"`
+	Price        uint64          `json:"price"`
+	CellCodeInfo DASCellBaseInfo `json:"cell_code_info"`
 }
 
 /**
@@ -212,15 +212,15 @@ table OnSaleCellData {
     price: Uint64,
 }
 */
-type OnSaleCellParam struct {
-	Version uint32 `json:"version"`
-	// Data                      Data            `json:"data"`
-	OnSaleCellData            OnSaleCellData  `json:"-"`
-	Price                     uint64          `json:"price"`
-	AccountId                 DasAccountId    `json:"account_id"`
-	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
-	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
-}
+//type OnSaleCellParam struct {
+//	Version uint32 `json:"version"`
+//	// Data                      Data            `json:"data"`
+//	OnSaleCellData            OnSaleCellData  `json:"-"`
+//	Price                     uint64          `json:"price"`
+//	AccountId                 DasAccountId    `json:"account_id"`
+//	CellCodeInfo              DASCellBaseInfo `json:"cell_code_info"`
+//	AlwaysSpendableScriptInfo DASCellBaseInfo `json:"always_spendable_script_info"`
+//}
 
 type IncomeCellParam struct {
 	Version uint32 `json:"version"`
@@ -281,7 +281,7 @@ type ProposeCellParam struct {
 type AccountCellTxDataParam struct {
 	NextAccountId DasAccountId `json:"next_account_id"`
 	// RegisteredAt  uint64          `json:"registered_at"`
-	ExpiredAt   uint64          `json:"expired_at"`
+	ExpiredAt   uint64             `json:"expired_at"`
 	AccountInfo VersionAccountCell `json:"-"`
 }
 
@@ -296,7 +296,7 @@ args: [
 
 type DasLockArgsPairParam struct {
 	HashIndexType DasLockCodeHashIndexType
-	Script types.Script
+	Script        types.Script
 }
 
 func (d *DasLockArgsPairParam) TryUpgradeEthVersion() DasLockArgsPairParam {
@@ -310,32 +310,32 @@ func (d DasLockArgsPairParam) Bytes() []byte {
 	if len(d.Script.Args) == DasLockArgsMinBytesLen {
 		return d.Script.Args
 	}
-	return append(d.HashIndexType.Bytes(),d.Script.Args...)
+	return append(d.HashIndexType.Bytes(), d.Script.Args...)
 }
 
 type DasLockParam struct {
 	OwnerCodeHashIndexByte []byte
-	OwnerPubkeyHashByte  []byte
-	ManagerCodeHashIndex []byte
-	ManagerPubkeyHash []byte
+	OwnerPubkeyHashByte    []byte
+	ManagerCodeHashIndex   []byte
+	ManagerPubkeyHash      []byte
 }
 
 func (d *DasLockParam) Bytes() []byte {
-	ownerBytes := append(d.OwnerCodeHashIndexByte,d.OwnerPubkeyHashByte...)
-	return append(append(ownerBytes,d.ManagerCodeHashIndex...),d.ManagerPubkeyHash...)
+	ownerBytes := append(d.OwnerCodeHashIndexByte, d.OwnerPubkeyHashByte...)
+	return append(append(ownerBytes, d.ManagerCodeHashIndex...), d.ManagerPubkeyHash...)
 }
 
 type AccountCellDatas struct {
 	NewAccountCellData *AccountCellTxDataParam `json:"-"`
 }
 type AccountCellParam struct {
-	TestNet                   bool `json:"test_net"`
-	TxDataParam               *AccountCellTxDataParam `json:"-"`
-	DataBytes                 []byte `json:"data_bytes"`
-	Version                   uint32                  `json:"version"`
-	CellCodeInfo              DASCellBaseInfo         `json:"cell_code_info"`
-	DasLock                   DASCellBaseInfo `json:"das_lock"`
-	DasLockParam *DasLockParam `json:"das_lock_param"`
+	TestNet      bool                    `json:"test_net"`
+	TxDataParam  *AccountCellTxDataParam `json:"-"`
+	DataBytes    []byte                  `json:"data_bytes"`
+	Version      uint32                  `json:"version"`
+	CellCodeInfo DASCellBaseInfo         `json:"cell_code_info"`
+	DasLock      DASCellBaseInfo         `json:"das_lock"`
+	DasLockParam *DasLockParam           `json:"das_lock_param"`
 }
 
 type ParseDasWitnessBysDataObj struct {
