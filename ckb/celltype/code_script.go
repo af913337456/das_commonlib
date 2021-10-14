@@ -247,18 +247,18 @@ var (
 			Args:         emptyHexToArgsBytes(),
 		},
 	}
-	DasOnSaleCellScript = DASCellBaseInfo{
-		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x123"),
-			TxIndex: 0,
-			DepType: types.DepTypeCode,
-		},
-		Out: DASCellBaseInfoOut{
-			CodeHash:     types.HexToHash("0x123"),
-			CodeHashType: types.HashTypeType,
-			Args:         emptyHexToArgsBytes(),
-		},
-	}
+	// DasOnSaleCellScript = DASCellBaseInfo{
+	// 	Dep: DASCellBaseInfoDep{
+	// 		TxHash:  types.HexToHash("0x123"),
+	// 		TxIndex: 0,
+	// 		DepType: types.DepTypeCode,
+	// 	},
+	// 	Out: DASCellBaseInfoOut{
+	// 		CodeHash:     types.HexToHash("0x123"),
+	// 		CodeHashType: types.HashTypeType,
+	// 		Args:         emptyHexToArgsBytes(),
+	// 	},
+	// }
 	DasIncomeCellScript = DASCellBaseInfo{
 		Name: "income-cell-type",
 		Dep: DASCellBaseInfoDep{
