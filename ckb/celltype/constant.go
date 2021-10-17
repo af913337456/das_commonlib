@@ -128,7 +128,7 @@ const ConfigCellPreservedAccount00 = 150,
 */
 func (t TableType) ValidateType() bool {
 	return t <= TableType_IncomeCell ||
-		(t >= TableType_ConfigCell_Account && t <= TableType_ConfigCell_Unavailable) ||
+		(t >= TableType_ConfigCell_Account && t <= TableType_ConfigCell_SecondaryMarket) ||
 		(t >= TableType_ConfigCell_PreservedAccount00 && t <= TableType_ConfigCell_PreservedAccount19) ||
 		(t >= TableType_ConfigCell_CharSetEmoji && t <= TableType_ConfigCell_CharSetHanT)
 }
@@ -155,6 +155,7 @@ const (
 	TableType_ConfigCell_RecordNamespace TableType = 108
 	TableType_ConfigCell_Release         TableType = 109
 	TableType_ConfigCell_Unavailable     TableType = 110
+	TableType_ConfigCell_SecondaryMarket TableType = 111
 
 	TableType_ConfigCell_PreservedAccount00 TableType = 10000
 	TableType_ConfigCell_PreservedAccount01 TableType = 10001
