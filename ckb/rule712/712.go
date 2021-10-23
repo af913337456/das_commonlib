@@ -7,6 +7,7 @@ import (
 	"github.com/DeAccountSystems/das_commonlib/ckb/builder"
 	"github.com/DeAccountSystems/das_commonlib/ckb/celltype"
 	"github.com/DeAccountSystems/das_commonlib/ckb/gotype"
+	"github.com/nervosnetwork/ckb-sdk-go/address"
 	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/types"
 	"math/big"
@@ -397,7 +398,12 @@ func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.Withdraw
 		ChainStr := getChainStr(hashIndex.ChainType())
 		inputStr = inputStr + fmt.Sprintf("TO %s:%s(%s CKB)", ChainStr, str, removeSuffixZeroChar(ckbValueStr(output.Amount)))
 	} else {
-		receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
+		mod := address.Mainnet
+		if isTestNet {
+			mod = address.Testnet
+		}
+		receiverAddr, _ := address.Generate(mod, &output.ReceiverCkbScript)
+		//receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
 		inputStr = inputStr + fmt.Sprintf("TO CKB:%s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
 	}
 	m.dasMessage = fmt.Sprintf("TRANSFER FROM %s", inputStr)
