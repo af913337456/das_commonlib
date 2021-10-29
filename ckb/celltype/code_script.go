@@ -74,7 +74,7 @@ var (
 	}
 	DasAnyOneCanSendCellInfo = DASCellBaseInfo{
 		Dep: DASCellBaseInfoDep{
-			TxHash:  types.HexToHash("0x88462008b19c9ac86fb9fef7150c4f6ef7305d457d6b200c8852852012923bf1"),
+			TxHash:  types.HexToHash("0xa7ff448225fc131d657af882a3f97a8219be230d7e25d070a9282de89302c640"),
 			TxIndex: 0,
 			DepType: types.DepTypeCode,
 		},
