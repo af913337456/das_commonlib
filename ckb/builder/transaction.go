@@ -256,7 +256,11 @@ func (builder *TransactionBuilder) addOutputAutoComputeCap(lockScript, typeScrip
 func (builder *TransactionBuilder) NeedCapacityValue() uint64 {
 	if min := celltype.CkbTxMinOutputCKBValue + builder.fee; builder.totalOutputCap >= min {
 		if totalSpend := builder.totalOutputCap + builder.fee; totalSpend > builder.totalInputCap {
-			return totalSpend - builder.totalInputCap
+			needCap := totalSpend - builder.totalInputCap
+			if needCap >= celltype.CkbTxMinOutputCKBValue {
+				return needCap
+			}
+			return needCap + celltype.CkbTxMinOutputCKBValue
 		} else if left := builder.totalInputCap - totalSpend; left > celltype.CkbTxMinOutputCKBValue {
 			return left
 		} else {
