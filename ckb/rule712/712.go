@@ -54,7 +54,7 @@ var MMJsonA = `{
   },
   "primaryType": "Transaction",
   "domain": {
-    "chainId": 5,
+    "chainId": %d,
     "name": "da.systems",
     "verifyingContract": "0x0000000000000000000000000000000020210722",
     "version": "1"
@@ -140,8 +140,8 @@ func (m *MMJson) FillOutputs(outputList InputOutputParam712List, accountData *ce
 	return nil
 }
 
-func (m *MMJson) Build() (*MMJsonObj, error) {
-	tmp := fmt.Sprintf(MMJsonA,
+func (m *MMJson) Build(evmChainId int64) (*MMJsonObj, error) {
+	tmp := fmt.Sprintf(MMJsonA, evmChainId,
 		m.dasMessage,
 		removeSuffixZeroChar(ckbValueStr(m.inputsCapacity)),
 		removeSuffixZeroChar(ckbValueStr(m.outputsCapacity)),
