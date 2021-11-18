@@ -140,7 +140,13 @@ func (m *MMJson) FillOutputs(outputList InputOutputParam712List, accountData *ce
 	return nil
 }
 
-func (m *MMJson) Build(evmChainId int64) (*MMJsonObj, error) {
+func (m *MMJson) Build(evmChainId int64, net celltype.DasNetType) (*MMJsonObj, error) {
+	if evmChainId == 0 {
+		evmChainId = 1
+		if net != celltype.DasNetType_Mainnet {
+			evmChainId = 5
+		}
+	}
 	tmp := fmt.Sprintf(MMJsonA, evmChainId,
 		m.dasMessage,
 		removeSuffixZeroChar(ckbValueStr(m.inputsCapacity)),
