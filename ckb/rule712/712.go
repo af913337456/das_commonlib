@@ -336,7 +336,7 @@ func (m *MMJson) Fill712Capacity(txBuilder *builder.TransactionBuilder) error {
 	return nil
 }
 
-var transferAccountDasMessage = "TRANSFER THE ACCOUNT %s TO %s:%s"
+var transferAccountDasMessage = "TRANSFER THE ACCOUNT %s TO %s" //"TRANSFER THE ACCOUNT %s TO %s:%s"
 
 func (m *MMJson) FillTransferAccountDasMessage(isTestNet bool, accountCell *gotype.AccountCell, newOwnerParam celltype.DasLockArgsPairParam) {
 	//originOwnerIndexType := celltype.DasLockCodeHashIndexType(accountCell.DasLockArgs[0])
@@ -345,11 +345,8 @@ func (m *MMJson) FillTransferAccountDasMessage(isTestNet bool, accountCell *goty
 	account, _ := celltype.AccountFromOutputData(accountCell.Data)
 	//originOwnerAddr := gotype.PubkeyHashToAddress(isTestNet, originOwnerIndexType.ChainType(), hex.EncodeToString(originOwnerAddrBytes))
 	newOwnerAddr := gotype.PubkeyHashToAddress(isTestNet, newOwnerParam.HashIndexType.ChainType(), hex.EncodeToString(newOwnerAddrBytes))
-	m.dasMessage = fmt.Sprintf(
-		transferAccountDasMessage,
-		account,
-		newOwnerParam.HashIndexType.ChainType().String(),
-		newOwnerAddr)
+	//m.dasMessage = fmt.Sprintf(transferAccountDasMessage, account, newOwnerParam.HashIndexType.ChainType().String(), newOwnerAddr)
+	m.dasMessage = fmt.Sprintf(transferAccountDasMessage, account, newOwnerAddr)
 }
 
 // Transfer from ckb1xxxx(111.111 CKB), ckb1yyyy(222.222 CKB) to ckb1zzzz(333 CKB), ckb1zzzz(0.333 CKB).
@@ -393,8 +390,9 @@ func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.Withdraw
 		item := v
 		hashIndex := celltype.DasLockCodeHashIndexType(item.LockScriptArgs[0])
 		str := gotype.PubkeyHashToAddress(isTestNet, hashIndex.ChainType(), hex.EncodeToString(item.LockScriptArgs[1:celltype.DasLockArgsMinBytesLen/2]))
-		ChainStr := getChainStr(hashIndex.ChainType())
-		inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB), ", ChainStr, str, removeSuffixZeroChar(ckbValueStr(item.CellCap)))
+		//ChainStr := getChainStr(hashIndex.ChainType())
+		//inputStr = inputStr + fmt.Sprintf("%s:%s(%s CKB), ", ChainStr, str, removeSuffixZeroChar(ckbValueStr(item.CellCap)))
+		inputStr = inputStr + fmt.Sprintf("%s(%s CKB), ", str, removeSuffixZeroChar(ckbValueStr(item.CellCap)))
 	}
 	inputStr = strings.TrimSuffix(inputStr, ", ") + " "
 
@@ -410,7 +408,8 @@ func (m *MMJson) FillWithdrawDasMessage(isTestNet bool, inputs []gotype.Withdraw
 		}
 		receiverAddr, _ := address.Generate(mod, &output.ReceiverCkbScript)
 		//receiverAddr := gotype.PubkeyHashToAddress(isTestNet, celltype.ChainType_CKB, hex.EncodeToString(output.ReceiverCkbScript.Args))
-		inputStr = inputStr + fmt.Sprintf("TO CKB:%s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
+		//inputStr = inputStr + fmt.Sprintf("TO CKB:%s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
+		inputStr = inputStr + fmt.Sprintf("TO %s(%s CKB)", receiverAddr, removeSuffixZeroChar(ckbValueStr(output.Amount)))
 	}
 	m.dasMessage = fmt.Sprintf("TRANSFER FROM %s", inputStr)
 }
