@@ -244,7 +244,7 @@ func (s *ConfigCellMain) AsSlice() []byte {
 }
 
 func ConfigCellMainDefault() ConfigCellMain {
-	return *ConfigCellMainFromSliceUnchecked([]byte{73, 2, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 125, 1, 0, 0, 0, 108, 1, 0, 0, 44, 0, 0, 0, 76, 0, 0, 0, 108, 0, 0, 0, 140, 0, 0, 0, 172, 0, 0, 0, 204, 0, 0, 0, 236, 0, 0, 0, 12, 1, 0, 0, 44, 1, 0, 0, 76, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 204, 0, 0, 0, 24, 0, 0, 0, 60, 0, 0, 0, 96, 0, 0, 0, 132, 0, 0, 0, 168, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellMainFromSliceUnchecked([]byte{1, 2, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 53, 1, 0, 0, 0, 36, 1, 0, 0, 36, 0, 0, 0, 68, 0, 0, 0, 100, 0, 0, 0, 132, 0, 0, 0, 164, 0, 0, 0, 196, 0, 0, 0, 228, 0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 204, 0, 0, 0, 24, 0, 0, 0, 60, 0, 0, 0, 96, 0, 0, 0, 132, 0, 0, 0, 168, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellMainFromSlice(slice []byte, compatible bool) (*ConfigCellMain, error) {
@@ -383,15 +383,13 @@ type TypeIdTableBuilder struct {
 	proposal_cell        Hash
 	account_sale_cell    Hash
 	account_auction_cell Hash
-	offer_cell           Hash
-	reverse_record_cell  Hash
 }
 
 func (s *TypeIdTableBuilder) Build() TypeIdTable {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (10 + 1)
-	offsets := make([]uint32, 0, 10)
+	totalSize := HeaderSizeUint * (8 + 1)
+	offsets := make([]uint32, 0, 8)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.account_cell.AsSlice()))
@@ -409,10 +407,6 @@ func (s *TypeIdTableBuilder) Build() TypeIdTable {
 	totalSize += uint32(len(s.account_sale_cell.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.account_auction_cell.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.offer_cell.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.reverse_record_cell.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -428,8 +422,6 @@ func (s *TypeIdTableBuilder) Build() TypeIdTable {
 	b.Write(s.proposal_cell.AsSlice())
 	b.Write(s.account_sale_cell.AsSlice())
 	b.Write(s.account_auction_cell.AsSlice())
-	b.Write(s.offer_cell.AsSlice())
-	b.Write(s.reverse_record_cell.AsSlice())
 	return TypeIdTable{inner: b.Bytes()}
 }
 
@@ -473,18 +465,8 @@ func (s *TypeIdTableBuilder) AccountAuctionCell(v Hash) *TypeIdTableBuilder {
 	return s
 }
 
-func (s *TypeIdTableBuilder) OfferCell(v Hash) *TypeIdTableBuilder {
-	s.offer_cell = v
-	return s
-}
-
-func (s *TypeIdTableBuilder) ReverseRecordCell(v Hash) *TypeIdTableBuilder {
-	s.reverse_record_cell = v
-	return s
-}
-
 func NewTypeIdTableBuilder() *TypeIdTableBuilder {
-	return &TypeIdTableBuilder{account_cell: HashDefault(), apply_register_cell: HashDefault(), balance_cell: HashDefault(), income_cell: HashDefault(), pre_account_cell: HashDefault(), proposal_cell: HashDefault(), account_sale_cell: HashDefault(), account_auction_cell: HashDefault(), offer_cell: HashDefault(), reverse_record_cell: HashDefault()}
+	return &TypeIdTableBuilder{account_cell: HashDefault(), apply_register_cell: HashDefault(), balance_cell: HashDefault(), income_cell: HashDefault(), pre_account_cell: HashDefault(), proposal_cell: HashDefault(), account_sale_cell: HashDefault(), account_auction_cell: HashDefault()}
 }
 
 type TypeIdTable struct {
@@ -499,7 +481,7 @@ func (s *TypeIdTable) AsSlice() []byte {
 }
 
 func TypeIdTableDefault() TypeIdTable {
-	return *TypeIdTableFromSliceUnchecked([]byte{108, 1, 0, 0, 44, 0, 0, 0, 76, 0, 0, 0, 108, 0, 0, 0, 140, 0, 0, 0, 172, 0, 0, 0, 204, 0, 0, 0, 236, 0, 0, 0, 12, 1, 0, 0, 44, 1, 0, 0, 76, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *TypeIdTableFromSliceUnchecked([]byte{36, 1, 0, 0, 36, 0, 0, 0, 68, 0, 0, 0, 100, 0, 0, 0, 132, 0, 0, 0, 164, 0, 0, 0, 196, 0, 0, 0, 228, 0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
@@ -515,7 +497,7 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 10 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 8 == 0 {
 		return &TypeIdTable{inner: slice}, nil
 	}
 
@@ -536,9 +518,9 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
 	}
 
 	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 10 {
+	if fieldCount < 8 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 10 {
+	} else if !compatible && fieldCount > 8 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -597,16 +579,6 @@ func TypeIdTableFromSlice(slice []byte, compatible bool) (*TypeIdTable, error) {
 		return nil, err
 	}
 
-	_, err = HashFromSlice(slice[offsets[8]:offsets[9]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = HashFromSlice(slice[offsets[9]:offsets[10]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
 	return &TypeIdTable{inner: slice}, nil
 }
 
@@ -628,11 +600,11 @@ func (s *TypeIdTable) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *TypeIdTable) CountExtraFields() uint {
-	return s.FieldCount() - 10
+	return s.FieldCount() - 8
 }
 
 func (s *TypeIdTable) HasExtraFields() bool {
-	return 10 != s.FieldCount()
+	return 8 != s.FieldCount()
 }
 
 func (s *TypeIdTable) AccountCell() *Hash {
@@ -678,22 +650,10 @@ func (s *TypeIdTable) AccountSaleCell() *Hash {
 }
 
 func (s *TypeIdTable) AccountAuctionCell() *Hash {
-	start := unpackNumber(s.inner[32:])
-	end := unpackNumber(s.inner[36:])
-	return HashFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *TypeIdTable) OfferCell() *Hash {
-	start := unpackNumber(s.inner[36:])
-	end := unpackNumber(s.inner[40:])
-	return HashFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *TypeIdTable) ReverseRecordCell() *Hash {
 	var ret *Hash
-	start := unpackNumber(s.inner[40:])
+	start := unpackNumber(s.inner[32:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[44:])
+		end := unpackNumber(s.inner[36:])
 		ret = HashFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = HashFromSliceUnchecked(s.inner[start:])
@@ -702,7 +662,7 @@ func (s *TypeIdTable) ReverseRecordCell() *Hash {
 }
 
 func (s *TypeIdTable) AsBuilder() TypeIdTableBuilder {
-	ret := NewTypeIdTableBuilder().AccountCell(*s.AccountCell()).ApplyRegisterCell(*s.ApplyRegisterCell()).BalanceCell(*s.BalanceCell()).IncomeCell(*s.IncomeCell()).PreAccountCell(*s.PreAccountCell()).ProposalCell(*s.ProposalCell()).AccountSaleCell(*s.AccountSaleCell()).AccountAuctionCell(*s.AccountAuctionCell()).OfferCell(*s.OfferCell()).ReverseRecordCell(*s.ReverseRecordCell())
+	ret := NewTypeIdTableBuilder().AccountCell(*s.AccountCell()).ApplyRegisterCell(*s.ApplyRegisterCell()).BalanceCell(*s.BalanceCell()).IncomeCell(*s.IncomeCell()).PreAccountCell(*s.PreAccountCell()).ProposalCell(*s.ProposalCell()).AccountSaleCell(*s.AccountSaleCell()).AccountAuctionCell(*s.AccountAuctionCell())
 	return *ret
 }
 
@@ -3738,17 +3698,13 @@ type ConfigCellSecondaryMarketBuilder struct {
 	auction_description_bytes_limit     Uint32
 	auction_cell_basic_capacity         Uint64
 	auction_cell_prepared_fee_capacity  Uint64
-	offer_min_price                     Uint64
-	offer_cell_basic_capacity           Uint64
-	offer_cell_prepared_fee_capacity    Uint64
-	offer_message_bytes_limit           Uint32
 }
 
 func (s *ConfigCellSecondaryMarketBuilder) Build() ConfigCellSecondaryMarket {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (17 + 1)
-	offsets := make([]uint32, 0, 17)
+	totalSize := HeaderSizeUint * (13 + 1)
+	offsets := make([]uint32, 0, 13)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.common_fee.AsSlice()))
@@ -3776,14 +3732,6 @@ func (s *ConfigCellSecondaryMarketBuilder) Build() ConfigCellSecondaryMarket {
 	totalSize += uint32(len(s.auction_cell_basic_capacity.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.auction_cell_prepared_fee_capacity.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.offer_min_price.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.offer_cell_basic_capacity.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.offer_cell_prepared_fee_capacity.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.offer_message_bytes_limit.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -3804,10 +3752,6 @@ func (s *ConfigCellSecondaryMarketBuilder) Build() ConfigCellSecondaryMarket {
 	b.Write(s.auction_description_bytes_limit.AsSlice())
 	b.Write(s.auction_cell_basic_capacity.AsSlice())
 	b.Write(s.auction_cell_prepared_fee_capacity.AsSlice())
-	b.Write(s.offer_min_price.AsSlice())
-	b.Write(s.offer_cell_basic_capacity.AsSlice())
-	b.Write(s.offer_cell_prepared_fee_capacity.AsSlice())
-	b.Write(s.offer_message_bytes_limit.AsSlice())
 	return ConfigCellSecondaryMarket{inner: b.Bytes()}
 }
 
@@ -3876,28 +3820,8 @@ func (s *ConfigCellSecondaryMarketBuilder) AuctionCellPreparedFeeCapacity(v Uint
 	return s
 }
 
-func (s *ConfigCellSecondaryMarketBuilder) OfferMinPrice(v Uint64) *ConfigCellSecondaryMarketBuilder {
-	s.offer_min_price = v
-	return s
-}
-
-func (s *ConfigCellSecondaryMarketBuilder) OfferCellBasicCapacity(v Uint64) *ConfigCellSecondaryMarketBuilder {
-	s.offer_cell_basic_capacity = v
-	return s
-}
-
-func (s *ConfigCellSecondaryMarketBuilder) OfferCellPreparedFeeCapacity(v Uint64) *ConfigCellSecondaryMarketBuilder {
-	s.offer_cell_prepared_fee_capacity = v
-	return s
-}
-
-func (s *ConfigCellSecondaryMarketBuilder) OfferMessageBytesLimit(v Uint32) *ConfigCellSecondaryMarketBuilder {
-	s.offer_message_bytes_limit = v
-	return s
-}
-
 func NewConfigCellSecondaryMarketBuilder() *ConfigCellSecondaryMarketBuilder {
-	return &ConfigCellSecondaryMarketBuilder{common_fee: Uint64Default(), sale_min_price: Uint64Default(), sale_expiration_limit: Uint32Default(), sale_description_bytes_limit: Uint32Default(), sale_cell_basic_capacity: Uint64Default(), sale_cell_prepared_fee_capacity: Uint64Default(), auction_max_extendable_duration: Uint32Default(), auction_duration_increment_each_bid: Uint32Default(), auction_min_opening_price: Uint64Default(), auction_min_increment_rate_each_bid: Uint32Default(), auction_description_bytes_limit: Uint32Default(), auction_cell_basic_capacity: Uint64Default(), auction_cell_prepared_fee_capacity: Uint64Default(), offer_min_price: Uint64Default(), offer_cell_basic_capacity: Uint64Default(), offer_cell_prepared_fee_capacity: Uint64Default(), offer_message_bytes_limit: Uint32Default()}
+	return &ConfigCellSecondaryMarketBuilder{common_fee: Uint64Default(), sale_min_price: Uint64Default(), sale_expiration_limit: Uint32Default(), sale_description_bytes_limit: Uint32Default(), sale_cell_basic_capacity: Uint64Default(), sale_cell_prepared_fee_capacity: Uint64Default(), auction_max_extendable_duration: Uint32Default(), auction_duration_increment_each_bid: Uint32Default(), auction_min_opening_price: Uint64Default(), auction_min_increment_rate_each_bid: Uint32Default(), auction_description_bytes_limit: Uint32Default(), auction_cell_basic_capacity: Uint64Default(), auction_cell_prepared_fee_capacity: Uint64Default()}
 }
 
 type ConfigCellSecondaryMarket struct {
@@ -3912,7 +3836,7 @@ func (s *ConfigCellSecondaryMarket) AsSlice() []byte {
 }
 
 func ConfigCellSecondaryMarketDefault() ConfigCellSecondaryMarket {
-	return *ConfigCellSecondaryMarketFromSliceUnchecked([]byte{180, 0, 0, 0, 72, 0, 0, 0, 80, 0, 0, 0, 88, 0, 0, 0, 92, 0, 0, 0, 96, 0, 0, 0, 104, 0, 0, 0, 112, 0, 0, 0, 116, 0, 0, 0, 120, 0, 0, 0, 128, 0, 0, 0, 132, 0, 0, 0, 136, 0, 0, 0, 144, 0, 0, 0, 152, 0, 0, 0, 160, 0, 0, 0, 168, 0, 0, 0, 176, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ConfigCellSecondaryMarketFromSliceUnchecked([]byte{136, 0, 0, 0, 56, 0, 0, 0, 64, 0, 0, 0, 72, 0, 0, 0, 76, 0, 0, 0, 80, 0, 0, 0, 88, 0, 0, 0, 96, 0, 0, 0, 100, 0, 0, 0, 104, 0, 0, 0, 112, 0, 0, 0, 116, 0, 0, 0, 120, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ConfigCellSecondaryMarketFromSlice(slice []byte, compatible bool) (*ConfigCellSecondaryMarket, error) {
@@ -3928,7 +3852,7 @@ func ConfigCellSecondaryMarketFromSlice(slice []byte, compatible bool) (*ConfigC
 		return nil, errors.New(errMsg)
 	}
 
-	if uint32(sliceLen) == HeaderSizeUint && 17 == 0 {
+	if uint32(sliceLen) == HeaderSizeUint && 13 == 0 {
 		return &ConfigCellSecondaryMarket{inner: slice}, nil
 	}
 
@@ -3949,9 +3873,9 @@ func ConfigCellSecondaryMarketFromSlice(slice []byte, compatible bool) (*ConfigC
 	}
 
 	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 17 {
+	if fieldCount < 13 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 17 {
+	} else if !compatible && fieldCount > 13 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -4035,26 +3959,6 @@ func ConfigCellSecondaryMarketFromSlice(slice []byte, compatible bool) (*ConfigC
 		return nil, err
 	}
 
-	_, err = Uint64FromSlice(slice[offsets[13]:offsets[14]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = Uint64FromSlice(slice[offsets[14]:offsets[15]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = Uint64FromSlice(slice[offsets[15]:offsets[16]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = Uint32FromSlice(slice[offsets[16]:offsets[17]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
 	return &ConfigCellSecondaryMarket{inner: slice}, nil
 }
 
@@ -4076,11 +3980,11 @@ func (s *ConfigCellSecondaryMarket) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ConfigCellSecondaryMarket) CountExtraFields() uint {
-	return s.FieldCount() - 17
+	return s.FieldCount() - 13
 }
 
 func (s *ConfigCellSecondaryMarket) HasExtraFields() bool {
-	return 17 != s.FieldCount()
+	return 13 != s.FieldCount()
 }
 
 func (s *ConfigCellSecondaryMarket) CommonFee() *Uint64 {
@@ -4156,226 +4060,10 @@ func (s *ConfigCellSecondaryMarket) AuctionCellBasicCapacity() *Uint64 {
 }
 
 func (s *ConfigCellSecondaryMarket) AuctionCellPreparedFeeCapacity() *Uint64 {
-	start := unpackNumber(s.inner[52:])
-	end := unpackNumber(s.inner[56:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellSecondaryMarket) OfferMinPrice() *Uint64 {
-	start := unpackNumber(s.inner[56:])
-	end := unpackNumber(s.inner[60:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellSecondaryMarket) OfferCellBasicCapacity() *Uint64 {
-	start := unpackNumber(s.inner[60:])
-	end := unpackNumber(s.inner[64:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellSecondaryMarket) OfferCellPreparedFeeCapacity() *Uint64 {
-	start := unpackNumber(s.inner[64:])
-	end := unpackNumber(s.inner[68:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellSecondaryMarket) OfferMessageBytesLimit() *Uint32 {
-	var ret *Uint32
-	start := unpackNumber(s.inner[68:])
-	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[72:])
-		ret = Uint32FromSliceUnchecked(s.inner[start:end])
-	} else {
-		ret = Uint32FromSliceUnchecked(s.inner[start:])
-	}
-	return ret
-}
-
-func (s *ConfigCellSecondaryMarket) AsBuilder() ConfigCellSecondaryMarketBuilder {
-	ret := NewConfigCellSecondaryMarketBuilder().CommonFee(*s.CommonFee()).SaleMinPrice(*s.SaleMinPrice()).SaleExpirationLimit(*s.SaleExpirationLimit()).SaleDescriptionBytesLimit(*s.SaleDescriptionBytesLimit()).SaleCellBasicCapacity(*s.SaleCellBasicCapacity()).SaleCellPreparedFeeCapacity(*s.SaleCellPreparedFeeCapacity()).AuctionMaxExtendableDuration(*s.AuctionMaxExtendableDuration()).AuctionDurationIncrementEachBid(*s.AuctionDurationIncrementEachBid()).AuctionMinOpeningPrice(*s.AuctionMinOpeningPrice()).AuctionMinIncrementRateEachBid(*s.AuctionMinIncrementRateEachBid()).AuctionDescriptionBytesLimit(*s.AuctionDescriptionBytesLimit()).AuctionCellBasicCapacity(*s.AuctionCellBasicCapacity()).AuctionCellPreparedFeeCapacity(*s.AuctionCellPreparedFeeCapacity()).OfferMinPrice(*s.OfferMinPrice()).OfferCellBasicCapacity(*s.OfferCellBasicCapacity()).OfferCellPreparedFeeCapacity(*s.OfferCellPreparedFeeCapacity()).OfferMessageBytesLimit(*s.OfferMessageBytesLimit())
-	return *ret
-}
-
-type ConfigCellReverseResolutionBuilder struct {
-	record_basic_capacity        Uint64
-	record_prepared_fee_capacity Uint64
-	common_fee                   Uint64
-}
-
-func (s *ConfigCellReverseResolutionBuilder) Build() ConfigCellReverseResolution {
-	b := new(bytes.Buffer)
-
-	totalSize := HeaderSizeUint * (3 + 1)
-	offsets := make([]uint32, 0, 3)
-
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.record_basic_capacity.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.record_prepared_fee_capacity.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.common_fee.AsSlice()))
-
-	b.Write(packNumber(Number(totalSize)))
-
-	for i := 0; i < len(offsets); i++ {
-		b.Write(packNumber(Number(offsets[i])))
-	}
-
-	b.Write(s.record_basic_capacity.AsSlice())
-	b.Write(s.record_prepared_fee_capacity.AsSlice())
-	b.Write(s.common_fee.AsSlice())
-	return ConfigCellReverseResolution{inner: b.Bytes()}
-}
-
-func (s *ConfigCellReverseResolutionBuilder) RecordBasicCapacity(v Uint64) *ConfigCellReverseResolutionBuilder {
-	s.record_basic_capacity = v
-	return s
-}
-
-func (s *ConfigCellReverseResolutionBuilder) RecordPreparedFeeCapacity(v Uint64) *ConfigCellReverseResolutionBuilder {
-	s.record_prepared_fee_capacity = v
-	return s
-}
-
-func (s *ConfigCellReverseResolutionBuilder) CommonFee(v Uint64) *ConfigCellReverseResolutionBuilder {
-	s.common_fee = v
-	return s
-}
-
-func NewConfigCellReverseResolutionBuilder() *ConfigCellReverseResolutionBuilder {
-	return &ConfigCellReverseResolutionBuilder{record_basic_capacity: Uint64Default(), record_prepared_fee_capacity: Uint64Default(), common_fee: Uint64Default()}
-}
-
-type ConfigCellReverseResolution struct {
-	inner []byte
-}
-
-func ConfigCellReverseResolutionFromSliceUnchecked(slice []byte) *ConfigCellReverseResolution {
-	return &ConfigCellReverseResolution{inner: slice}
-}
-func (s *ConfigCellReverseResolution) AsSlice() []byte {
-	return s.inner
-}
-
-func ConfigCellReverseResolutionDefault() ConfigCellReverseResolution {
-	return *ConfigCellReverseResolutionFromSliceUnchecked([]byte{40, 0, 0, 0, 16, 0, 0, 0, 24, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-}
-
-func ConfigCellReverseResolutionFromSlice(slice []byte, compatible bool) (*ConfigCellReverseResolution, error) {
-	sliceLen := len(slice)
-	if uint32(sliceLen) < HeaderSizeUint {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "ConfigCellReverseResolution", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	totalSize := unpackNumber(slice)
-	if Number(sliceLen) != totalSize {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "ConfigCellReverseResolution", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	if uint32(sliceLen) == HeaderSizeUint && 3 == 0 {
-		return &ConfigCellReverseResolution{inner: slice}, nil
-	}
-
-	if uint32(sliceLen) < HeaderSizeUint*2 {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "ConfigCellReverseResolution", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
-	if uint32(offsetFirst)%HeaderSizeUint != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
-		errMsg := strings.Join([]string{"OffsetsNotMatch", "ConfigCellReverseResolution", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	if sliceLen < int(offsetFirst) {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "ConfigCellReverseResolution", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(offsetFirst))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 3 {
-		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 3 {
-		return nil, errors.New("FieldCountNotMatch")
-	}
-
-	offsets := make([]uint32, fieldCount)
-
-	for i := 0; i < int(fieldCount); i++ {
-		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][int(HeaderSizeUint)*i:]))
-	}
-	offsets = append(offsets, uint32(totalSize))
-
-	for i := 0; i < len(offsets); i++ {
-		if i&1 != 0 && offsets[i-1] > offsets[i] {
-			return nil, errors.New("OffsetsNotMatch")
-		}
-	}
-
-	var err error
-
-	_, err = Uint64FromSlice(slice[offsets[0]:offsets[1]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = Uint64FromSlice(slice[offsets[1]:offsets[2]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = Uint64FromSlice(slice[offsets[2]:offsets[3]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ConfigCellReverseResolution{inner: slice}, nil
-}
-
-func (s *ConfigCellReverseResolution) TotalSize() uint {
-	return uint(unpackNumber(s.inner))
-}
-func (s *ConfigCellReverseResolution) FieldCount() uint {
-	var number uint = 0
-	if uint32(s.TotalSize()) == HeaderSizeUint {
-		return number
-	}
-	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
-	return number
-}
-func (s *ConfigCellReverseResolution) Len() uint {
-	return s.FieldCount()
-}
-func (s *ConfigCellReverseResolution) IsEmpty() bool {
-	return s.Len() == 0
-}
-func (s *ConfigCellReverseResolution) CountExtraFields() uint {
-	return s.FieldCount() - 3
-}
-
-func (s *ConfigCellReverseResolution) HasExtraFields() bool {
-	return 3 != s.FieldCount()
-}
-
-func (s *ConfigCellReverseResolution) RecordBasicCapacity() *Uint64 {
-	start := unpackNumber(s.inner[4:])
-	end := unpackNumber(s.inner[8:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellReverseResolution) RecordPreparedFeeCapacity() *Uint64 {
-	start := unpackNumber(s.inner[8:])
-	end := unpackNumber(s.inner[12:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ConfigCellReverseResolution) CommonFee() *Uint64 {
 	var ret *Uint64
-	start := unpackNumber(s.inner[12:])
+	start := unpackNumber(s.inner[52:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[16:])
+		end := unpackNumber(s.inner[56:])
 		ret = Uint64FromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = Uint64FromSliceUnchecked(s.inner[start:])
@@ -4383,8 +4071,8 @@ func (s *ConfigCellReverseResolution) CommonFee() *Uint64 {
 	return ret
 }
 
-func (s *ConfigCellReverseResolution) AsBuilder() ConfigCellReverseResolutionBuilder {
-	ret := NewConfigCellReverseResolutionBuilder().RecordBasicCapacity(*s.RecordBasicCapacity()).RecordPreparedFeeCapacity(*s.RecordPreparedFeeCapacity()).CommonFee(*s.CommonFee())
+func (s *ConfigCellSecondaryMarket) AsBuilder() ConfigCellSecondaryMarketBuilder {
+	ret := NewConfigCellSecondaryMarketBuilder().CommonFee(*s.CommonFee()).SaleMinPrice(*s.SaleMinPrice()).SaleExpirationLimit(*s.SaleExpirationLimit()).SaleDescriptionBytesLimit(*s.SaleDescriptionBytesLimit()).SaleCellBasicCapacity(*s.SaleCellBasicCapacity()).SaleCellPreparedFeeCapacity(*s.SaleCellPreparedFeeCapacity()).AuctionMaxExtendableDuration(*s.AuctionMaxExtendableDuration()).AuctionDurationIncrementEachBid(*s.AuctionDurationIncrementEachBid()).AuctionMinOpeningPrice(*s.AuctionMinOpeningPrice()).AuctionMinIncrementRateEachBid(*s.AuctionMinIncrementRateEachBid()).AuctionDescriptionBytesLimit(*s.AuctionDescriptionBytesLimit()).AuctionCellBasicCapacity(*s.AuctionCellBasicCapacity()).AuctionCellPreparedFeeCapacity(*s.AuctionCellPreparedFeeCapacity())
 	return *ret
 }
 
@@ -8142,237 +7830,5 @@ func (s *AccountChar) Bytes() *Bytes {
 
 func (s *AccountChar) AsBuilder() AccountCharBuilder {
 	ret := NewAccountCharBuilder().CharSetName(*s.CharSetName()).Bytes(*s.Bytes())
-	return *ret
-}
-
-type OfferCellDataBuilder struct {
-	account      Bytes
-	price        Uint64
-	message      Bytes
-	inviter_lock Script
-	channel_lock Script
-}
-
-func (s *OfferCellDataBuilder) Build() OfferCellData {
-	b := new(bytes.Buffer)
-
-	totalSize := HeaderSizeUint * (5 + 1)
-	offsets := make([]uint32, 0, 5)
-
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.account.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.price.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.message.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.inviter_lock.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.channel_lock.AsSlice()))
-
-	b.Write(packNumber(Number(totalSize)))
-
-	for i := 0; i < len(offsets); i++ {
-		b.Write(packNumber(Number(offsets[i])))
-	}
-
-	b.Write(s.account.AsSlice())
-	b.Write(s.price.AsSlice())
-	b.Write(s.message.AsSlice())
-	b.Write(s.inviter_lock.AsSlice())
-	b.Write(s.channel_lock.AsSlice())
-	return OfferCellData{inner: b.Bytes()}
-}
-
-func (s *OfferCellDataBuilder) Account(v Bytes) *OfferCellDataBuilder {
-	s.account = v
-	return s
-}
-
-func (s *OfferCellDataBuilder) Price(v Uint64) *OfferCellDataBuilder {
-	s.price = v
-	return s
-}
-
-func (s *OfferCellDataBuilder) Message(v Bytes) *OfferCellDataBuilder {
-	s.message = v
-	return s
-}
-
-func (s *OfferCellDataBuilder) InviterLock(v Script) *OfferCellDataBuilder {
-	s.inviter_lock = v
-	return s
-}
-
-func (s *OfferCellDataBuilder) ChannelLock(v Script) *OfferCellDataBuilder {
-	s.channel_lock = v
-	return s
-}
-
-func NewOfferCellDataBuilder() *OfferCellDataBuilder {
-	return &OfferCellDataBuilder{account: BytesDefault(), price: Uint64Default(), message: BytesDefault(), inviter_lock: ScriptDefault(), channel_lock: ScriptDefault()}
-}
-
-type OfferCellData struct {
-	inner []byte
-}
-
-func OfferCellDataFromSliceUnchecked(slice []byte) *OfferCellData {
-	return &OfferCellData{inner: slice}
-}
-func (s *OfferCellData) AsSlice() []byte {
-	return s.inner
-}
-
-func OfferCellDataDefault() OfferCellData {
-	return *OfferCellDataFromSliceUnchecked([]byte{146, 0, 0, 0, 24, 0, 0, 0, 28, 0, 0, 0, 36, 0, 0, 0, 40, 0, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-}
-
-func OfferCellDataFromSlice(slice []byte, compatible bool) (*OfferCellData, error) {
-	sliceLen := len(slice)
-	if uint32(sliceLen) < HeaderSizeUint {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "OfferCellData", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	totalSize := unpackNumber(slice)
-	if Number(sliceLen) != totalSize {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "OfferCellData", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	if uint32(sliceLen) == HeaderSizeUint && 5 == 0 {
-		return &OfferCellData{inner: slice}, nil
-	}
-
-	if uint32(sliceLen) < HeaderSizeUint*2 {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "OfferCellData", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
-	if uint32(offsetFirst)%HeaderSizeUint != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
-		errMsg := strings.Join([]string{"OffsetsNotMatch", "OfferCellData", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	if sliceLen < int(offsetFirst) {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "OfferCellData", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(offsetFirst))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 5 {
-		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 5 {
-		return nil, errors.New("FieldCountNotMatch")
-	}
-
-	offsets := make([]uint32, fieldCount)
-
-	for i := 0; i < int(fieldCount); i++ {
-		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][int(HeaderSizeUint)*i:]))
-	}
-	offsets = append(offsets, uint32(totalSize))
-
-	for i := 0; i < len(offsets); i++ {
-		if i&1 != 0 && offsets[i-1] > offsets[i] {
-			return nil, errors.New("OffsetsNotMatch")
-		}
-	}
-
-	var err error
-
-	_, err = BytesFromSlice(slice[offsets[0]:offsets[1]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = Uint64FromSlice(slice[offsets[1]:offsets[2]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = BytesFromSlice(slice[offsets[2]:offsets[3]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = ScriptFromSlice(slice[offsets[3]:offsets[4]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = ScriptFromSlice(slice[offsets[4]:offsets[5]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	return &OfferCellData{inner: slice}, nil
-}
-
-func (s *OfferCellData) TotalSize() uint {
-	return uint(unpackNumber(s.inner))
-}
-func (s *OfferCellData) FieldCount() uint {
-	var number uint = 0
-	if uint32(s.TotalSize()) == HeaderSizeUint {
-		return number
-	}
-	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
-	return number
-}
-func (s *OfferCellData) Len() uint {
-	return s.FieldCount()
-}
-func (s *OfferCellData) IsEmpty() bool {
-	return s.Len() == 0
-}
-func (s *OfferCellData) CountExtraFields() uint {
-	return s.FieldCount() - 5
-}
-
-func (s *OfferCellData) HasExtraFields() bool {
-	return 5 != s.FieldCount()
-}
-
-func (s *OfferCellData) Account() *Bytes {
-	start := unpackNumber(s.inner[4:])
-	end := unpackNumber(s.inner[8:])
-	return BytesFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *OfferCellData) Price() *Uint64 {
-	start := unpackNumber(s.inner[8:])
-	end := unpackNumber(s.inner[12:])
-	return Uint64FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *OfferCellData) Message() *Bytes {
-	start := unpackNumber(s.inner[12:])
-	end := unpackNumber(s.inner[16:])
-	return BytesFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *OfferCellData) InviterLock() *Script {
-	start := unpackNumber(s.inner[16:])
-	end := unpackNumber(s.inner[20:])
-	return ScriptFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *OfferCellData) ChannelLock() *Script {
-	var ret *Script
-	start := unpackNumber(s.inner[20:])
-	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[24:])
-		ret = ScriptFromSliceUnchecked(s.inner[start:end])
-	} else {
-		ret = ScriptFromSliceUnchecked(s.inner[start:])
-	}
-	return ret
-}
-
-func (s *OfferCellData) AsBuilder() OfferCellDataBuilder {
-	ret := NewOfferCellDataBuilder().Account(*s.Account()).Price(*s.Price()).Message(*s.Message()).InviterLock(*s.InviterLock()).ChannelLock(*s.ChannelLock())
 	return *ret
 }
